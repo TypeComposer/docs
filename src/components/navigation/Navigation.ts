@@ -14,10 +14,9 @@ interface RouterProps {
 export class Navigation extends Component {
   constructor() {
     super({ className: "mt-4 p-2 flex items-center justify-between w-full h-16bg-[#1a202c] h-20 text-[#fcfffa] border-t-2 border-[#f7df1e]" });
-    console.log("URL: " + getURL());
-    const { prevew, next } = this.getPath();
-    this.append(this.routerLink("prev", prevew));
-    this.append(this.routerLink("next", next));
+    // const { prevew, next } = this.getPath();
+    // this.append(this.routerLink("prev", prevew));
+    // this.append(this.routerLink("next", next));
   }
 
   routerLink(type: "prev" | "next", props?: RouterProps): Component {
@@ -30,7 +29,7 @@ export class Navigation extends Component {
           className: "hover:border-b-2 border-white-500",
           onclick: () => {
             SidebarItem.removeSelected();
-            window.location.href = props.link;
+            Router.go(props.link);
           },
         })
       );

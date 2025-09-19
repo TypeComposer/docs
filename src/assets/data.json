@@ -15,7 +15,7 @@
     },
     {
       "title": "Ref",
-      "link": "ref",
+      "link": "docs/ref",
       "items": []
     },
     {
@@ -23,11 +23,11 @@
       "items": [
         {
           "title": "Router",
-          "link": "router"
+          "link": "docs/router"
         },
         {
           "title": "RouterView",
-          "link": "router-view"
+          "link": "docs/router-view"
         }
       ]
     },
@@ -36,7 +36,7 @@
       "items": [
         {
           "title": "Component",
-          "link": "components/component"
+          "link": "docs/components/component"
         }
       ]
     },
@@ -45,12 +45,12 @@
       "items": [
         {
           "title": "BorderPanel",
-          "link": "layout/border-panel"
+          "link": "docs/layout/border-panel"
         },
-        { "title": "Vbox", "link": "layout/vbox" },
+        { "title": "Vbox", "link": "docs/layout/vbox" },
         {
           "title": "Hbox",
-          "link": "layout/hbox"
+          "link": "docs/layout/hbox"
         }
       ]
     },
@@ -59,31 +59,31 @@
       "items": [
         {
           "title": "Div",
-          "link": "elements/div"
+          "link": "docs/elements/div"
         },
         {
           "title": "Button",
-          "link": "elements/button"
+          "link": "docs/elements/button"
         },
         {
           "title": "Input",
-          "link": "elements/input"
+          "link": "docs/elements/input"
         },
         {
           "title": "Label",
-          "link": "elements/label"
+          "link": "docs/elements/label"
         },
         {
           "title": "Table",
-          "link": "elements/table"
+          "link": "docs/elements/table"
         },
         {
           "title": "Span",
-          "link": "elements/span"
+          "link": "docs/elements/span"
         },
         {
           "title": "Heading",
-          "link": "elements/heading"
+          "link": "docs/elements/heading"
         }
       ]
     }

@@ -20,14 +20,12 @@ import { RouteViewDoc } from "@/views/router/RouterViewDoc";
 
 Router.create({
   history: "hash",
-  sitemaps: { baseUrl: "https://typecomposer.com" },
-  robots: "auto",
   routes: [
     {
-      path: "/",
+      path: "/docs",
       component: AppPage,
       children: [
-        { path: "docs/getting-started", component: GettingStartedView },
+        { path: "getting-started", component: GettingStartedView },
         { path: "components/component", component: ComponentView },
         { path: "elements/div", component: DivView },
         { path: "elements/button", component: ButtonView },
@@ -39,10 +37,10 @@ Router.create({
         { path: "layout/vbox", component: VboxView },
         { path: "layout/hbox", component: HboxView },
         { path: "layout/border-panel", component: BorderPanelView },
-        { path: "docs", component: HomeView },
         { path: "ref", component: RefDocView },
         { path: "router", component: RouterDoc },
         { path: "router-view", component: RouteViewDoc },
+        { path: "", component: HomeView },
       ],
     },
     { path: "/playground", component: PlaygroundPage },

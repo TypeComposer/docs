@@ -3,19 +3,13 @@ import typeComposerPlugin from "typecomposer-plugin";
 import path from "path";
 
 export default defineConfig({
-  plugins: [
-    typeComposerPlugin({
-      debuger: false,
-    }),
-  ],
+  plugins: [typeComposerPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    include: ["@codesandbox/sandpack-client"],
-  },
+  base: "./",
   css: {
     preprocessorOptions: {
       scss: {

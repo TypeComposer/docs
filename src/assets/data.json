@@ -1,0 +1,91 @@
+{
+  "sidebar": [
+    {
+      "title": "Introduction",
+      "items": [
+        {
+          "title": "What is TypeComposer?",
+          "link": "docs"
+        },
+        {
+          "title": "Getting Started",
+          "link": "docs/getting-started"
+        }
+      ]
+    },
+    {
+      "title": "Ref",
+      "link": "ref",
+      "items": []
+    },
+    {
+      "title": "Router",
+      "items": [
+        {
+          "title": "Router",
+          "link": "router"
+        },
+        {
+          "title": "RouterView",
+          "link": "router-view"
+        }
+      ]
+    },
+    {
+      "title": "Components",
+      "items": [
+        {
+          "title": "Component",
+          "link": "components/component"
+        }
+      ]
+    },
+    {
+      "title": "Layout",
+      "items": [
+        {
+          "title": "BorderPanel",
+          "link": "layout/border-panel"
+        },
+        { "title": "Vbox", "link": "layout/vbox" },
+        {
+          "title": "Hbox",
+          "link": "layout/hbox"
+        }
+      ]
+    },
+    {
+      "title": "Elements",
+      "items": [
+        {
+          "title": "Div",
+          "link": "elements/div"
+        },
+        {
+          "title": "Button",
+          "link": "elements/button"
+        },
+        {
+          "title": "Input",
+          "link": "elements/input"
+        },
+        {
+          "title": "Label",
+          "link": "elements/label"
+        },
+        {
+          "title": "Table",
+          "link": "elements/table"
+        },
+        {
+          "title": "Span",
+          "link": "elements/span"
+        },
+        {
+          "title": "Heading",
+          "link": "elements/heading"
+        }
+      ]
+    }
+  ]
+}

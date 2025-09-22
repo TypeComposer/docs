@@ -1,81 +1,53 @@
-import { AnchorElement, Component, DetailsElement, ListItemElement, NavElement, OrderedListElement, SpanElement, SummaryElement } from "typecomposer";
+import { AnchorElement, Component, DetailsElement, NavElement, SpanElement, SummaryElement, DivElement, Router } from "typecomposer";
 import data from "@/assets/data.json";
+import { ChevronUp, ChevronDown, createElement } from "lucide";
 
-export class SidebarItem extends ListItemElement {
-  private static select: ListItemElement | null = null;
-  constructor(
-    public props: {
-      text: string;
-      items: {
-        title: string;
-        link: string;
-      }[];
-      link?: string;
-    }
-  ) {
-    super({ className: "sidebar-item" });
-    if (props.link && props.text) {
-      this.append(...this.items([{ title: props.text, link: props.link }]));
-    } else
-      this.append(
-        new DetailsElement({
-          className: "details",
-          children: [
-            new SummaryElement({
-              className: "summary",
-              children: [new SpanElement({ text: props.text })],
-            }),
-            new OrderedListElement({
-              className: "gap-4 p-4 pt-2 pb-2",
-              children: this.items(props.items),
-            }),
-          ],
-        })
-      );
-  }
+interface SidebarData {
+  title: string;
+  items: {
+    title: string;
+    link: string;
+  }[];
+  link?: undefined;
+}
 
-  static removeSelected() {
-    if (SidebarItem.select) {
-      SidebarItem.select.classList.remove("selected");
-      SidebarItem.select = null;
+export class SidebarItem extends DetailsElement {
+  icon: SpanElement = new SpanElement({ className: "right" });
+
+  constructor(private data: SidebarData) {
+    super({ className: "menu" });
+    if (data.items.length) {
+      this.icon.append(createElement(ChevronDown));
+      this.addEventListener("toggle", () => {
+        this.icon.innerHTML = "";
+        this.icon.append(this.open ? createElement(ChevronUp) : createElement(ChevronDown));
+      });
     }
   }
 
-  items(r: { title: string; link: string }[]): Component[] {
-    const elements: Component[] = [];
-    for (let i = 0; i < r.length; i++) {
-      const element = new ListItemElement({ children: [new AnchorElement({ style: { marginLeft: "1.5rem" }, rlink: r[i].link, text: r[i].title, className: "text-link" })] });
-      element.onclick = () => {
-        if (SidebarItem.select) {
-          SidebarItem.select.classList.remove("selected");
-        }
-        SidebarItem.select = element;
-        element.addClassName("selected");
-      };
-      elements.push(element);
+  onInit(): void {
+    const summary = new SummaryElement();
+    summary.append(new SpanElement({ className: "label", style: { paddingLeft: "20px" }, textContent: this.data.title }));
+    summary.appendChild(this.icon);
+    this.appendChild(summary);
+    if (this.data.items.length === 0) {
+      this.onclick = () => Router.go(this.data.link!);
+    } else {
+      const li = new DivElement({ className: "submenu", role: "group", ariaLabel: this.data.title });
+      for (const item of this.data.items) {
+        li.append(new AnchorElement({ rlink: item.link, textContent: item.title }));
+      }
+      this.appendChild(li);
     }
-    return elements;
   }
 }
 
 export class Sidebar extends Component {
   constructor() {
-    super({ className: "sidebar overflow-y-auto" });
-    const order = new OrderedListElement({});
-    this.append(
-      new NavElement({
-        className: "flex items-center gap-2",
-        children: [order],
-      })
-    );
-    for (let i = 0; i < data.sidebar.length; i++) {
-      order.append(new SidebarItem({ text: data.sidebar[i].title, items: data.sidebar[i]?.items || [], link: data.sidebar[i].link }));
+    super({ className: "sidebar" });
+    const nav = this.appendChild(new NavElement());
+    for (const menu of data.sidebar) {
+      nav.append(new SidebarItem(menu as SidebarData));
     }
-    // @ts-ignore
-    this.onEvent("menu-bar", (e) => {
-      if (e.open) this.addClassName("m-open");
-      else this.removeClassName("m-open");
-      //this.style.display = e.open ? "block" : "none";
-    });
   }
 }

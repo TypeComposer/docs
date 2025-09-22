@@ -1,0 +1,130 @@
+.sidebar {
+  width: 260px;
+  max-width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  border-right: 1px solid #23232c;
+  padding: 8px 8px 24px;
+}
+
+/* header */
+.lib-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  margin: 6px;
+  background: var(--panel);
+  border-radius: var(--radius);
+  outline: none;
+}
+.lib-header:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 65%, transparent);
+}
+.lib-title {
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.2px;
+  flex: 1;
+}
+.folder {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+.arrow-btn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid #2a2a33;
+  background: #202029;
+  cursor: pointer;
+}
+.arrow-btn:hover {
+  background: #252532;
+}
+.chev {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s ease;
+}
+
+/* items */
+details.menu {
+  margin: 2px 6px;
+  overflow: clip;
+}
+details.menu summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  cursor: pointer;
+  padding: 10px 0px;
+  position: relative;
+  user-select: none;
+  outline: none;
+}
+
+details.menu summary:hover {
+  border-left: 2px solid #23232c;
+  border-left-color: var(--primary);
+  color: var(--text);
+  background: #1a1a21 !important;
+}
+
+details.menu summary::-webkit-details-marker {
+  display: none;
+}
+details.menu summary:focus-visible {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ring) 55%, transparent);
+}
+details.menu summary:hover {
+  background: var(--hover);
+}
+.icon {
+  width: 22px;
+  height: 22px;
+  opacity: 0.95;
+  flex: 0 0 auto;
+}
+.label {
+  font-weight: 560;
+}
+.right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 3px;
+  color: var(--muted);
+}
+.right .chev {
+  transform: rotate(0deg);
+}
+details[open] .right .chev {
+  transform: rotate(180deg);
+}
+
+/* subitens */
+.submenu {
+  margin: 8px 8px 14px 34px;
+  display: grid;
+  gap: 8px;
+  background: transparent;
+  border-left: 2px solid #23232c;
+}
+
+.submenu a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 10px;
+}
+.submenu a:hover {
+  color: var(--text);
+  background: #1a1a21;
+  border-left: 2px solid #23232c;
+  border-left-color: var(--primary);
+}

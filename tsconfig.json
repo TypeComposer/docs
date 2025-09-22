@@ -13,12 +13,11 @@
     "isolatedModules": true,
     "noEmit": true,
 
-    "allowSyntheticDefaultImports": true,
     /* JSX */
     "jsx": "preserve",
-    "jsxFactory": "createElement",
-    "jsxFragmentFactory": "createFragment",
-    "checkJs": true,
+    "jsxFactory": "TypeComposer.createElement",
+    "jsxFragmentFactory": "TypeComposer.Fragment",
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -28,6 +27,8 @@
     /* Decorators */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+
+    "allowSyntheticDefaultImports": true,
 
     /* Path aliases */
     "baseUrl": ".",

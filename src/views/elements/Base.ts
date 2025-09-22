@@ -57,26 +57,20 @@ const compoents = {
 
 export class BaseView extends VBox {
   public docs: IDoc[] = [];
+  public contentWrapper: VBox;
+  
   constructor() {
     super({ className: "main-content" });
+
+    this.contentWrapper = this.appendChild(new VBox({ className: "content-wrapper" }));
+    
+    setTimeout(() => {
+      this.contentWrapper.append(new Navigation());
+    }, 0);
   }
 
   async onConnected() {
-    const wrapper = this.appendChild(new VBox({ className: "content-wrapper" }));
-    
-    // Add breadcrumb
-    const breadcrumb = wrapper.appendChild(new SpanElement({ 
-      className: "breadcrumb",
-      text: "TypeComposer"
-    }));
-    
-    // Move all existing content to wrapper
-    const existingChildren = Array.from(this.children).filter(child => child !== wrapper);
-    existingChildren.forEach(child => {
-      wrapper.appendChild(child);
-    });
-    
-    wrapper.append(new Navigation());
+    // Navigation is already added in constructor
   }
 
   get url(): string {

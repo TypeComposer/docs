@@ -1,0 +1,90 @@
+# Overview
+
+In TypeComposer, the Router is automatically loaded when a file named `router.ts` or `router.js` is present in the project. The router is configured using `Router.create` and follows a declarative approach to define navigation paths.
+
+## 1. Key Features
+
+- Automatic loading of the router when the file is named `router.ts` or `router.js`.
+- Uses a declarative approach to define routes.
+- Supports nested routes with the `children` property.
+- Provides support for history-based (`history`) and hash-based (`hash`) navigation.
+- Supports wildcard paths and redirects.
+
+## 2. Defining Routes
+
+Routes are defined inside the `Router.create()` function. The router is automatically recognized by TypeComposer and does not require manual imports.
+
+## 3. Example Routing Configuration
+
+```javascript
+import { Router } from "typecomposer";
+import { MainLayout } from "@/layouts/MainLayout";
+import { DashboardView } from "@/views/DashboardView";
+import { SettingsView } from "@/views/SettingsView";
+import { ProfileView } from "@/views/ProfileView";
+import { NotFoundView } from "@/views/NotFoundView";
+
+Router.create({
+  history: "history",
+  routes: [
+    {
+      path: "/",
+      component: MainLayout,
+      children: [
+        { path: "dashboard", component: DashboardView },
+        { path: "settings", component: SettingsView },
+        { path: "profile", component: ProfileView }
+      ]
+    },
+    { path: Router.PATH_WILDCARD, component: NotFoundView }
+  ]
+});
+```
+
+## 4. Properties
+
+| Property | Type | Description | Example |
+|----------|------|-------------|---------|
+| history | `"hash" \| "history"` | Defines the navigation mode (hash-based or history-based). | `"history"` |
+| routes | Route[] | An array of route definitions. | `[{ path: '/', component: MainLayout }]` |
+| path | string | The URL path associated with the route. | `"/dashboard"` |
+| component | Component | The component to be rendered at the specified path. | `DashboardView` |
+| children | Route[] (optional) | Defines nested routes inside a parent component. | `[{ path: 'profile', component: ProfileView }]` |
+| redirect | string (optional) | Redirects to a different path when a route is matched. | `"/dashboard"` |
+
+## 5. Example with Nested Routes
+
+```javascript
+Router.create({
+  history: "history",
+  routes: [
+    {
+      path: "/",
+      component: MainLayout,
+      children: [
+        { path: "dashboard", component: DashboardView },
+        { path: "settings", component: SettingsView },
+        { path: "profile", component: ProfileView }
+      ]
+    },
+    { path: "/not-found", component: NotFoundView },
+    { path: Router.PATH_WILDCARD, redirect: "/not-found" }
+  ]
+});
+```
+
+## 6. Default Behavior
+
+- The Router is loaded automatically based on the reserved filename (`router.ts` or `router.js`).
+- Routes must be declared inside `Router.create()`.
+- If no matching route is found, the wildcard (`Router.PATH_WILDCARD`) can be used to redirect to a 404 page.
+
+## 7. When to Use the Router
+
+- When creating multi-page applications with navigable routes.
+- When needing nested views within a parent route.
+- When defining structured paths for different application sections.
+
+## Conclusion
+
+The TypeComposer Router provides a simple yet powerful way to handle navigation. It automatically loads from a reserved file and follows a declarative approach for defining routes, making it ideal for building scalable applications.

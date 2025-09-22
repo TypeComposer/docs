@@ -159,8 +159,8 @@ export class PlaygroundView extends Component {
 	async onInit() {
 		const iframe = this.appendChild(new IFrameElement({ className: "w-full h-full" })) as any;
 
-		const client = await loadSandpackClient(iframe, {
-			files: {}
+		await loadSandpackClient(iframe, {
+			files
 		}, {
 			clearConsoleOnFirstCompile: true,
 

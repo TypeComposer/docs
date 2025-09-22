@@ -1,0 +1,165 @@
+# Overview
+
+The TypeComposer framework offers two main approaches for creating components, depending on your needs:
+
+## 1. Extending the Component class
+
+When a component is created by extending the Component class, it generates a custom HTML tag whose name corresponds to the class name converted to kebab-case. This approach is ideal for creating entirely new and semantically unique components.
+
+### Example:
+
+```javascript
+import { Component } from 'typecomposer';
+
+class AppPage extends Component {
+	constructor() {
+	super({
+		text: 'Welcome to the page!',
+		padding: '20px',
+	});
+	}
+}
+
+export default AppPage;
+```
+
+**Generated HTML Tag:**
+
+```html
+<app-page>
+	Welcome to the page!
+</app-page>
+```
+
+### Features:
+
+- The class name is automatically converted to kebab-case to generate the custom tag name.
+- Full flexibility to define the component's appearance and behavior.
+- Ideal for creating application-specific, custom components.
+
+## 2. Extending Base Components
+
+In this approach, a component is created by extending a base component (like DivElement, ButtonElement, etc.). The HTML tag and behavior of the base component remain unchanged, but you can add specific properties and logic.
+
+### Example:
+
+```javascript
+import { DivElement } from 'typecomposer';
+
+class AppPage extends DivElement {
+	constructor() {
+	super({
+		text: 'This is a custom Div.',
+		padding: '10px',
+		border: '1px solid #ccc',
+	});
+	}
+}
+
+export default AppPage;
+```
+
+**Generated HTML Tag:**
+
+```html
+<div>This is a custom Div.</div>
+```
+
+### Features:
+
+- Inherits all the native properties and methods of the base HTML element.
+- Leverages existing semantics and accessibility features.
+- Perfect for enhancing standard HTML elements with additional functionality.
+
+## 3. Component Registration
+
+Components are automatically registered with the browser's Custom Elements API. This process happens behind the scenes, so you don't need to manually call `customElements.define()`.
+
+### Automatic Registration Process:
+
+1. When a component class is defined, TypeComposer automatically registers it.
+2. The component becomes available as a custom HTML element.
+3. You can use the component in HTML or instantiate it programmatically.
+
+### Example:
+
+```javascript
+// Component is automatically registered
+class MyButton extends Component {
+	constructor() {
+		super({ text: 'Click me!' });
+	}
+}
+
+// Use it in HTML
+// <my-button></my-button>
+
+// Or create it programmatically
+const button = new MyButton();
+document.body.append(button);
+```
+
+## 4. Component Lifecycle
+
+Components in TypeComposer follow the standard Custom Elements lifecycle:
+
+### onInit()
+
+Called when the component is first created. Use this for initial setup.
+
+```javascript
+class MyComponent extends Component {
+	onInit() {
+		// Initial setup code here
+		console.log('Component initialized');
+	}
+}
+```
+
+### connectedCallback()
+
+Called when the component is added to the DOM.
+
+```javascript
+class MyComponent extends Component {
+	connectedCallback() {
+		super.connectedCallback();
+		// Component is now in the DOM
+		console.log('Component connected to DOM');
+	}
+}
+```
+
+### disconnectedCallback()
+
+Called when the component is removed from the DOM.
+
+```javascript
+class MyComponent extends Component {
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		// Cleanup code here
+		console.log('Component removed from DOM');
+	}
+}
+```
+
+## 5. When to Use Each Approach
+
+### Use Component Extension When:
+
+- Creating unique, application-specific components
+- Building complex widgets or layouts
+- You need a semantic custom element name
+- Building reusable component libraries
+
+### Use Base Element Extension When:
+
+- Enhancing standard HTML elements
+- You need to preserve native element behavior
+- Building form controls or interactive elements
+- Working with accessibility requirements
+
+## Conclusion
+
+TypeComposer's dual approach to component creation provides flexibility for different use cases. Whether you need custom semantic elements or enhanced standard elements, the framework supports both patterns with automatic registration and lifecycle management.

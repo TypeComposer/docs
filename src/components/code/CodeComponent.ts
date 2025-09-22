@@ -1,8 +1,7 @@
 import { Component } from "typecomposer";
-import markdownit from 'markdown-it'
-import markdownItHighlight from 'markdown-it-highlightjs';
+import hljs from 'highlight.js';
 
-type CodeLanguage = "typescript" | "javascript" | "bash" | "html";
+type CodeLanguage = "typescript" | "javascript" | "bash" | "html" | "css" | "scss" | "json" | "yaml" | "xml" | "sql" | "python" | "java" | "csharp" | "cpp" | "c" | "php" | "ruby" | "go" | "rust" | "swift" | "kotlin" | "dart" | "markdown" | "diff" | "dockerfile" | "shell" | "powershell";
 
 export class CodeComponent extends Component {
 
@@ -16,8 +15,22 @@ export class CodeComponent extends Component {
 	}
 
 	transformCode(language: CodeLanguage, code: string) {
-		const md = new markdownit().use(markdownItHighlight, { auto: true, code: true, language });
-		const codeSnippet = `\`\`\`${language}\n${code.trim()}\n\`\`\``;
-		this.innerHTML = md.render(codeSnippet);
+		// Use highlight.js directly for syntax highlighting
+		let highlightedCode: string;
+		
+		if (hljs.getLanguage(language)) {
+			try {
+				highlightedCode = hljs.highlight(code.trim(), { language }).value;
+			} catch (__) {
+				highlightedCode = hljs.highlightAuto(code.trim()).value;
+			}
+		} else {
+			highlightedCode = hljs.highlightAuto(code.trim()).value;
+		}
+
+		// Create the structure manually without markdown-it
+		this.innerHTML = `
+			<pre class="hljs"><code class="hljs language-${language}">${highlightedCode}</code></pre>
+		`;
 	}
 }

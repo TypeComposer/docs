@@ -6,18 +6,18 @@ import { BaseView } from "../elements/Base";
 export class LabelView extends BaseView {
 	constructor() {
 		super();
-		this.append(new SpanElement({ innerText: "TypeComposer ∙ LabelElement" }));
-		this.append(new H1Element({ innerText: "Overview" }));
-		this.append(new ParagraphElement({ innerText: "The LabelElement is a versatile component in TypeComposer that extends the functionality of the native HTMLLabelElement. It simplifies the association of labels with form controls while offering customization options for styling and interaction." }));
+		this.contentWrapper.append(new SpanElement({ innerText: "TypeComposer ∙ LabelElement" }));
+		this.contentWrapper.append(new H1Element({ innerText: "Overview" }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "The LabelElement is a versatile component in TypeComposer that extends the functionality of the native HTMLLabelElement. It simplifies the association of labels with form controls while offering customization options for styling and interaction." }));
 
-		this.append(new H1Element({ innerText: "1. Key Features" }));
-		this.append(new ParagraphElement({ innerText: "- Inherits all native functionalities of HTMLLabelElement." }));
-		this.append(new ParagraphElement({ innerText: "- Supports property-driven customization for text, styles, and associations with form elements." }));
-		this.append(new ParagraphElement({ innerText: "- Provides event handlers for user interactions, such as `onclick`." }));
-		this.append(new ParagraphElement({ innerText: "- Enables flexible styling for creating visually appealing labels." }));
+		this.contentWrapper.append(new H1Element({ innerText: "1. Key Features" }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Inherits all native functionalities of HTMLLabelElement." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Supports property-driven customization for text, styles, and associations with form elements." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Provides event handlers for user interactions, such as `onclick`." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Enables flexible styling for creating visually appealing labels." }));
 
-		this.append(new H1Element({ innerText: "2. Basic Example" }));
-		this.append(new CodeComponent({
+		this.contentWrapper.append(new H1Element({ innerText: "2. Basic Example" }));
+		this.contentWrapper.append(new CodeComponent({
 			code: `import { LabelElement, InputElement } from "typecomposer";
 		
 class ExampleLabel extends LabelElement {
@@ -44,8 +44,8 @@ class ExampleInput extends InputElement {
 export default { ExampleLabel, ExampleInput };`
 		}));
 
-		this.append(new H1Element({ innerText: "3. Properties" }));
-		this.append(new TableElement({
+		this.contentWrapper.append(new H1Element({ innerText: "3. Properties" }));
+		this.contentWrapper.append(new TableElement({
 			headers: ["Property", "Type", "Description", "Example"],
 			rows: [
 				["innerText", "string", "Defines the text displayed inside the label.", `"Name:"`],
@@ -59,9 +59,9 @@ export default { ExampleLabel, ExampleInput };`
 			className: "border border-gray-300"
 		}));
 
-		this.append(new H1Element({ innerText: "4. Examples" }));
-		this.append(new H2Element({ innerText: "Basic Label Associated with Input" }));
-		this.append(new CodeComponent({
+		this.contentWrapper.append(new H1Element({ innerText: "4. Examples" }));
+		this.contentWrapper.append(new H2Element({ innerText: "Basic Label Associated with Input" }));
+		this.contentWrapper.append(new CodeComponent({
 			code: `new LabelElement({
 	text: "Email:",
 	for: "emailInput",
@@ -76,8 +76,8 @@ new InputElement({
 });`
 		}));
 
-		this.append(new H2Element({ innerText: "Styled Label with Padding" }));
-		this.append(new CodeComponent({
+		this.contentWrapper.append(new H2Element({ innerText: "Styled Label with Padding" }));
+		this.contentWrapper.append(new CodeComponent({
 			code: `new LabelElement({
 	text: "Password:",
 	for: "passwordInput",
@@ -93,8 +93,8 @@ new InputElement({
 });`
 		}));
 
-		this.append(new H2Element({ innerText: "Interactive Label with Click Event" }));
-		this.append(new CodeComponent({
+		this.contentWrapper.append(new H2Element({ innerText: "Interactive Label with Click Event" }));
+		this.contentWrapper.append(new CodeComponent({
 			code: `new LabelElement({
 	text: "Click Me:",
 	for: "interactiveInput",
@@ -110,19 +110,19 @@ new InputElement({
 });`
 		}));
 
-		this.append(new H1Element({ innerText: "5. Default Behavior" }));
-		this.append(new ParagraphElement({ innerText: "By default, the LabelElement:" }));
-		this.append(new ParagraphElement({ innerText: "- Inherits the native behavior of HTMLLabelElement." }));
-		this.append(new ParagraphElement({ innerText: "- Does not apply any predefined styles unless specified through properties." }));
-		this.append(new ParagraphElement({ innerText: "- Allows association with form elements using the `for` property." }));
+		this.contentWrapper.append(new H1Element({ innerText: "5. Default Behavior" }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "By default, the LabelElement:" }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Inherits the native behavior of HTMLLabelElement." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Does not apply any predefined styles unless specified through properties." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- Allows association with form elements using the `for` property." }));
 
-		this.append(new H1Element({ innerText: "6. When to Use LabelElement" }));
-		this.append(new ParagraphElement({ innerText: "- For associating labels with form controls to enhance accessibility." }));
-		this.append(new ParagraphElement({ innerText: "- When creating styled and interactive labels for forms." }));
-		this.append(new ParagraphElement({ innerText: "- To handle user interactions, such as clicks, on labels." }));
+		this.contentWrapper.append(new H1Element({ innerText: "6. When to Use LabelElement" }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- For associating labels with form controls to enhance accessibility." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- When creating styled and interactive labels for forms." }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "- To handle user interactions, such as clicks, on labels." }));
 
-		this.append(new H1Element({ innerText: "Conclusion" }));
-		this.append(new ParagraphElement({ innerText: "The LabelElement is an essential component for creating accessible and styled form labels in TypeComposer. Its property-driven configuration simplifies customization and ensures seamless integration with other form elements, making it a vital tool for building user-friendly forms." }));
+		this.contentWrapper.append(new H1Element({ innerText: "Conclusion" }));
+		this.contentWrapper.append(new ParagraphElement({ innerText: "The LabelElement is an essential component for creating accessible and styled form labels in TypeComposer. Its property-driven configuration simplifies customization and ensures seamless integration with other form elements, making it a vital tool for building user-friendly forms." }));
 
 	}
 }

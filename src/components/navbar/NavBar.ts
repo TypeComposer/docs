@@ -1,45 +1,58 @@
-import { AnchorElement, ButtonElement, Component, DivElement, ImageElement, Router, SvgElement } from "typecomposer";
+import { AnchorElement, Component, DivElement, ImageElement, Router, SvgElement, App } from "typecomposer";
+import { Sun, Moon } from "lucide";
 
 class ThemeToggle extends Component {
-  private isDark = false;
 
   constructor() {
     super({
-      className: "flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
+      className: "theme-toggle",
       onclick: () => this.toggleTheme(),
     });
-    
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
+
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    this.isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    
-    this.updateTheme();
+    App.theme = prefersDark ? 'dark' : 'light';
     this.updateIcon();
   }
 
   toggleTheme() {
-    this.isDark = !this.isDark;
-    this.updateTheme();
+    App.theme = App.theme === 'dark' ? 'light' : 'dark';
     this.updateIcon();
-    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
   }
-
-  updateTheme() {
-    document.documentElement.setAttribute('data-theme', this.isDark ? 'dark' : 'light');
-  }
-
   updateIcon() {
     this.innerHTML = '';
-    const icon = this.isDark ? '☀️' : '🌙';
-    const text = this.isDark ? 'Light' : 'Dark';
+    const text = App.theme === 'dark' ? 'Light' : 'Dark';
+    
+    // Get the icon data from lucide
+    const iconData = App.theme === 'dark' ? Sun : Moon;
+    
+    // Create SVG element
+    const iconSvg = new SvgElement({
+      className: "w-4 h-4 transition-all duration-300",
+      style: {
+        width: "16px",
+        height: "16px",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      }
+    });
+    
+    // Build the SVG content from the icon data
+    let svgContent = '';
+    for (const [tag, attrs] of iconData) {
+      const attrString = Object.entries(attrs)
+        .map(([key, value]) => `${key}="${value}"`)
+        .join(' ');
+      svgContent += `<${tag} ${attrString} />`;
+    }
+    iconSvg.innerHTML = svgContent;
+    
     this.append(
+      iconSvg,
       new DivElement({ 
-        className: "text-lg",
-        text: icon 
-      }),
-      new DivElement({ 
-        className: "text-sm font-medium text-gray-700 dark:text-gray-300",
+        className: "text-sm font-medium text-gray-700 dark:text-gray-300 theme-toggle-text",
         text: text 
       })
     );
@@ -59,7 +72,7 @@ class Logo extends Component {
 
 class NavLinks extends Component {
   constructor() {
-    super({ className: "flex gap-1 nav-links" });
+    super({ className: "flex items-center gap-1 nav-links" });
     this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
     this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
     this.append(new ThemeToggle());

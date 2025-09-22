@@ -1,0 +1,106 @@
+# Overview
+
+The HBox is a container component in TypeComposer designed to arrange its child elements horizontally. It comes with built-in styles for horizontal alignment and is highly customizable through its properties.
+
+## 1. Key Features
+
+- Automatically aligns child elements horizontally using flex-direction: row.
+- Supports customization such as spacing, alignment, and events directly through properties.
+- Simplifies creation of row-based layouts in a structured way.
+
+## 2. Basic Example
+
+```javascript
+import { HBox, DivElement } from "typecomposer";
+		
+class ExampleHBox extends HBox {
+	constructor() {
+	super({
+		gap: "10px",
+		padding: "20px",
+		backgroundColor: "#ffffff",
+		border: "1px solid #ccc",
+		children: [
+		new DivElement({ text: "Item 1", padding: "10px", backgroundColor: "#f0f0f0" }),
+		new DivElement({ text: "Item 2", padding: "10px", backgroundColor: "#d0d0d0" }),
+		new DivElement({ text: "Item 3", padding: "10px", backgroundColor: "#b0b0b0" }),
+		],
+	});
+	}
+}
+
+export default ExampleHBox;
+```
+
+## 3. Properties
+
+| Property | Type | Description | Example |
+|----------|------|-------------|---------|
+| children | Element[] | An array of child components to be rendered inside the HBox. | `[new DivElement(...), new ButtonElement(...)]` |
+| gap | string (optional) | Specifies spacing between child elements. | `"10px"` |
+| padding | string (optional) | Adds padding inside the container. | `"20px"` |
+| backgroundColor | string (optional) | Sets the background color of the container. | `"#ffffff"` |
+| border | string (optional) | Add a border around the container. | `"1px solid #ccc"` |
+| alignItems | string (optional) | Aligns child elements vertically (e.g., center, flex-start, flex-end). | `"center"` |
+| justifyContent | string (optional) | Aligns child elements horizontally within the container (e.g., center, space-between). | `"space-between"` |
+| onclick | function (optional) | Event handler for click events. | `() => alert("HBox clicked!")` |
+
+## 4. Examples
+
+### Spacing Between Items
+
+```javascript
+new HBox({
+	gap: "15px",
+	padding: "10px",
+	backgroundColor: "#f8f9fa",
+	children: [
+	new DivElement({ text: "Item 1", padding: "5px", backgroundColor: "#e0e0e0" }),
+	new DivElement({ text: "Item 2", padding: "5px", backgroundColor: "#c0c0c0" }),
+	new DivElement({ text: "Item 3", padding: "5px", backgroundColor: "#a0a0a0" }),
+	],
+});
+```
+
+### Aligning Items
+
+```javascript
+new HBox({
+	alignItems: "center",
+	padding: "20px",
+	children: [
+	new DivElement({ text: "Aligned Item 1", padding: "10px" }),
+	new DivElement({ text: "Aligned Item 2", padding: "10px" }),
+	],
+});
+```
+
+### Horizontal Justification
+
+```javascript
+new HBox({
+	justifyContent: "space-between",
+	width: "500px",
+	children: [
+	new DivElement({ text: "Left Item", padding: "10px" }),
+	new DivElement({ text: "Right Item", padding: "10px" }),
+	],
+});
+```
+
+## 5. Default Behavior
+
+By default, the HBox:
+- Aligns child elements horizontally using flex-direction: row.
+- Has no spacing between elements unless specified with the gap property.
+- Allows full customization through its properties.
+
+## 6. When to Use HBox
+
+- When you need to align elements horizontally in a clean and structured way.
+- When creating row-based layouts.
+- When alignment and spacing between child elements need to be handled efficiently.
+
+## Conclusion
+
+The HBox simplifies the process of creating horizontal layouts by providing built-in alignment and spacing properties. Its property-driven design ensures that you can quickly customize the container without needing to manually write styles. It's the perfect choice for creating organized and responsive row-based layouts in TypeComposer.

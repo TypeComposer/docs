@@ -1,0 +1,30 @@
+# Overview
+
+TypeComposer is a framework for building web user interfaces using native web standards. It emphasizes a class-based approach where components are defined as ES6 classes extending HTMLElement. This structure leverages native browser APIs, resulting in efficient, streamlined JavaScript code.
+
+```javascript
+import { Component, ButtonElement } from 'typecomposer';
+		
+export class AppPage extends Component {
+	constructor() {
+	super();
+
+	const button = new ButtonElement({ text: 'Click me' });
+	button.onclick = () => alert('Welcome to TypeComposer!');
+	button.style.fontSize = '4em';
+
+	this.append(button);
+	}
+}
+```
+
+In TypeComposer, components can range from simple reusable elements to complete web applications, ensuring flexibility and scalability. Styles, event listeners, and logic are applied directly, maintaining full control over the DOM.
+
+# Features
+
+- **Declarative Design**: Components are defined using JavaScript classes, focusing on clean and maintainable code.
+- **Native Performance**: Built directly on web platform standards without extra runtime abstractions.
+- **Scalability**: Suitable for creating everything from small widgets to comprehensive web apps.
+- **Integrated Component Registration**: Components are automatically registered with the browser using customElements.
+
+These pages serve as the official documentation. If you're new to TypeComposer, start with the interactive examples and return here for detailed references.

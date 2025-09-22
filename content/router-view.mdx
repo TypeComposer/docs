@@ -1,0 +1,87 @@
+# Overview
+
+The RouteView component is a dynamic routing element in TypeComposer that automatically updates its view based on the application's active route. It listens for route changes and renders the corresponding component.
+
+- Automatically updates when the route changes.
+- Supports default views when no matching route is found.
+- Allows custom logic through event-driven updates.
+
+## Usage
+
+### Basic Example
+
+```javascript
+import { RouteView, Component } from "typecomposer";
+
+class NotFoundComponent extends Component {
+	onInit() {
+		this.append("Not Found");
+	}
+}
+
+export class MyApp extends Component {
+	constructor() {
+		super();
+		this.append(new RouteView({
+			defaultView: NotFoundComponent,
+			onUpdateView: (view) => console.log("New view loaded:", view),
+		}));
+	}
+}
+```
+
+In this example, `RouteView` is placed inside `AppPage`, which acts as the main container for managing the application layout and routing logic. The `defaultView` is displayed when no matching route is found.
+
+## Properties
+
+### 1. defaultView
+
+Defines the default component to be displayed when no matching route is found.
+
+```javascript
+new RouteView({
+	defaultView: NotFoundComponent,
+});
+```
+
+### 2. onUpdateView
+
+Callback function that is triggered whenever the view changes.
+
+```javascript
+new RouteView({
+	onUpdateView: (view) => console.log("Current view:", view),
+});
+```
+
+### 3. view
+
+Holds the currently rendered component inside `RouteView`.
+
+## Lifecycle Methods
+
+### connectedCallback()
+
+Automatically called when the component is added to the DOM. Initializes and updates the view based on the current route.
+
+### disconnectedCallback()
+
+Automatically called when the component is removed from the DOM. Cleans up route watchers to prevent memory leaks.
+
+## Default Behavior
+
+By default, RouteView:
+
+- Renders the appropriate component based on the active route.
+- Falls back to `defaultView` if no route matches.
+- Removes the previous component when switching views.
+
+## When to Use RouteView
+
+- When you need dynamic view updates based on routing.
+- To manage component-based navigation within a TypeComposer application.
+- To handle dynamic page rendering without manually managing component mounting/unmounting.
+
+## Conclusion
+
+The RouteView component is an essential tool for handling dynamic routing in TypeComposer. By automatically updating the displayed component based on the current route, it simplifies navigation management and ensures a seamless user experience.

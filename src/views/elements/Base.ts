@@ -65,19 +65,8 @@ export class BaseView extends VBox {
     super({ className: "main-content" });
 
     this.contentWrapper = this.appendChild(new VBox({ className: "content-wrapper" }));
-    const docPath = Router.pathname;
-    this.contentWrapper.append(getPage(docPath == "/docs" ? "/docs/getting-started" : docPath) || new DivElement({ innerText: "Document not found." }));
-    // // setTimeout(() => {
+    this.contentWrapper.append(getPage(Router.pathname));
     this.contentWrapper.append(new Navigation());
-    // }, 0);
-  }
-
-  async onConnected() {
-    // Navigation is already added in constructor
-  }
-
-  get url(): string {
-    return window.location.pathname.charAt(0) === "/" ? window.location.pathname.slice(1) : window.location.pathname;
   }
 }
 

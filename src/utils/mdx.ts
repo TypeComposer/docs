@@ -303,5 +303,17 @@ export async function loadDocs() {
 }
 
 export function getPage(filePath: string): HTMLElement {
-  return pages[filePath];
+  if (pages[filePath]) return pages[filePath];
+  const errorDiv = new DivElement({
+    innerText: `Error rendering MDX content: ${filePath} not found.`,
+    style: {
+      color: "red",
+      padding: "10px",
+      border: "1px solid red",
+      borderRadius: "4px",
+      backgroundColor: "#fee",
+    },
+  });
+  errorDiv.className = "error-message";
+  return errorDiv;
 }

@@ -119,7 +119,6 @@ pre code {
   line-height: 1.7;
 }
 
-
 /* Navigation bar - Modern Design */
 .navbar {
   background: rgba(255, 255, 255, 0.8);
@@ -179,7 +178,7 @@ pre code {
 }
 
 .navbar .nav-links a::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -209,13 +208,12 @@ pre code {
 /* Main content area */
 .main-content {
   flex: 1;
-  max-width: none;
   padding: 0;
   background-color: var(--primary-background-color);
 }
 
 .content-wrapper {
-  max-width: 768px;
+  max-width: 2500px;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -363,7 +361,7 @@ pre code {
 }
 
 .theme-toggle::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -476,11 +474,8 @@ pre code {
 
 /* Enhanced Smooth transitions for theme changes */
 * {
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Modern Focus States */
@@ -497,7 +492,7 @@ pre code {
   .theme-toggle-text {
     display: none;
   }
-  
+
   .theme-toggle {
     min-width: auto;
     padding: 0.5rem;
@@ -638,7 +633,8 @@ pre code {
   width: 0.75rem;
   height: 0.75rem;
   background: currentColor;
-  mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M9 5l7 7-7 7'/%3e%3c/svg%3e") no-repeat center;
+  mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M9 5l7 7-7 7'/%3e%3c/svg%3e")
+    no-repeat center;
   mask-size: contain;
   color: var(--text-muted);
   transition: all 0.2s ease;
@@ -703,7 +699,7 @@ pre code {
 }
 
 .sidebar .details ol li.selected a::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -0.5rem;
   top: 50%;
@@ -741,7 +737,7 @@ pre code {
 }
 
 .sidebar-item.selected > a::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -0.75rem;
   top: 50%;

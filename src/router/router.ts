@@ -31,7 +31,7 @@ loadDocs().finally(() => {
         ],
       },
       { path: "/playground", component: PlaygroundPage },
-      { path: Router.PATH_WILDCARD, redirect: "/docs" },
+      { path: Router.PATH_WILDCARD, redirect: "/docs/getting-started" },
     ],
   });
 });

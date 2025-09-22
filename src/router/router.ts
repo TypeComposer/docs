@@ -27,11 +27,11 @@ loadDocs().finally(() => {
           { path: "ref", component: BaseView },
           { path: "router", component: BaseView },
           { path: "router-view", component: BaseView },
-          { path: "", component: BaseView },
+          { path: "home", component: BaseView }
         ],
       },
       { path: "/playground", component: PlaygroundPage },
-      { path: Router.PATH_WILDCARD, redirect: "/docs/getting-started" },
+      { path: Router.PATH_WILDCARD, redirect: "/docs/home" },
     ],
   });
 });

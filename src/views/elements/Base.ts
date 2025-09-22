@@ -58,11 +58,25 @@ const compoents = {
 export class BaseView extends VBox {
   public docs: IDoc[] = [];
   constructor() {
-    super({ className: "flex flex-col gap-2 w-full h-full p-10 overflow-auto" });
+    super({ className: "main-content" });
   }
 
   async onConnected() {
-    this.append(new Navigation());
+    const wrapper = this.appendChild(new VBox({ className: "content-wrapper" }));
+    
+    // Add breadcrumb
+    const breadcrumb = wrapper.appendChild(new SpanElement({ 
+      className: "breadcrumb",
+      text: "TypeComposer"
+    }));
+    
+    // Move all existing content to wrapper
+    const existingChildren = Array.from(this.children).filter(child => child !== wrapper);
+    existingChildren.forEach(child => {
+      wrapper.appendChild(child);
+    });
+    
+    wrapper.append(new Navigation());
   }
 
   get url(): string {

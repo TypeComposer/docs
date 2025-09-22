@@ -3,21 +3,19 @@ import { AnchorElement, ButtonElement, Component, DivElement, ImageElement, Rout
 class Logo extends Component {
   constructor() {
     super({
-      className: "flex text-2xl font-bold align-middle gap-3 cursor-pointer",
+      className: "flex items-center gap-2 cursor-pointer logo",
       onclick: () => Router.go("/"),
     });
-    this.append(new ImageElement({ src: "/typecomposer.svg", style: { width: "35px", height: "35px" } }));
+    this.append(new ImageElement({ src: "/typecomposer.svg", style: { width: "28px", height: "28px" } }));
     this.append("TypeComposer");
   }
 }
 
 class NavLinks extends Component {
   constructor() {
-    super({ className: "flex gap-4 nav-link" });
-    this.append(new AnchorElement({ rlink: "docs", text: "Home", className: "hover:text-[#f7df1e]" }));
-    this.append(new AnchorElement({ rlink: "docs", text: "Docs", className: "hover:text-[#f7df1e]" }));
-    this.append(new AnchorElement({ rlink: "playground", text: "Playground", className: "hover:text-[#f7df1e]" }));
-    this.append(new AnchorElement({ rlink: "contact", text: "Contact", className: "hover:text-[#f7df1e]" }));
+    super({ className: "flex gap-1 nav-links" });
+    this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
+    this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
   }
 }
 
@@ -25,7 +23,7 @@ export class NavBar extends Component {
   open = false;
 
   constructor() {
-    super({ className: "flex items-center justify-between w-screen h-16 px-10 bg-[#1a202c] text-[#fcfffa]" });
+    super({ className: "flex items-center justify-between w-screen h-16 px-6 navbar" });
     this.append(new Logo());
     this.append(new NavLinks());
     this.btn();
@@ -38,9 +36,9 @@ export class NavBar extends Component {
         src: "menu-svgrepo-com.svg",
         className: "menu-btn",
         style: {
-          width: "30px",
-          height: "30px",
-          fill: "#afacac",
+          width: "24px",
+          height: "24px",
+          fill: "var(--text-secondary)",
         },
       })
     );

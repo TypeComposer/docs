@@ -13,24 +13,26 @@ interface RouterProps {
 
 export class Navigation extends Component {
   constructor() {
-    super({ className: "mt-4 p-2 flex items-center justify-between w-full h-16bg-[#1a202c] h-20 text-[#fcfffa] border-t-2 border-[#f7df1e]" });
+    super({ className: "page-navigation" });
     const { prevew, next } = this.getPath();
     this.append(this.routerLink("prev", prevew));
     this.append(this.routerLink("next", next));
   }
 
   routerLink(type: "prev" | "next", props?: RouterProps): Component {
-    const div = new DivElement({ className: "flex items-center gap-2" });
+    const div = new DivElement({ className: type === "prev" ? "flex-1" : "flex-1 flex justify-end" });
     if (props) {
-      div.append(
+      const link = div.appendChild(
         new AnchorElement({
           rlink: props.link,
-          text: (type === "prev" ? "Previous: " : "Next: ") + props.title,
-          className: "hover:border-b-2 border-white-500",
+          className: "flex flex-col",
           onclick: () => SidebarItem.removeSelected(),
         })
       );
+      link.append(new DivElement({ className: "nav-label", text: type === "prev" ? "Previous" : "Next" }));
+      link.append(new DivElement({ className: "nav-title", text: props.title }));
     }
+    this.append(div);
     return div;
   }
 

@@ -11,13 +11,13 @@ export class CodeComponent extends Component {
 		code: string
 	}) {
 		super();
+		this.className = "code-block";
 		this.transformCode(props.language || "typescript", props.code);
 	}
 
 	transformCode(language: CodeLanguage, code: string) {
 		const md = new markdownit().use(markdownItHighlight, { auto: true, code: true, language });
-		const codeSnippet = `\`\`\`${language}
-		\n${code.trim()}\n\n`;
+		const codeSnippet = `\`\`\`${language}\n${code.trim()}\n\`\`\``;
 		this.innerHTML = md.render(codeSnippet);
 	}
 }

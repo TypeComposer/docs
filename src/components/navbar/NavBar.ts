@@ -1,5 +1,51 @@
 import { AnchorElement, ButtonElement, Component, DivElement, ImageElement, Router, SvgElement } from "typecomposer";
 
+class ThemeToggle extends Component {
+  private isDark = false;
+
+  constructor() {
+    super({
+      className: "flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
+      onclick: () => this.toggleTheme(),
+    });
+    
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+    
+    this.updateTheme();
+    this.updateIcon();
+  }
+
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    this.updateTheme();
+    this.updateIcon();
+    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+  }
+
+  updateTheme() {
+    document.documentElement.setAttribute('data-theme', this.isDark ? 'dark' : 'light');
+  }
+
+  updateIcon() {
+    this.innerHTML = '';
+    const icon = this.isDark ? '☀️' : '🌙';
+    const text = this.isDark ? 'Light' : 'Dark';
+    this.append(
+      new DivElement({ 
+        className: "text-lg",
+        text: icon 
+      }),
+      new DivElement({ 
+        className: "text-sm font-medium text-gray-700 dark:text-gray-300",
+        text: text 
+      })
+    );
+  }
+}
+
 class Logo extends Component {
   constructor() {
     super({
@@ -16,6 +62,7 @@ class NavLinks extends Component {
     super({ className: "flex gap-1 nav-links" });
     this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
     this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
+    this.append(new ThemeToggle());
   }
 }
 

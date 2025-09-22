@@ -14,21 +14,23 @@
   --code-background: #f8fafc;
   --sidebar-background: #ffffff;
   --sidebar-border: #e5e7eb;
+  --hover-background: #f3f4f6;
   background-color: var(--primary-background-color) !important;
 }
 
 [data-theme="dark"] {
-  --primary-background-color: #000000;
-  --secondary-background-color: #111111;
-  --border-color: #333333;
+  --primary-background-color: #0a0a0a;
+  --secondary-background-color: #1a1a1a;
+  --border-color: #2a2a2a;
   --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --accent-color: #0070f3;
-  --accent-hover: #3291ff;
-  --code-background: #1a1a1a;
-  --sidebar-background: #000000;
-  --sidebar-border: #333333;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --accent-color: #3b82f6;
+  --accent-hover: #2563eb;
+  --code-background: #111827;
+  --sidebar-background: #0a0a0a;
+  --sidebar-border: #2a2a2a;
+  --hover-background: #1f2937;
   background-color: var(--primary-background-color) !important;
 }
 
@@ -169,7 +171,7 @@ pre code {
 }
 
 .sidebar details summary:hover {
-  background-color: var(--secondary-background-color);
+  background-color: var(--hover-background);
 }
 
 .sidebar details summary::before {
@@ -209,12 +211,12 @@ pre code {
 
 .sidebar details ol li a:hover {
   color: var(--text-primary);
-  background-color: var(--secondary-background-color);
+  background-color: var(--hover-background);
 }
 
 .sidebar details ol li.selected a {
   color: var(--accent-color);
-  background-color: var(--secondary-background-color);
+  background-color: var(--hover-background);
   border-left-color: var(--accent-color);
   font-weight: 500;
 }
@@ -251,7 +253,7 @@ pre code {
 
 .navbar .nav-links a:hover {
   color: var(--text-primary);
-  background-color: var(--secondary-background-color);
+  background-color: var(--hover-background);
 }
 
 /* Main content area */
@@ -305,7 +307,7 @@ table tbody tr:last-child td {
 }
 
 table tbody tr:hover {
-  background-color: var(--secondary-background-color);
+  background-color: var(--hover-background);
 }
 
 /* Navigation between pages */
@@ -381,6 +383,10 @@ table tbody tr:hover {
     display: block;
   }
 
+  .theme-toggle-text {
+    display: none;
+  }
+
   .content-wrapper {
     padding: 1rem;
   }
@@ -434,4 +440,29 @@ table tbody tr:hover {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* Theme toggle specific styles */
+.dark .hover\:bg-gray-100:hover {
+  background-color: var(--hover-background);
+}
+
+.dark .text-gray-700 {
+  color: var(--text-secondary);
+}
+
+.dark .text-gray-300 {
+  color: var(--text-secondary);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Mobile theme toggle adjustments */
+@media (max-width: 768px) {
+  .theme-toggle-text {
+    display: none;
+  }
 }

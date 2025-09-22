@@ -1,4 +1,5 @@
 import { compile } from '@mdx-js/mdx';
+import remarkGfm from 'remark-gfm';
 import hljs from 'highlight.js';
 import { 
   SpanElement, 
@@ -87,7 +88,52 @@ const jsxRuntime = {
       return jsxRuntime.Fragment(props);
     }
     
-    // Handle code blocks with syntax highlighting
+    // Handle code elements with syntax highlighting
+    if (type === 'code') {
+      const element = document.createElement('code');
+      
+      if (props) {
+        const className = props.className || '';
+        const languageMatch = className.match(/language-(\w+)/);
+        const language = languageMatch ? languageMatch[1] : null;
+        const code = extractTextContent(props.children) || '';
+        
+        if (language && code.trim()) {
+          let highlightedCode: string;
+          if (hljs.getLanguage(language)) {
+            try {
+              highlightedCode = hljs.highlight(code.trim(), { language }).value;
+            } catch (__) {
+              highlightedCode = hljs.highlightAuto(code.trim()).value;
+            }
+          } else {
+            highlightedCode = hljs.highlightAuto(code.trim()).value;
+          }
+          
+          element.className = `hljs language-${language}`;
+          element.innerHTML = highlightedCode;
+        } else {
+          element.className = className;
+          element.textContent = code;
+        }
+        
+        // Apply other properties
+        Object.keys(props).forEach(key => {
+          if (key !== 'children' && key !== 'className') {
+            if (key.startsWith('on') && typeof props[key] === 'function') {
+              const eventName = key.slice(2).toLowerCase();
+              element.addEventListener(eventName, props[key]);
+            } else {
+              element.setAttribute(key, props[key]);
+            }
+          }
+        });
+      }
+      
+      return element;
+    }
+    
+    // Handle pre blocks - ensure they work with code children
     if (type === 'pre') {
       const element = document.createElement('pre');
       element.className = 'hljs';
@@ -95,34 +141,21 @@ const jsxRuntime = {
       if (props) {
         Object.keys(props).forEach(key => {
           if (key === 'children') {
-            // Find the code element and apply syntax highlighting
-            const codeElement = props.children?.type === 'code' ? props.children : 
-                               (Array.isArray(props.children) ? props.children.find((child: any) => child?.type === 'code') : null);
-            
-            if (codeElement) {
-              const codeProps = codeElement.props;
-              const className = codeProps.className || '';
-              const languageMatch = className.match(/language-(\w+)/);
-              const language = languageMatch ? languageMatch[1] : 'typescript';
-              const code = codeProps.children || '';
-              
-              // Apply syntax highlighting
-              let highlightedCode: string;
-              if (hljs.getLanguage(language)) {
-                try {
-                  highlightedCode = hljs.highlight(code.trim(), { language }).value;
-                } catch (__) {
-                  highlightedCode = hljs.highlightAuto(code.trim()).value;
+            // Handle children - they might be code elements or plain text
+            if (Array.isArray(props.children)) {
+              props.children.forEach((child: any) => {
+                if (typeof child === 'object' && child.type === 'code') {
+                  // This is a code element, process it with highlighting
+                  const codeElement = jsxRuntime.jsx('code', child.props);
+                  element.appendChild(codeElement);
+                } else {
+                  appendChildren(element, child);
                 }
-              } else {
-                highlightedCode = hljs.highlightAuto(code.trim()).value;
-              }
-              
-              // Create the code element with highlighting
-              const codeEl = document.createElement('code');
-              codeEl.className = `hljs language-${language}`;
-              codeEl.innerHTML = highlightedCode;
-              element.appendChild(codeEl);
+              });
+            } else if (typeof props.children === 'object' && props.children.type === 'code') {
+              // Single code child
+              const codeElement = jsxRuntime.jsx('code', props.children.props);
+              element.appendChild(codeElement);
             } else {
               appendChildren(element, props.children);
             }
@@ -184,6 +217,11 @@ const jsxRuntime = {
         appendChildren(component, props.children);
       }
       
+      // Handle table children - tables need special handling for thead, tbody, tr, td, th
+      if (type === 'table' && props?.children) {
+        appendChildren(component, props.children);
+      }
+      
       return component;
     }
     
@@ -231,6 +269,8 @@ export async function renderMDX(container: HTMLElement | Component, mdxContent: 
       const compiled = await compile(mdxContent, {
         outputFormat: 'function-body',
         development: false,
+        jsxImportSource: undefined, // Use our custom runtime
+        remarkPlugins: [remarkGfm],
       });
       
       // Create function from compiled code

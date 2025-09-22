@@ -10,7 +10,7 @@ class ThemeToggle extends Component {
     });
 
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    App.theme = prefersDark ? 'dark' : 'light';
+    App.theme = prefersDark ? 'light' : 'dark';
     this.updateIcon();
   }
 
@@ -20,10 +20,9 @@ class ThemeToggle extends Component {
   }
   updateIcon() {
     this.innerHTML = '';
-    const text = App.theme === 'dark' ? 'Light' : 'Dark';
     
     // Get the icon data from lucide
-    const iconData = App.theme === 'dark' ? Sun : Moon;
+    const iconData = App.theme === 'dark' ? Moon : Sun;
     
     // Create SVG element
     const iconSvg = new SvgElement({
@@ -41,6 +40,7 @@ class ThemeToggle extends Component {
     
     // Build the SVG content from the icon data
     let svgContent = '';
+    console.log(iconData);
     for (const [tag, attrs] of iconData) {
       const attrString = Object.entries(attrs)
         .map(([key, value]) => `${key}="${value}"`)
@@ -50,11 +50,7 @@ class ThemeToggle extends Component {
     iconSvg.innerHTML = svgContent;
     
     this.append(
-      iconSvg,
-      new DivElement({ 
-        className: "text-sm font-medium text-gray-700 dark:text-gray-300 theme-toggle-text",
-        text: text 
-      })
+      iconSvg
     );
   }
 }

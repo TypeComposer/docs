@@ -1,7 +1,6 @@
 import { compile } from "@mdx-js/mdx";
 import remarkGfm from "remark-gfm";
 import hljs from "highlight.js";
-import "highlight.js/styles/github.css";
 import {
   SpanElement,
   H1Element,

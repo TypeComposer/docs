@@ -68,7 +68,7 @@ class Logo extends Component {
 
 class NavLinks extends Component {
   constructor() {
-    super({ className: "flex items-center gap-1 nav-links" });
+    super({ className: "flex items-center nav-links" });
     this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
     this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
     this.append(new ThemeToggle());
@@ -100,7 +100,6 @@ export class NavBar extends Component {
     );
     div.onclick = () => {
       this.open = !this.open;
-      console.log("open: ", this.open);
       svg.src = this.open ? "close-lg-svgrepo-com.svg" : "menu-svgrepo-com.svg";
       // @ts-ignore
       this.emitEvent("menu-bar", { open: this.open });

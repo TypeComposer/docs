@@ -1,4 +1,4 @@
-import { AnchorElement, Component, DetailsElement, ListItemElement, NavElement, OrderedListElement, Router, SpanElement, SummaryElement, UListElement, VBox } from "typecomposer";
+import { AnchorElement, Component, DetailsElement, ListItemElement, NavElement, OrderedListElement, SpanElement, SummaryElement } from "typecomposer";
 import data from "@/assets/data.json";
 
 export class SidebarItem extends ListItemElement {

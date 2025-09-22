@@ -293,11 +293,9 @@ export async function renderMDX(mdxContent: string): Promise<HTMLElement> {
 
 export async function loadDocs() {
   const files = import.meta.glob("/content/**/*.mdx", { query: "?raw", eager: true }) as Record<string, { default: string }>;
-  console.log(files);
   for (const [path, mdSource] of Object.entries(files)) {
     const html = await renderMDX(mdSource.default);
     const docPath = path.replace("/content", "docs").replace(".mdx", "").toLowerCase();
-    console.log(`Loaded doc: ${docPath}`);
     pages[docPath] = html;
   }
 }

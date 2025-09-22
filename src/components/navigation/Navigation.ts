@@ -1,4 +1,4 @@
-import { AnchorElement, Component, DivElement, Router } from "typecomposer";
+import { AnchorElement, Component, DivElement } from "typecomposer";
 import { SidebarItem } from "../sidebar/Sidebar";
 import data from "@/assets/data.json";
 

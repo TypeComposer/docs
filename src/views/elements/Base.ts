@@ -1,15 +1,17 @@
 import { CodeComponent } from "@/components/code/CodeComponent";
 import { Navigation } from "@/components/navigation/Navigation";
+import { getPage } from "@/utils/mdx";
 import {
   AnchorElement,
   ButtonElement,
   CardPanel,
   DialogPanel,
   DivElement,
-  ElementProps,
+  ElementType,
   H1Element,
   H2Element,
   ParagraphElement,
+  Router,
   SpanElement,
   TableElement,
   TextAreaElement,
@@ -58,15 +60,16 @@ const compoents = {
 export class BaseView extends VBox {
   public docs: IDoc[] = [];
   public contentWrapper: VBox;
-  
+
   constructor() {
     super({ className: "main-content" });
 
     this.contentWrapper = this.appendChild(new VBox({ className: "content-wrapper" }));
-    
-    setTimeout(() => {
-      this.contentWrapper.append(new Navigation());
-    }, 0);
+    const docPath = Router.pathname;
+    this.contentWrapper.append(getPage(docPath == "/docs" ? "/docs/getting-started" : docPath) || new DivElement({ innerText: "Document not found." }));
+    // // setTimeout(() => {
+    this.contentWrapper.append(new Navigation());
+    // }, 0);
   }
 
   async onConnected() {
@@ -167,7 +170,7 @@ export class BaseDocItem extends VBox {
   public url: string;
   public doc: IDoc;
 
-  constructor(props: ElementProps & { url: string; doc: IDoc }) {
+  constructor(props: ElementType & { url: string; doc: IDoc }) {
     super({ className: "group" });
     this.url = props.url;
     this.doc = props.doc;

@@ -852,6 +852,10 @@ label {
   display: none;
 }
 
+[main-page] {
+  overflow: hidden;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   .navbar {

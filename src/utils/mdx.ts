@@ -296,12 +296,15 @@ export async function loadDocs() {
   for (const [path, mdSource] of Object.entries(files)) {
     const html = await renderMDX(mdSource.default);
     const docPath = path.replace("/content", "docs").replace(".mdx", "").toLowerCase();
+    console.log("Loaded doc:", docPath);
     pages[docPath] = html;
   }
 }
 
 export function getPage(filePath: string): HTMLElement {
-  if (pages[filePath]) return pages[filePath];
+  if (pages[filePath]) {
+    return pages[filePath].cloneNode(true) as HTMLElement;
+  }
   const errorDiv = new DivElement({
     innerText: `Error rendering MDX content: ${filePath} not found.`,
     style: {

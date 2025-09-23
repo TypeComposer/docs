@@ -3,11 +3,13 @@ import { PlaygroundPage } from "@/pages/Playground";
 import { Router } from "typecomposer";
 import { loadDocs } from "@/utils/mdx";
 import { BaseView } from "@/views/elements/Base";
+import { HomePage } from "@/pages/Home";
 
 loadDocs().finally(() => {
   Router.create({
     history: "hash",
     routes: [
+      { path: "/", component: HomePage },
       {
         path: "/docs",
         component: AppPage,

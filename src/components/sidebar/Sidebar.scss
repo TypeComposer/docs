@@ -72,7 +72,7 @@ details.menu summary:hover {
   border-left: 2px solid #23232c;
   border-left-color: var(--primary);
   color: var(--text);
-  background: #1a1a21 !important;
+  background: var(--hover-background) !important;
 }
 
 details.menu summary::-webkit-details-marker {
@@ -124,7 +124,7 @@ details[open] .right .chev {
 }
 .submenu a:hover {
   color: var(--text);
-  background: #1a1a21;
+  background: var(--hover-background);
   border-left: 2px solid #23232c;
   border-left-color: var(--primary);
 }

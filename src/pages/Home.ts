@@ -15,6 +15,7 @@ import {
   import "highlight.js/styles/atom-one-dark.css";
   import { NavBar } from "@/components/navbar/NavBar";
   import { CopyButton } from "@/components/ui/CopyButton";
+  import { BuiltWithTypeCompose } from "@/components/ui/Made";
 
   export class HomePage extends BorderPanel {
     constructor() {
@@ -434,6 +435,11 @@ import {
           alignItems: "center",
         }
       });
+
+      const madeWithBadge = new BuiltWithTypeCompose({
+        className: "fixed bottom-6 right-6 z-50"
+      });
+      footer.appendChild(madeWithBadge);
   
       const footerContent = new VBox({
         className: "text-center max-w-4xl",

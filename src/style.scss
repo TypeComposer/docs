@@ -871,6 +871,10 @@ label {
     display: none;
   }
 
+  .no-mobile {
+    display: none;
+  }
+
   .sidebar[open] {
     display: flex !important;
     position: fixed;

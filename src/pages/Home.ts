@@ -57,8 +57,9 @@ export class HomePage extends BorderPanel {
 
     const title = new H1Element({
       text: "TypeComposer",
-      className: "text-7xl md:text-8xl font-black mb-2 tracking-tight animate-fade-in-up",
+      className: "font-black mb-2 tracking-tight animate-fade-in-up",
       style: {
+        fontSize: "clamp(2.5rem, 8vw, 6rem)",
         background: "linear-gradient(135deg, var(--text-primary), var(--accent-color), var(--accent-hover))",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
@@ -481,7 +482,7 @@ export class HomePage extends BorderPanel {
 
     // Create main container
     const mainContainer = new VBox({
-      className: "w-full",
+      className: "w-full overflow-y-auto",
       style: {
         alignItems: "stretch",
       },

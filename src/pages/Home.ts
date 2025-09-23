@@ -18,7 +18,7 @@ export class HomePage extends BorderPanel {
   private buildLandingPage(): HTMLElement {
     // Hero Section
     const heroSection = new VBox({
-      className: "relative text-center pt-32 pb-16 px-6 overflow-hidden min-h-screen flex items-center justify-center",
+      className: "relative text-center pt-0 pb-16 px-6 overflow-hidden min-h-screen flex items-center justify-center",
       style: {
         alignItems: "center",
         gap: "3rem",

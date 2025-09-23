@@ -1,4 +1,4 @@
-import { AnchorElement, Component, DetailsElement, NavElement, SpanElement, SummaryElement, DivElement, Router } from "typecomposer";
+import { AnchorElement, Component, DetailsElement, NavElement, SpanElement, SummaryElement, DivElement, Router, ElementType } from "typecomposer";
 import data from "@/assets/data.json";
 import { ChevronUp, ChevronDown, createElement } from "lucide";
 
@@ -43,8 +43,9 @@ export class SidebarItem extends DetailsElement {
 }
 
 export class Sidebar extends Component {
-  constructor() {
-    super({ className: "sidebar" });
+  constructor(props?: ElementType) {
+    super({ ...props, className: "sidebar" });
+    this.append(new DivElement({ className: "lib-header", textContent: "TypeComposer" }));
     const nav = this.appendChild(new NavElement());
     for (const menu of data.sidebar) {
       nav.append(new SidebarItem(menu as SidebarData));

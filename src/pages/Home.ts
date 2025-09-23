@@ -28,7 +28,7 @@ import {
     private buildLandingPage(): HTMLElement {
       // Hero Section
       const heroSection = new VBox({ 
-        className: "relative text-center py-32 px-6 overflow-hidden min-h-screen flex items-center justify-center",
+        className: "relative text-center pt-32 pb-16 px-6 overflow-hidden min-h-screen flex items-center justify-center",
         style: {
           alignItems: "center",
           gap: "3rem",
@@ -164,7 +164,7 @@ import {
   
       // Features Section
       const featuresSection = new VBox({ 
-        className: "py-32 px-6 relative",
+        className: "pt-5 pb-32 px-6 relative",
         style: {
           alignItems: "center",
           gap: "5rem",

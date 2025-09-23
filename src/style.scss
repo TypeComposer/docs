@@ -6,7 +6,7 @@
   --primary-background-color: #ffffff;
   --secondary-background-color: #fafafa;
   --border-color: #e5e7eb;
-  --text-primary: #111827;
+  --text-primary: #111827 !important;
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
   --accent-color: #0070f3;
@@ -22,7 +22,7 @@
   --primary-background-color: #0a0a0a;
   --secondary-background-color: #1a1a1a;
   --border-color: #2a2a2a;
-  --text-primary: #ffffff;
+  --text-primary: #ffffff !important;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
   --accent-color: #3b82f6;
@@ -224,26 +224,19 @@ pre code {
 }
 
 .navbar .nav-links a {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background-color: var(--secondary-background-color);
-  transition: all 0.2s ease;
-  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .navbar .nav-links a:hover {
-  color: var(--text-primary);
-  background-color: var(--hover-background);
-  border-color: var(--accent-color);
-  transform: translateY(-1px);
+  color: var(--accent-color);
 }
 
 .navbar .nav-links a:active {
@@ -378,23 +371,17 @@ pre code {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.70rem 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background-color: var(--secondary-background-color);
-  transition: all 0.2s ease;
-  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: 0.2s ease;
   cursor: pointer;
 }
 
 .navbar .nav-links .theme-toggle:hover {
-  background-color: var(--hover-background);
-  border-color: var(--accent-color);
-  transform: translateY(-1px);
+  color: var(--accent-color);
 }
 
 .navbar .nav-links .theme-toggle:active {
-  transform: translateY(0);
+  transform: scale(0.95);
 }
 
 .theme-toggle .text-lg {
@@ -402,16 +389,17 @@ pre code {
 }
 
 .navbar .nav-links .theme-toggle svg {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   flex-shrink: 0;
   display: block;
+  transition: 0.2s ease;
 }
 
 .navbar .nav-links .theme-toggle:hover svg {
   color: var(--accent-color);
 }
 .navbar .nav-links .theme-toggle:active svg {
-  transform: scale(0.95) rotate(0deg);
+  transform: scale(0.95);
 }
 
 /* Icon rotation animation on theme change */
@@ -434,7 +422,7 @@ pre code {
 .theme-toggle .text-sm {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .theme-toggle:hover .text-sm {
@@ -788,7 +776,7 @@ pre code {
   --primary-background-color: #0a0a0a;
   --secondary-background-color: #1a1a1a;
   --border-color: #2a2a2a;
-  --text-primary: #ffffff;
+  --text-primary: #ffffff !important;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
   --accent-color: #3b82f6;
@@ -805,7 +793,7 @@ pre code {
   --primary-background-color: #0a0a0a;
   --secondary-background-color: #1a1a1a;
   --border-color: #2a2a2a;
-  --text-primary: #ffffff;
+  --text-primary: #ffffff !important;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
   --accent-color: #3b82f6;

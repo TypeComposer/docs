@@ -91,7 +91,7 @@ export class HomePage extends BorderPanel {
 
     // Hero CTA buttons
     const heroActions = new HBox({
-      className: "mt-16 flex flex-col sm:flex-row gap-8 animate-fade-in-up",
+      className: "mt-16 flex flex-col sm:flex-row gap-8 animate-fade-in-up hero-actions",
       style: {
         alignItems: "center",
         justifyContent: "center",

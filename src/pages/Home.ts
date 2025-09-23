@@ -460,7 +460,7 @@ import {
       });
   
       const footerLinkData = [
-        { text: "Documentation", href: "/docs" },
+        { text: "Documentation", href: "/#/docs" },
         { text: "GitHub", href: "https://github.com/typecomposer/typecomposer" },
         { text: "NPM Package", href: "https://www.npmjs.com/package/typecomposer" }
       ];

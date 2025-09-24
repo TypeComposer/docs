@@ -51,7 +51,6 @@ export class NavBar extends Component {
         children: [createElement(Menu)],
         onclick: () => {
           const parent = this.getParent<BorderPanel>();
-          console.log("paarent:left", parent?.left);
           parent?.left.toggleAttribute("open");
         },
       })

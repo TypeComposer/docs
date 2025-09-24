@@ -296,7 +296,6 @@ export async function loadDocs() {
   for (const [path, mdSource] of Object.entries(files)) {
     const html = await renderMDX(mdSource.default);
     const docPath = path.replace("/content", "docs").replace(".mdx", "").toLowerCase();
-    console.log("Loaded doc:", docPath);
     pages[docPath] = html;
   }
 }

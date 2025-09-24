@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "clean": "rm -rf node_modules/.vite && clear && vite --host",
+    "clean": "rm -rf node_modules/.vite  && rm -rf node_modules/.vite-temp && clear && vite",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -17,7 +17,7 @@
     "highlight.js": "^11.11.1",
     "lucide": "^0.544.0",
     "remark-gfm": "^4.0.1",
-    "typecomposer": "^0.1.52",
+    "typecomposer": "^0.1.53",
     "typecomposer-plugin": "^1.0.9"
   },
   "devDependencies": {

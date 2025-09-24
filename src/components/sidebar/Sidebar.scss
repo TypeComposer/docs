@@ -1,4 +1,4 @@
-.sidebar {
+:host {
   width: 260px;
   max-width: 100%;
   min-height: 100vh;
@@ -125,33 +125,3 @@ details[open] .right .chev {
   border-left: 2px solid #23232c;
   border-left-color: var(--primary);
 }
-
-// @media (max-width: 768px) {
-//   nav {
-//     display: none !important;
-//   }
-//   // .sidebar {
-//   //   position: fixed;
-//   //   top: 0;
-//   //   left: 0;
-//   //   height: 100vh;
-//   //   z-index: 1000;
-//   //   transform: translateX(-100%);
-//   //   transition: transform 0.3s ease;
-//   // }
-//   // .sidebar.open {
-//   //   transform: translateX(0);
-//   // }
-//   // .sidebar {
-//   //   display: none;
-//   // }
-//   // .overlay {
-//   //   position: fixed;
-//   //   top: 0;
-//   //   left: 0;
-//   //   width: 100%;
-//   //   height: 100%;
-//   //   background: rgba(0, 0, 0, 0.5);
-//   //   z-index: 999;
-//   // }
-// }

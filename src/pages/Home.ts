@@ -1,21 +1,9 @@
-import { 
-    SpanElement, 
-    H1Element, 
-    H2Element, 
-    ParagraphElement, 
-    ButtonElement, 
-    DivElement, 
-    VBox, 
-    HBox,
-    CodeElement,
-    AnchorElement,
-    BorderPanel,
-    Router
-  } from "typecomposer";
-  import "highlight.js/styles/atom-one-dark.css";
-  import { NavBar } from "@/components/navbar/NavBar";
-  import { CopyButton } from "@/components/ui/CopyButton";
-  import { BuiltWithTypeCompose } from "@/components/ui/Made";
+import { SpanElement, H1Element, H2Element, ParagraphElement, ButtonElement, DivElement, VBox, HBox, CodeElement, AnchorElement, BorderPanel, Router, ImageElement } from "typecomposer";
+import "highlight.js/styles/atom-one-dark.css";
+import { NavBar } from "@/components/navbar/NavBar";
+import { CopyButton } from "@/components/ui/CopyButton";
+import { BuiltWithTypeCompose } from "@/components/ui/Made";
+import { Sidebar } from "@/components/sidebar/Sidebar";
 
   export class HomePage extends BorderPanel {
     constructor() {
@@ -155,90 +143,92 @@ import {
         }
       }
 
-      secondaryButton.onclick = () => {
-        Router.go('/docs');
-      }
-  
-      heroActions.append(primaryButton, secondaryButton);
-      titleContainer.append(title, subtitle, description, heroActions);
-      heroSection.appendChild(titleContainer);
-  
-      // Features Section
-      const featuresSection = new VBox({ 
-        className: "pt-5 pb-32 px-6 relative",
+    secondaryButton.onclick = () => {
+      Router.go("/docs");
+    };
+
+    heroActions.append(primaryButton, secondaryButton);
+    titleContainer.append(title, subtitle, description, heroActions);
+    heroSection.appendChild(titleContainer);
+
+    // Features Section
+    const featuresSection = new VBox({
+      className: "pt-5 pb-32 px-6 relative",
+      style: {
+        alignItems: "center",
+        gap: "5rem",
+        background: "linear-gradient(180deg, var(--primary-background-color) 0%, var(--secondary-background-color) 50%, var(--primary-background-color) 100%)",
+      },
+    });
+
+    const featuresTitle = new H2Element({
+      text: "Why Choose TypeComposer?",
+      className: "text-5xl md:text-6xl font-bold text-center mb-6 animate-fade-in-up",
+      style: {
+        background: "linear-gradient(135deg, var(--text-primary), var(--accent-color))",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        textShadow: "0 0 20px var(--accent-color)30",
+      },
+    });
+
+    const featuresGrid = new DivElement({
+      className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto animate-fade-in-up",
+      style: {
+        animationDelay: "0.4s",
+      },
+    });
+
+    const features : Array<{ emoji: string, title: string, description: string, gradient: string, className?: string }> = [
+      {
+        emoji: "/images/Rocket.png",
+        title: "No HTML",
+        description: "Define your entire UI using clean, intuitive TypeScript classes.",
+        gradient: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))"
+      },
+      {
+        emoji: "/images/Gem stone.png",
+        title: "Clean & Declarative",
+        description: "Build complex layouts with simple, readable code that's easy to maintain and understand.",
+        gradient: "linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(255, 58, 212, 0.1))",
+      },
+      {
+        emoji: "/images/Typescript.png",
+        title: "TypeScript Native",
+        description: "Full type safety, intelligent autocomplete, and modern tooling support out of the box.",
+        gradient: "linear-gradient(135deg, rgba(255, 58, 212, 0.1), rgba(59, 130, 246, 0.1))",
+        className: "w-20 h-20 filter drop-shadow-lg relative z-10",
+      },
+      {
+        emoji: "/images/React.png",
+        title: "React-Friendly",
+        description: "Easily integrate React components into TypeComposer applications for maximum flexibility.",
+        gradient: "linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(120, 119, 198, 0.1))",
+        className: "w-20 h-20 filter drop-shadow-lg relative z-10",
+      },
+      {
+        emoji: "/images/Artist palette.png",
+        title: "Style Your Way",
+        description: "Use CSS-in-JS, Tailwind, or plain CSS. Complete flexibility in your styling approach.",
+        gradient: "linear-gradient(135deg, rgba(120, 119, 198, 0.1), rgba(147, 51, 234, 0.1))",
+      },
+      {
+        emoji: "/images/High voltage.png",
+        title: "Lightning Fast",
+        description: "Minimal runtime overhead with tree-shaking support for optimal bundle sizes.",
+        gradient: "linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(14, 165, 233, 0.1))",
+      },
+    ];
+
+    features.forEach((feature, index) => {
+      const featureCard = new VBox({
+        className: "group p-10 rounded-3xl transition-all duration-700 transform hover:-translate-y-4 hover:scale-105 relative overflow-hidden cursor-pointer",
         style: {
           alignItems: "center",
-          gap: "5rem",
-          background: "linear-gradient(180deg, var(--primary-background-color) 0%, var(--secondary-background-color) 50%, var(--primary-background-color) 100%)"
-        }
-      });
-  
-      const featuresTitle = new H2Element({ 
-        text: "Why Choose TypeComposer?",
-        className: "text-5xl md:text-6xl font-bold text-center mb-6 animate-fade-in-up",
-        style: {
-          background: "linear-gradient(135deg, var(--text-primary), var(--accent-color))",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          textShadow: "0 0 20px var(--accent-color)30"
-        }
-      });
-  
-      const featuresGrid = new DivElement({ 
-        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto animate-fade-in-up",
-        style: {
-          animationDelay: "0.4s"
-        }
-      });
-  
-      const features = [
-        {
-          emoji: "🚀",
-          title: "No HTML",
-          description: "Define your entire UI using clean, intuitive TypeScript classes.",
-          gradient: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))"
-        },
-        {
-          emoji: "💎",
-          title: "Clean & Declarative",
-          description: "Build complex layouts with simple, readable code that's easy to maintain and understand.",
-          gradient: "linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(255, 58, 212, 0.1))"
-        },
-        {
-          emoji: "🔷",
-          title: "TypeScript Native",
-          description: "Full type safety, intelligent autocomplete, and modern tooling support out of the box.",
-          gradient: "linear-gradient(135deg, rgba(255, 58, 212, 0.1), rgba(59, 130, 246, 0.1))"
-        },
-        {
-          emoji: "⚛️",
-          title: "React-Friendly",
-          description: "Easily integrate React components into TypeComposer applications for maximum flexibility.",
-          gradient: "linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(120, 119, 198, 0.1))"
-        },
-        {
-          emoji: "🎨",
-          title: "Style Your Way",
-          description: "Use CSS-in-JS, Tailwind, or plain CSS. Complete flexibility in your styling approach.",
-          gradient: "linear-gradient(135deg, rgba(120, 119, 198, 0.1), rgba(147, 51, 234, 0.1))"
-        },
-        {
-          emoji: "⚡",
-          title: "Lightning Fast",
-          description: "Minimal runtime overhead with tree-shaking support for optimal bundle sizes.",
-          gradient: "linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(14, 165, 233, 0.1))"
-        }
-      ];
-  
-      features.forEach((feature, index) => {
-        const featureCard = new VBox({ 
-          className: "group p-10 rounded-3xl transition-all duration-700 transform hover:-translate-y-4 hover:scale-105 relative overflow-hidden cursor-pointer",
-          style: {
-            alignItems: "center",
-            gap: "2rem",
-            animationDelay: `${index * 0.15}s`,
-            background: `
+          gap: "2rem",
+          animationDelay: `${index * 0.15}s`,
+          background: `
               ${feature.gradient},
               var(--hover-background)
             `,
@@ -249,68 +239,72 @@ import {
               0 10px 30px var(--text-primary)30,
               0 0 0 1px var(--text-primary)05
             `,
-          }
-        });
-  
-        // Card hover glow effect
-        const cardGlow = new DivElement({
-          className: "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10",
-          style: {
-            background: feature.gradient,
-            filter: "blur(20px)",
-            transform: "scale(1.1)"
-          }
-        });
-        featureCard.appendChild(cardGlow);
-  
-        const emojiContainer = new DivElement({
-          className: "w-24 h-24 rounded-3xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl relative overflow-hidden",
-          style: {
-            background: "linear-gradient(135deg, var(--accent-color), var(--accent-hover))",
-            border: "1px solid var(--text-primary)20",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 8px 32px var(--accent-color)30"
-          }
-        });
-  
-        const emoji = new SpanElement({ 
-          text: feature.emoji,
-          className: "text-4xl filter drop-shadow-lg relative z-10"
-        });
-  
-        const featureTitle = new H2Element({ 
-          text: feature.title,
-          className: "text-2xl font-bold text-center group-hover:scale-105 transition-all duration-500",
-          style: {
-            color: "var(--text-primary)",
-            textShadow: "0 2px 10px var(--text-primary)10"
-          }
-        });
-  
-        const featureDesc = new ParagraphElement({ 
-          text: feature.description,
-          className: "text-center leading-relaxed group-hover:text-slate-200 transition-all duration-500",
-          style: {
-            color: "var(--text-secondary)",
-            lineHeight: "1.7"
-          }
-        });
-  
-        emojiContainer.appendChild(emoji);
-        featureCard.append(emojiContainer, featureTitle, featureDesc);
-        featuresGrid.appendChild(featureCard);
+        },
       });
-  
-      featuresSection.append(featuresTitle, featuresGrid);
-  
-      // Quick Start Section
-      const quickStartSection = new VBox({ 
-        className: "py-32 px-6 relative overflow-hidden",
-        id: "quick-start-section",
+
+      // Card hover glow effect
+      const cardGlow = new DivElement({
+        className: "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10",
         style: {
-          alignItems: "center",
-          gap: "4rem",
-          background: `
+          background: feature.gradient,
+          filter: "blur(20px)",
+          transform: "scale(1.1)",
+        },
+      });
+      featureCard.appendChild(cardGlow);
+
+      const emojiContainer = new DivElement({
+        className:
+          "w-24 h-24 rounded-3xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl relative overflow-hidden",
+        style: {
+          background: "linear-gradient(135deg, var(--accent-color), var(--accent-hover))",
+          border: "1px solid var(--text-primary)20",
+          backdropFilter: "blur(10px)",
+          boxShadow: "0 8px 32px var(--accent-color)30",
+        },
+      });
+
+      const emoji = new ImageElement({
+        src: feature.emoji,
+        alt: feature.title,
+        className: feature.className || `w-16 h-16 filter drop-shadow-lg relative z-10`,
+      });
+
+      const featureTitle = new H2Element({
+        text: feature.title,
+        className: "text-2xl font-bold text-center group-hover:scale-105 transition-all duration-500",
+        style: {
+          color: "var(--text-primary)",
+          textShadow: "0 2px 10px var(--text-primary)10",
+        },
+      });
+
+      const featureDesc = new ParagraphElement({
+        text: feature.description,
+        className: "text-center leading-relaxed group-hover:text-slate-200 transition-all duration-500",
+        style: {
+          color: "var(--text-secondary)",
+          lineHeight: "1.7",
+        },
+      });
+
+      emojiContainer.appendChild(emoji);
+      featureCard.append(emojiContainer, featureTitle, featureDesc);
+      featuresGrid.appendChild(featureCard);
+    });
+
+    featuresSection.append(featuresTitle, featuresGrid);
+
+    // Quick Start Section
+    const quickStartSection = new VBox({
+      className: "py-80 px-32 relative overflow-hidden",
+      id: "quick-start-section",
+      style: {
+        alignItems: "center",
+        gap: "4rem",
+        marginBottom: "4rem",
+        paddingBottom: "6rem",
+        background: `
             radial-gradient(ellipse 100% 60% at 50% 20%, rgba(59, 130, 246, 0.1), transparent),
             radial-gradient(ellipse 80% 40% at 20% 80%, rgba(59, 130, 246, 0.05), transparent),
             linear-gradient(180deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%)
@@ -421,20 +415,22 @@ import {
         size: "md"
       });
 
-      copyButton.className += " opacity-70 hover:opacity-100 flex-shrink-0";
-      
-      codeTextContainer.append(codeText, copyButton);
-      codeBlock.append(terminalHeader, codeTextContainer);
-      quickStartContent.append(quickStartTitle, quickStartDesc, codeBlock);
-      quickStartSection.appendChild(quickStartContent);
-  
-      // Footer
-      const footer = new VBox({ 
-        className: "py-24 px-6 relative",
-        style: {
-          alignItems: "center",
-        }
-      });
+    copyButton.className += " opacity-70 hover:opacity-100 flex-shrink-0";
+
+    codeTextContainer.append(codeText, copyButton);
+    codeBlock.append(terminalHeader, codeTextContainer);
+    quickStartContent.append(quickStartTitle, quickStartDesc, codeBlock);
+    quickStartSection.appendChild(quickStartContent);
+
+    // Footer
+    const footer = new VBox({
+      className: "py-24 px-6 relative mt-16",
+      style: {
+        alignItems: "center",
+        marginTop: "4rem",
+        paddingTop: "4rem",
+      },
+    });
 
       const madeWithBadge = new BuiltWithTypeCompose({
         className: "fixed bottom-6 right-6 z-50"

@@ -1,4 +1,4 @@
-import { SpanElement, H1Element, H2Element, ParagraphElement, ButtonElement, DivElement, VBox, HBox, CodeElement, AnchorElement, BorderPanel, Router } from "typecomposer";
+import { SpanElement, H1Element, H2Element, ParagraphElement, ButtonElement, DivElement, VBox, HBox, CodeElement, AnchorElement, BorderPanel, Router, ImageElement } from "typecomposer";
 import "highlight.js/styles/atom-one-dark.css";
 import { NavBar } from "@/components/navbar/NavBar";
 import { CopyButton } from "@/components/ui/CopyButton";
@@ -184,39 +184,41 @@ export class HomePage extends BorderPanel {
       },
     });
 
-    const features = [
+    const features : Array<{ emoji: string, title: string, description: string, gradient: string, className?: string }> = [
       {
-        emoji: "🚀",
+        emoji: "/images/Rocket.png",
         title: "No HTML",
         description: "Define your entire UI using clean, intuitive TypeScript classes.",
-        gradient: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))",
+        gradient: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))"
       },
       {
-        emoji: "💎",
+        emoji: "/images/Gem stone.png",
         title: "Clean & Declarative",
         description: "Build complex layouts with simple, readable code that's easy to maintain and understand.",
         gradient: "linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(255, 58, 212, 0.1))",
       },
       {
-        emoji: "🔷",
+        emoji: "/images/Typescript.png",
         title: "TypeScript Native",
         description: "Full type safety, intelligent autocomplete, and modern tooling support out of the box.",
         gradient: "linear-gradient(135deg, rgba(255, 58, 212, 0.1), rgba(59, 130, 246, 0.1))",
+        className: "w-20 h-20 filter drop-shadow-lg relative z-10",
       },
       {
-        emoji: "⚛️",
+        emoji: "/images/React.png",
         title: "React-Friendly",
         description: "Easily integrate React components into TypeComposer applications for maximum flexibility.",
         gradient: "linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(120, 119, 198, 0.1))",
+        className: "w-20 h-20 filter drop-shadow-lg relative z-10",
       },
       {
-        emoji: "🎨",
+        emoji: "/images/Artist palette.png",
         title: "Style Your Way",
         description: "Use CSS-in-JS, Tailwind, or plain CSS. Complete flexibility in your styling approach.",
         gradient: "linear-gradient(135deg, rgba(120, 119, 198, 0.1), rgba(147, 51, 234, 0.1))",
       },
       {
-        emoji: "⚡",
+        emoji: "/images/High voltage.png",
         title: "Lightning Fast",
         description: "Minimal runtime overhead with tree-shaking support for optimal bundle sizes.",
         gradient: "linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(14, 165, 233, 0.1))",
@@ -266,9 +268,10 @@ export class HomePage extends BorderPanel {
         },
       });
 
-      const emoji = new SpanElement({
-        text: feature.emoji,
-        className: "text-4xl filter drop-shadow-lg relative z-10",
+      const emoji = new ImageElement({
+        src: feature.emoji,
+        alt: feature.title,
+        className: feature.className || `w-16 h-16 filter drop-shadow-lg relative z-10`,
       });
 
       const featureTitle = new H2Element({
@@ -298,11 +301,13 @@ export class HomePage extends BorderPanel {
 
     // Quick Start Section
     const quickStartSection = new VBox({
-      className: "py-32 px-6 relative overflow-hidden",
+      className: "py-80 px-32 relative overflow-hidden",
       id: "quick-start-section",
       style: {
         alignItems: "center",
         gap: "4rem",
+        marginBottom: "4rem",
+        paddingBottom: "6rem",
         background: `
             radial-gradient(ellipse 100% 60% at 50% 20%, rgba(59, 130, 246, 0.1), transparent),
             radial-gradient(ellipse 80% 40% at 20% 80%, rgba(59, 130, 246, 0.05), transparent),
@@ -424,9 +429,11 @@ export class HomePage extends BorderPanel {
 
     // Footer
     const footer = new VBox({
-      className: "py-24 px-6 relative",
+      className: "py-24 px-6 relative mt-16",
       style: {
         alignItems: "center",
+        marginTop: "4rem",
+        paddingTop: "4rem",
       },
     });
 

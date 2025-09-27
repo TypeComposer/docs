@@ -1,0 +1,42 @@
+name: Nightly HTML & Link Check
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  proof-html:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      # Install and run proof-html against the build output
+      - name: Install proof-html
+        run: gem install proof-html
+
+      - name: Validate HTML & Links
+        run: |
+          proof-html ./dist \
+            --check-html \
+            --check-links \
+            --report \
+            --retry-delay 2

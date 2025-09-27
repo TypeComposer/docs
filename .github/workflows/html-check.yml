@@ -36,3 +36,5 @@ jobs:
           max_concurrency: 50
           tokens: |
             {"https://github.com": "${{ secrets.GITHUB_TOKEN }}"}
+          ignore_url: |
+            https://typecomposer.com/google4af83caede6e50cf.html

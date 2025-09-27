@@ -1,4 +1,4 @@
-name: Nightly HTML & Link Check
+name: HTML & Link Check
 
 on:
   schedule:
@@ -24,19 +24,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Run proof-html
+        uses: anishathalye/proof-html@v2
         with:
-          ruby-version: '3.1'
-
-      # Install and run proof-html against the build output
-      - name: Install proof-html
-        run: gem install proof-html
-
-      - name: Validate HTML & Links
-        run: |
-          proof-html ./dist \
-            --check-html \
-            --check-links \
-            --report \
-            --retry-delay 2
+          directory: ./dist
+          check_html: true
+          check_css: true
+          enforce_https: true
+          retries: 3
+          timeout: 120
+          max_concurrency: 50
+          tokens: |
+            {"https://github.com": "${{ secrets.GITHUB_TOKEN }}"}

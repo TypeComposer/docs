@@ -438,7 +438,7 @@ export class HomePage extends BorderPanel {
     });
 
     const madeWithBadge = new BuiltWithTypeCompose({
-      className: "fixed bottom-6 right-6 z-50",
+      className: "fixed bottom-6 right-6 z-50"
     });
     footer.appendChild(madeWithBadge);
 
@@ -447,7 +447,7 @@ export class HomePage extends BorderPanel {
       style: {
         alignItems: "center",
         gap: "2rem",
-      },
+      }
     });
 
     const footerText = new ParagraphElement({
@@ -463,13 +463,13 @@ export class HomePage extends BorderPanel {
       className: "flex flex-wrap gap-8 text-sm mt-8",
       style: {
         justifyContent: "center",
-      },
+      }
     });
 
     const footerLinkData = [
-      { text: "Documentation", href: "/#/docs" },
+      { text: "Documentation", rlink: "/docs" },
       { text: "GitHub", href: "https://github.com/typecomposer/typecomposer" },
-      { text: "NPM Package", href: "https://www.npmjs.com/package/typecomposer" },
+      { text: "NPM Package", href: "https://www.npmjs.com/package/typecomposer" }
     ];
 
     footerLinkData.forEach((linkData) => {
@@ -479,7 +479,7 @@ export class HomePage extends BorderPanel {
         className: "font-semibold px-4 py-2 rounded-lg hover:bg-accent hover:text-white",
         style: {
           color: "var(--text-muted)",
-        },
+        }
       });
       footerLinks.appendChild(link);
     });
@@ -489,10 +489,10 @@ export class HomePage extends BorderPanel {
 
     // Create main container
     const mainContainer = new VBox({
-      className: "w-full overflow-y-auto",
+      className: "w-full",
       style: {
         alignItems: "stretch",
-      },
+      }
     });
 
     mainContainer.append(heroSection, featuresSection, quickStartSection, footer);

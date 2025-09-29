@@ -1026,3 +1026,87 @@ label {
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.roadmap {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 16px;
+  scrollbar-width: none;
+  position: relative;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+} 
+
+.section {
+  flex-shrink: 0;
+  min-width: 320px;
+  background: var(--navbar-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 20px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.section-header {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card {
+  background: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 
+    0 1px 3px var(--shadow-light),
+    0 0 0 1px var(--shadow-light);
+  transition: all 0.2s ease;
+  animation: slideInUp 0.3s ease-out;
+}
+
+.card-title {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  transition: color 0.2s ease;
+}
+
+.card-body-item {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.card-body-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.card:hover .card-body-item::before {
+  color: var(--text-primary);
+}
+
+.card {
+  margin: 8px 4px 2px 0;
+  font-size: 0.75rem;
+}

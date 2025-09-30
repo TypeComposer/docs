@@ -6,11 +6,12 @@ version: 2
 updates:
   # Enable version updates for npm (Docs project)
   - package-ecosystem: "npm"
-    # Look for `package.json` and `lock` files in the `docs` directory
+    # Look for `package.json` and `lock` files
     directory: "/"
     # Check the npm registry for updates every day (weekdays)
     schedule:
       interval: "daily"
+    target-branch: "develop"
     # Group all patch and minor updates together
     groups:
       docs-development:
@@ -26,7 +27,8 @@ updates:
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
-    # Workflow files stored in the default location of `.github/workflows`
+    # Workflow files stored in `.github/workflows` under docs
     directory: "/docs/.github/workflows"
     schedule:
       interval: "weekly"
+    target-branch: "develop"

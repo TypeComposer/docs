@@ -126,6 +126,13 @@ export class HomePage extends BorderPanel {
     });
     primaryButton.appendChild(buttonShimmer);
 
+    primaryButton.onclick = () => {
+      quickStartSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      }
+
     const secondaryButton = new ButtonElement({
       text: "Documentation",
       className: "px-12 py-6 rounded-2xl font-bold text-lg transition-all duration-500 hover:scale-105 backdrop-blur-xl group relative overflow-hidden",
@@ -137,13 +144,6 @@ export class HomePage extends BorderPanel {
         boxShadow: "inset 0 1px 0 var(--text-primary)10, 0 10px 30px var(--text-primary)30",
       },
     });
-
-    primaryButton.onclick = () => {
-      quickStartSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-      }
 
     secondaryButton.onclick = () => {
       Router.go("/docs");

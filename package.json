@@ -17,8 +17,8 @@
     "highlight.js": "^11.11.1",
     "lucide": "^0.544.0",
     "remark-gfm": "^4.0.1",
-    "typecomposer": "^0.1.51",
-    "typecomposer-plugin": "^1.0.8"
+    "typecomposer": "^0.1.53",
+    "typecomposer-plugin": "^1.0.9"
   },
   "devDependencies": {
     "@types/node": "^24.5.2",

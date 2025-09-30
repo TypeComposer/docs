@@ -492,6 +492,7 @@ export class HomePage extends BorderPanel {
       const link = new AnchorElement({
         text: linkData.text,
         href: linkData.href,
+        rlink: linkData.rlink,
         className: "font-semibold px-4 py-2 rounded-lg hover:bg-accent hover:text-white",
         style: {
           color: "var(--text-muted)",

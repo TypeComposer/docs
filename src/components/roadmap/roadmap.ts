@@ -1,4 +1,4 @@
-import { DivElement, H1Element, SpanElement } from "typecomposer";
+import { DivElement, SpanElement } from "typecomposer";
 
 interface RoadmapData {
   id: string;

@@ -1,4 +1,4 @@
-name: HTML & Link Check
+name: Links
 
 on:
   schedule:
@@ -24,8 +24,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Run proof-html
-        uses: anishathalye/proof-html@v2
+      - uses: anishathalye/proof-html@v2
         with:
           directory: ./dist
           tokens: |

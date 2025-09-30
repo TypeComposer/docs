@@ -852,10 +852,6 @@ label {
   display: none;
 }
 
-[main-page] {
-  overflow: hidden;
-}
-
 /* Mobile styles */
 @media (max-width: 768px) {
   .navbar {
@@ -1027,19 +1023,6 @@ label {
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.roadmap {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  padding: 16px;
-  scrollbar-width: none;
-  position: relative;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-} 
-
 .section {
   flex-shrink: 0;
   min-width: 320px;
@@ -1049,10 +1032,6 @@ label {
   padding: 16px;
   margin: 20px;
   scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .section-header {
@@ -1110,3 +1089,118 @@ label {
   margin: 8px 4px 2px 0;
   font-size: 0.75rem;
 }
+
+/* ========================================
+   ROADMAP COMPONENT STYLES
+   ======================================== */
+
+.roadmap-title {
+  color: var(--text-primary);
+}
+
+.roadmap-description {
+  color: var(--text-secondary);
+}
+
+.roadmap-legend-text {
+  color: var(--text-secondary);
+}
+
+.roadmap-section {
+  border-color: var(--border-color);
+  background-color: var(--primary-background-color);
+  box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+.roadmap-section-header {
+  border-color: var(--border-color);
+}
+
+.roadmap-section-title {
+  color: var(--text-primary);
+}
+
+.roadmap-section-description {
+  color: var(--text-muted);
+}
+
+.roadmap-nav-button {
+  background-color: var(--secondary-background-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.roadmap-nav-button:hover {
+  background-color: var(--hover-background);
+}
+
+.roadmap-card {
+  background-color: var(--primary-background-color);
+  border-color: var(--border-color);
+}
+
+.roadmap-card-title {
+  color: var(--text-primary);
+}
+
+.roadmap-card-body {
+  color: var(--text-secondary);
+}
+
+.roadmap-card-footer {
+  border-color: var(--border-color);
+}
+
+.status-badge-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  .dark .status-badge-completed {
+    background-color: rgba(16, 185, 129, 0.25);
+    color: #6ee7b7;
+  }
+
+  .status-badge-in-progress {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  .dark .status-badge-in-progress {
+    background-color: rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+  }
+
+  .status-badge-planned {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  .dark .status-badge-planned {
+    background-color: rgba(156, 163, 175, 0.2);
+    color: #d1d5db;
+  }
+
+  .priority-badge-high {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  .dark .priority-badge-high {
+    background-color: rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+  }
+
+  .priority-badge-medium {
+    background-color: #fef3c7;
+    color: #b45309;
+  }
+  .dark .priority-badge-medium {
+    background-color: rgba(245, 158, 11, 0.25);
+    color: #fcd34d;
+  }
+
+  .priority-badge-low {
+    background-color: #e0f2fe;
+    color: #0369a1;
+  }
+  .dark .priority-badge-low {
+    background-color: rgba(14, 165, 233, 0.25);
+    color: #7dd3fc;
+  }

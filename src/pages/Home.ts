@@ -4,6 +4,8 @@ import { NavBar } from "@/components/navbar/NavBar";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { BuiltWithTypeCompose } from "@/components/ui/Made";
 import { Sidebar } from "@/components/sidebar/Sidebar";
+import { Roadmap, RoadmapData } from "@/components/roadmap/roadmap";
+import roadmapJson from "@/assets/roadmap.json";
 
 export class HomePage extends BorderPanel {
   constructor() {
@@ -137,15 +139,11 @@ export class HomePage extends BorderPanel {
     });
 
     primaryButton.onclick = () => {
-      // Scroll to the quick start section
-      const quickStartElement = document.getElementById("quick-start-section");
-      if (quickStartElement) {
-        quickStartElement.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+      quickStartSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
       }
-    };
 
     secondaryButton.onclick = () => {
       Router.go("/docs");
@@ -301,13 +299,8 @@ export class HomePage extends BorderPanel {
 
     // Quick Start Section
     const quickStartSection = new VBox({
-      className: "py-80 px-32 relative overflow-hidden",
-      id: "quick-start-section",
+      className: "relative text-center pt-16 pb-24 px-6 overflow-hidden",
       style: {
-        alignItems: "center",
-        gap: "4rem",
-        marginBottom: "4rem",
-        paddingBottom: "6rem",
         background: `
             radial-gradient(ellipse 100% 60% at 50% 20%, rgba(59, 130, 246, 0.1), transparent),
             radial-gradient(ellipse 80% 40% at 20% 80%, rgba(59, 130, 246, 0.05), transparent),
@@ -316,7 +309,6 @@ export class HomePage extends BorderPanel {
       },
     });
 
-    // Enhanced background pattern
     const quickStartBg = new DivElement({
       className: "absolute inset-0 opacity-30",
       style: {
@@ -331,7 +323,7 @@ export class HomePage extends BorderPanel {
     quickStartSection.appendChild(quickStartBg);
 
     const quickStartContent = new VBox({
-      className: "relative z-10",
+      className: "relative",
       style: {
         alignItems: "center",
         gap: "3rem",
@@ -427,13 +419,37 @@ export class HomePage extends BorderPanel {
     quickStartContent.append(quickStartTitle, quickStartDesc, codeBlock);
     quickStartSection.appendChild(quickStartContent);
 
+    // Roadmap Section
+    const roadmapData : RoadmapData[] = roadmapJson.data;
+    
+    const contentContainer = new DivElement({
+      className: "flex flex-col pt-4 items-center justify-center",
+      style: {
+        backgroundColor: "var(--primary-background-color)"
+      }
+    });
+
+     const headerSection = new DivElement({className: "mb-8 text-center"});
+     headerSection.appendChild(new H1Element({
+      className: "text-5xl md:text-6xl font-bold text-center mb-6",
+      innerText: "Development Roadmap"
+    }));
+            
+    headerSection.appendChild(new SpanElement({
+        className: "text-xl text-center max-w-3xl animate-fade-in-up",
+        innerText: "Our planned development and release schedule for upcoming features"
+    }));
+    const roadmap = new Roadmap(roadmapData);
+
+    // Todo add gradients on the sides for a cleaner look
+    contentContainer.append(headerSection, roadmap);
+
+
     // Footer
     const footer = new VBox({
-      className: "py-24 px-6 relative mt-16",
+      className: "py-14 px-6 relative",
       style: {
         alignItems: "center",
-        marginTop: "4rem",
-        paddingTop: "4rem",
       },
     });
 
@@ -495,7 +511,7 @@ export class HomePage extends BorderPanel {
       }
     });
 
-    mainContainer.append(heroSection, featuresSection, quickStartSection, footer);
+    mainContainer.append(heroSection, featuresSection, quickStartSection, contentContainer, footer);
 
     return mainContainer;
   }

@@ -2,43 +2,57 @@
    "data":[
       {
          "id":"202508",
-         "title":"August",
+         "title":"August 2025",
+         "description": "Foundation phase focusing on core infrastructure",
          "cards":[
             {
                "header":{
-                  "title":"Lorem Ipsum"
+                  "title":"Core Library Enhancements"
                },
                "body":[
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                  "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                  "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip"
-               ]
+                  "Improve performance of component rendering",
+                  "Add support for nested component composition",
+                  "Implement better error handling and debugging"
+               ],
+               "status": "completed",
+               "priority": "high",
+               "dueDate": "2025-08-10",
+               "tags": ["core", "performance"]
             },
             {
                "header":{
-                  "title":"Lorem Ipsum"
+                  "title":"Component Testing Framework"
                },
                "body":[
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                  "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                  "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip"
-               ]
+                  "Implement unit testing utilities",
+                  "Create test runners for component validation",
+                  "Add snapshot testing capabilities"
+               ],
+               "status": "completed",
+               "priority": "medium",
+               "dueDate": "2025-08-20",
+               "tags": ["testing", "quality"]
             },
             {
                "header":{
-                  "title":"Lorem Ipsum"
+                  "title":"Build System Optimization"
                },
                "body":[
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                  "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                  "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip"
-               ]
+                  "Reduce bundle size by 30%",
+                  "Implement tree-shaking for component imports",
+                  "Add support for ES modules"
+               ],
+               "status": "completed",
+               "priority": "medium",
+               "dueDate": "2025-08-30",
+               "tags": ["build", "performance"]
             }
          ]
       },
       {
          "id":"202509",
-         "title":"September",
+         "title":"September 2025",
+         "description": "Documentation and community focus",
          "cards":[
             {
                "header":{
@@ -47,8 +61,13 @@
                "body":[
                   "Refactored Overall Documentation",
                   "Added Home Page",
-                  "Improved Navigation"
-               ]
+                  "Improved Navigation",
+                  "Created interactive examples"
+               ],
+               "status": "completed",
+               "priority": "high",
+               "dueDate": "2025-09-15",
+               "tags": ["docs", "user-experience"]
             },
             {
                "header":{
@@ -57,8 +76,13 @@
                "body":[
                   "Set up TypeComposer org",
                   "Migrated repositories",
-                  "Setup CI/CD pipelines"
-               ]
+                  "Setup CI/CD pipelines",
+                  "Implemented contribution guidelines"
+               ],
+               "status": "completed",
+               "priority": "high",
+               "dueDate": "2025-09-10",
+               "tags": ["community", "infrastructure"]
             },
             {
                "header":{
@@ -67,53 +91,166 @@
                "body":[
                   "Added issue templates",
                   "Improved README files",
-                  "Created License files"
-               ]
+                  "Created License files",
+                  "Set up community discussions"
+               ],
+               "status": "completed",
+               "priority": "medium",
+               "dueDate": "2025-09-25",
+               "tags": ["community", "documentation"]
             }
          ]
       },
       {
          "id":"202510",
-         "title":"October",
+         "title":"October 2025",
+         "description": "Integration and extension phase",
          "cards":[
             {
                "header":{
-                  "title":"Database Migration"
+                  "title":"Framework Integration"
                },
                "body":[
-                  "Migrated to PostgreSQL 13",
-                  "Optimized indexing"
-               ]
+                  "Add React bindings",
+                  "Create Vue integration",
+                  "Implement Svelte adapters",
+                  "Support for SSR environments"
+               ],
+               "status": "in-progress",
+               "priority": "high",
+               "dueDate": "2025-10-20",
+               "tags": ["integration", "frameworks"]
+            },
+            {
+               "header":{
+                  "title":"State Management System"
+               },
+               "body":[
+                  "Implement reactive state management",
+                  "Add support for external stores",
+                  "Create debugging tools for state"
+               ],
+               "status": "in-progress",
+               "priority": "high",
+               "dueDate": "2025-10-30",
+               "tags": ["state", "core"]
+            },
+            {
+               "header":{
+                  "title":"Plugin Architecture"
+               },
+               "body":[
+                  "Design extensible plugin system",
+                  "Create plugin documentation",
+                  "Develop example plugins"
+               ],
+               "status": "planned",
+               "priority": "medium",
+               "dueDate": "2025-10-25",
+               "tags": ["extensibility", "architecture"]
             }
          ]
       },
       {
          "id":"202511",
-         "title":"November",
+         "title":"November 2025",
+         "description": "Security and enterprise features",
          "cards":[
             {
                "header":{
                   "title":"Security Enhancements"
                },
                "body":[
-                  "Implemented 2FA",
-                  "Updated dependencies"
-               ]
+                  "Implement content security policies",
+                  "Add sanitization for user inputs",
+                  "Perform security audit",
+                  "Fix all reported vulnerabilities"
+               ],
+               "status": "planned",
+               "priority": "high",
+               "dueDate": "2025-11-15",
+               "tags": ["security", "enterprise"]
+            },
+            {
+               "header":{
+                  "title":"Enterprise Features"
+               },
+               "body":[
+                  "Create single sign-on integration",
+                  "Implement role-based access control",
+                  "Add support for audit logging",
+                  "Build enterprise deployment guides"
+               ],
+               "status": "planned",
+               "priority": "medium",
+               "dueDate": "2025-11-25",
+               "tags": ["enterprise", "security"]
+            },
+            {
+               "header":{
+                  "title":"Performance Monitoring"
+               },
+               "body":[
+                  "Add performance telemetry",
+                  "Create dashboard for performance metrics",
+                  "Implement performance regression testing"
+               ],
+               "status": "planned",
+               "priority": "medium",
+               "dueDate": "2025-11-30",
+               "tags": ["performance", "monitoring"]
             }
          ]
       },
       {
          "id":"202512",
-         "title":"December",
+         "title":"December 2025",
+         "description": "Review and planning for next year",
          "cards":[
             {
                "header":{
                   "title":"Year-End Review"
                },
                "body":[
-                  "Conducted performance reviews",
-                  "Planned roadmap for next year"
-               ]
+                  "Analyze component usage metrics",
+                  "Collect community feedback",
+                  "Evaluate performance benchmarks",
+                  "Identify areas for improvement"
+               ],
+               "status": "planned",
+               "priority": "high",
+               "dueDate": "2025-12-15",
+               "tags": ["planning", "analysis"]
+            },
+            {
+               "header":{
+                  "title":"2026 Roadmap Planning"
+               },
+               "body":[
+                  "Define key objectives for 2026",
+                  "Prioritize feature requests",
+                  "Create quarterly release schedule",
+                  "Align with strategic initiatives"
+               ],
+               "status": "planned",
+               "priority": "high",
+               "dueDate": "2025-12-30",
+               "tags": ["planning", "strategy"]
+            },
+            {
+               "header":{
+                  "title":"Community Event"
+               },
+               "body":[
+                  "Host year-end community showcase",
+                  "Present success stories",
+                  "Announce 2026 plans",
+                  "Recognize contributors"
+               ],
+               "status": "planned",
+               "priority": "medium",
+               "dueDate": "2025-12-20",
+               "tags": ["community", "event"]
             }
          ]
       }

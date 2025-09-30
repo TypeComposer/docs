@@ -28,13 +28,5 @@ jobs:
         uses: anishathalye/proof-html@v2
         with:
           directory: ./dist
-          check_html: true
-          check_css: true
-          enforce_https: true
-          retries: 3
-          timeout: 120
-          max_concurrency: 50
           tokens: |
             {"https://github.com": "${{ secrets.GITHUB_TOKEN }}"}
-          ignore_url: |
-            https://typecomposer.com/google4af83caede6e50cf.html

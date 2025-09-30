@@ -17,7 +17,7 @@ export class Roadmap extends DivElement {
   constructor(
     readonly data: RoadmapData[]
   ) {
-    super({ className: `flex justify-center gap-6 h-[500px] overflow-x-auto overflow-y-hidden p-4 scrollbar-hide` });
+    super({ className: `flex justify-center gap-2 h-[500px] overflow-x-auto overflow-y-hidden p-4 scrollbar-hide` });
     for (const section of this.data) {
         const sectionDiv = new DivElement({ className: "flex-shrink-0 min-w-80 border border-gray-300 rounded-xl p-4 m-5 overflow-y-auto scrollbar-hide" });
         sectionDiv.append(new SpanElement({ className: "text-lg font-semibold mb-4 block border-b pb-2 text-gray-800 dark:text-gray-200", innerText: section.title }));
@@ -33,7 +33,7 @@ class CardElement extends DivElement {
   constructor(readonly card: Card) {
     super({
       className:
-        "card border border-gray-200 rounded p-3 mb-5 bg-white shadow-sm w-full [max-width:300px]" // 👈 custom max width
+        "card border border-gray-200 rounded p-3 mb-5 bg-white shadow-sm [max-width:300px]"
     });
     this.appendChild(
       new DivElement({

@@ -4,14 +4,12 @@ import { Router } from "typecomposer";
 import { loadDocs } from "@/utils/mdx";
 import { BaseView } from "@/views/elements/Base";
 import { HomePage } from "@/pages/Home";
-import { RoadmapPage } from "@/pages/RoadmapPage";
 
 loadDocs().finally(() => {
   Router.create({
     history: "history",
     routes: [
       { path: "/", component: HomePage },
-      { path: "/roadmap", component: RoadmapPage },
       {
         path: "/docs",
         component: AppPage,

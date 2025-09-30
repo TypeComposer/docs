@@ -7,7 +7,7 @@ import { HomePage } from "@/pages/Home";
 
 loadDocs().finally(() => {
   Router.create({
-    history: "hash",
+    history: "history",
     routes: [
       { path: "/", component: HomePage },
       {

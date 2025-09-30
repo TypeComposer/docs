@@ -1,5 +1,5 @@
-import { AnchorElement, Component, DivElement, ImageElement, Router, SvgElement, App, ref, computed } from "typecomposer";
-import { Sun, Moon, createElement } from "lucide";
+import { AnchorElement, Component, DivElement, ImageElement, Router, SvgElement, App, ref, computed, ButtonElement, BorderPanel } from "typecomposer";
+import { Sun, Moon, createElement, Menu } from "lucide";
 
 class ThemeToggle extends Component {
   constructor() {
@@ -33,7 +33,7 @@ class NavLinks extends Component {
     super({ className: "flex items-center nav-links" });
     this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
     this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
-    this.append(new AnchorElement({ text: "GitHub" , href: "https://github.com/typecomposer/typecomposer" }));
+    this.append(new AnchorElement({ text: "GitHub", href: "https://github.com/typecomposer/typecomposer" }));
     this.append(new ThemeToggle());
   }
 }
@@ -45,6 +45,16 @@ export class NavBar extends Component {
     super({ className: "flex items-center justify-between w-screen h-16 px-6 navbar" });
     this.append(new Logo());
     this.append(new NavLinks());
+    this.append(
+      new ButtonElement({
+        className: "btn-sidebar m-2",
+        children: [createElement(Menu)],
+        onclick: () => {
+          const parent = this.getParent<BorderPanel>();
+          parent?.left.toggleAttribute("open");
+        },
+      })
+    );
     this.btn();
   }
 

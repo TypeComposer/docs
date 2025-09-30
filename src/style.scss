@@ -43,14 +43,14 @@
   --sidebar-background: #ffffff;
   --sidebar-border: #e5e7eb;
   --hover-background: #f3f4f6;
-  
+
   /* Glassmorphism */
   --glass-background: rgba(255, 255, 255, 0.9);
   --glass-border: rgba(255, 255, 255, 0.2);
   --navbar-background: rgba(255, 255, 255, 0.8);
   --navbar-border: rgba(229, 231, 235, 0.3);
   --selection-background: rgba(120, 119, 198, 0.3);
-  
+
   /* Shadows */
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.3);
@@ -70,14 +70,14 @@
   --sidebar-background: #0a0a0a;
   --sidebar-border: #374151;
   --hover-background: #1f2937;
-  
+
   /* Glassmorphism */
   --glass-background: rgba(0, 0, 0, 0.9);
   --glass-border: rgba(255, 255, 255, 0.1);
   --navbar-background: rgba(10, 10, 10, 0.8);
   --navbar-border: rgba(55, 65, 81, 0.3);
   --selection-background: rgba(59, 130, 246, 0.3);
-  
+
   /* Shadows */
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.3);
@@ -90,11 +90,8 @@
 
 * {
   box-sizing: border-box;
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -524,7 +521,8 @@ label {
   width: 0.75rem;
   height: 0.75rem;
   background: currentColor;
-  mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M9 5l7 7-7 7'/%3e%3c/svg%3e") no-repeat center;
+  mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M9 5l7 7-7 7'/%3e%3c/svg%3e")
+    no-repeat center;
   mask-size: contain;
   color: var(--text-muted);
   transition: all 0.2s ease;
@@ -690,6 +688,14 @@ label {
   table td {
     padding: 0.5rem;
   }
+
+  .nav-links {
+    display: none;
+  }
+
+  .sidebar {
+    display: none !important;
+  }
 }
 
 /* ========================================
@@ -779,7 +785,8 @@ label {
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -797,7 +804,8 @@ label {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
   33% {
@@ -809,7 +817,8 @@ label {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(1);
   }
@@ -837,6 +846,12 @@ label {
   margin-bottom: 1rem;
 }
 
+.navbar .btn-sidebar {
+  position: fixed;
+  right: 10px;
+  display: none;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   .navbar {
@@ -844,9 +859,33 @@ label {
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
   }
+  .btn-sidebar {
+    display: flex !important;
+  }
+
+  .hero-actions {
+    margin-top: 0px !important;
+    margin-bottom: 1rem;
+  }
 
   .navbar .nav-links {
     display: none;
+  }
+
+  .no-mobile {
+    display: none;
+  }
+
+  .sidebar[open] {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1000;
+    box-shadow: 2px 0 8px var(--shadow-medium);
+    animation: slide-in 0.3s ease-out forwards;
   }
 
   .menu-btn {
@@ -983,3 +1022,185 @@ label {
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.section {
+  flex-shrink: 0;
+  min-width: 320px;
+  background: var(--navbar-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 20px;
+  scrollbar-width: none;
+}
+
+.section-header {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card {
+  background: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 
+    0 1px 3px var(--shadow-light),
+    0 0 0 1px var(--shadow-light);
+  transition: all 0.2s ease;
+  animation: slideInUp 0.3s ease-out;
+}
+
+.card-title {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  transition: color 0.2s ease;
+}
+
+.card-body-item {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.card-body-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.card:hover .card-body-item::before {
+  color: var(--text-primary);
+}
+
+.card {
+  margin: 8px 4px 2px 0;
+  font-size: 0.75rem;
+}
+
+/* ========================================
+   ROADMAP COMPONENT STYLES
+   ======================================== */
+
+.roadmap-title {
+  color: var(--text-primary);
+}
+
+.roadmap-description {
+  color: var(--text-secondary);
+}
+
+.roadmap-legend-text {
+  color: var(--text-secondary);
+}
+
+.roadmap-section {
+  border-color: var(--border-color);
+  background-color: var(--primary-background-color);
+  box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+.roadmap-section-header {
+  border-color: var(--border-color);
+}
+
+.roadmap-section-title {
+  color: var(--text-primary);
+}
+
+.roadmap-section-description {
+  color: var(--text-muted);
+}
+
+.roadmap-nav-button {
+  background-color: var(--secondary-background-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.roadmap-nav-button:hover {
+  background-color: var(--hover-background);
+}
+
+.roadmap-card {
+  background-color: var(--primary-background-color);
+  border-color: var(--border-color);
+}
+
+.roadmap-card-title {
+  color: var(--text-primary);
+}
+
+.roadmap-card-body {
+  color: var(--text-secondary);
+}
+
+.roadmap-card-footer {
+  border-color: var(--border-color);
+}
+
+.status-badge-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  .dark .status-badge-completed {
+    background-color: rgba(16, 185, 129, 0.25);
+    color: #6ee7b7;
+  }
+
+  .status-badge-in-progress {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  .dark .status-badge-in-progress {
+    background-color: rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+  }
+
+  .status-badge-planned {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  .dark .status-badge-planned {
+    background-color: rgba(156, 163, 175, 0.2);
+    color: #d1d5db;
+  }
+
+  .priority-badge-high {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  .dark .priority-badge-high {
+    background-color: rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+  }
+
+  .priority-badge-medium {
+    background-color: #fef3c7;
+    color: #b45309;
+  }
+  .dark .priority-badge-medium {
+    background-color: rgba(245, 158, 11, 0.25);
+    color: #fcd34d;
+  }
+
+  .priority-badge-low {
+    background-color: #e0f2fe;
+    color: #0369a1;
+  }
+  .dark .priority-badge-low {
+    background-color: rgba(14, 165, 233, 0.25);
+    color: #7dd3fc;
+  }

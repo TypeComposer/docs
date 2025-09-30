@@ -1,13 +1,13 @@
-.sidebar {
+:host {
   width: 260px;
   max-width: 100%;
   min-height: 100vh;
   background: var(--bg);
   border-right: 1px solid #23232c;
   padding: 8px 8px 24px;
+  position: relative;
 }
 
-/* header */
 .lib-header {
   display: flex;
   align-items: center;
@@ -72,7 +72,7 @@ details.menu summary:hover {
   border-left: 2px solid #23232c;
   border-left-color: var(--primary);
   color: var(--text);
-  background: var(--hover-background) !important;
+  background: var(--hover-background);
 }
 
 details.menu summary::-webkit-details-marker {
@@ -80,9 +80,6 @@ details.menu summary::-webkit-details-marker {
 }
 details.menu summary:focus-visible {
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ring) 55%, transparent);
-}
-details.menu summary:hover {
-  background: var(--hover);
 }
 .icon {
   width: 22px;

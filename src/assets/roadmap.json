@@ -1,0 +1,156 @@
+{
+  "data": [
+    {
+      "id": "202509",
+      "title": "September 2025",
+      "description": "Documentation and community focus",
+      "cards": [
+        {
+          "header": {
+            "title": "Documentation Improvements"
+          },
+          "body": [
+            "Refactored Overall Documentation",
+            "Added Home Page",
+            "Improved Navigation"
+          ],
+          "status": "in-progress",
+          "priority": "high",
+          "dueDate": "2025-09-30",
+          "tags": ["docs", "user-experience"]
+        },
+        {
+          "header": {
+            "title": "Create Github Organization"
+          },
+          "body": [
+            "Set up TypeComposer org",
+            "Migrated repositories",
+            "Setup CI/CD pipelines",
+            "Implemented contribution guidelines"
+          ],
+          "status": "completed",
+          "priority": "high",
+          "dueDate": "2025-09-10",
+          "tags": ["community", "infrastructure"]
+        },
+        {
+          "header": {
+            "title": "Repository Enhancements"
+          },
+          "body": [
+            "Added issue templates",
+            "Improved README files",
+            "Created License files"
+          ],
+          "status": "completed",
+          "priority": "medium",
+          "dueDate": "2025-09-30",
+          "tags": ["community", "documentation"]
+        }
+      ]
+    },
+    {
+      "id": "202510",
+      "title": "October 2025",
+      "description": "Testing and State Management",
+      "cards": [
+        {
+          "header": {
+            "title": "Component Testing Framework"
+          },
+          "body": [
+            "Add testing utilities",
+            "Create example tests",
+            "Integrate with CI"
+          ],
+          "status": "planned",
+          "priority": "high",
+          "dueDate": "2025-10-31",
+          "tags": ["integration", "frameworks"]
+        },
+        {
+          "header": {
+            "title": "Improve Documentation with Examples"
+          },
+          "body": [
+            "Implement reactive state management",
+            "Add support for external stores",
+            "Create debugging tools for state"
+          ],
+          "status": "planned",
+          "priority": "high",
+          "dueDate": "2025-10-15",
+          "tags": ["state", "documentation"]
+        }
+      ]
+    },
+    {
+      "id": "202511",
+      "title": "November 2025",
+      "description": "Templates and Developer Tools",
+      "cards": [
+        {
+          "header": {
+            "title": "Improve Templates"
+          },
+          "body": [
+            "Add support for custom templates to streamline component creation.",
+            "Possibility of importing other components inside templates.",
+            "Similar to React's TSX."
+          ],
+          "status": "in-progress",
+          "priority": "high",
+          "dueDate": "2025-11-30",
+          "tags": ["templates", "components", "developer-experience"]
+        },
+        {
+          "header": {
+            "title": "VSCode Extension"
+          },
+          "body": [
+            "Support syntax highlighting for .template files.",
+            "Link templates with classes similar to how styles are linked."
+          ],
+          "status": "in-progress",
+          "priority": "medium",
+          "dueDate": "2025-11-30",
+          "tags": ["vscode", "developer-tools", "templates"]
+        }
+      ]
+    },
+    {
+      "id": "202512",
+      "title": "December 2025",
+      "description": "Community and Routing",
+      "cards": [
+        {
+          "header": {
+            "title": "Community Sessions"
+          },
+          "body": [
+            "Monthly showcases to demonstrate new features and improvements.",
+            "Gather feedback from the community."
+          ],
+          "status": "planned",
+          "priority": "medium",
+          "dueDate": "2025-12-31",
+          "tags": ["community", "showcases", "feedback"]
+        },
+        {
+          "header": {
+            "title": "Refactor Routing and Decide Best Pattern"
+          },
+          "body": [
+            "Explore the possibility of SSR.",
+            "Decide the best pattern for routing and navigation."
+          ],
+          "status": "planned",
+          "priority": "high",
+          "dueDate": "2025-12-31",
+          "tags": ["routing", "navigation", "architecture"]
+        }
+      ]
+    }
+  ]
+}

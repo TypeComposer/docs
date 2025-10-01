@@ -14,9 +14,22 @@
       ]
     },
     {
-      "title": "Ref",
-      "link": "docs/ref",
-      "items": []
+      "title": "Reactivity Fundamentals",
+      "link": "docs/reactivity/fundamentals",
+      "items": [
+        {
+          "title": "Fundamentals",
+          "link": "docs/reactivity/fundamentals"
+        },
+        {
+          "title": "ref",
+          "link": "docs/reactivity/ref"
+        },
+        {
+          "title": "computed",
+          "link": "docs/reactivity/computed"
+        }
+      ]
     },
     {
       "title": "Router",

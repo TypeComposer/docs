@@ -26,7 +26,9 @@ loadDocs().finally(() => {
           { path: "layout/vbox", component: BaseView },
           { path: "layout/hbox", component: BaseView },
           { path: "layout/border-panel", component: BaseView },
-          { path: "ref", component: BaseView },
+          { path: "reactivity/fundamentals", component: BaseView },
+          { path: "reactivity/ref", component: BaseView },
+          { path: "reactivity/computed", component: BaseView },
           { path: "router", component: BaseView },
           { path: "router-view", component: BaseView },
           { path: "home", component: BaseView }

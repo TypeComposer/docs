@@ -122,8 +122,22 @@
     {
       "id": "202512",
       "title": "December 2025",
-      "description": "Community and Routing",
+      "description": "Release, Community and Routing",
       "cards": [
+         {
+            "header": {
+               "title": "Release 1.0.0"
+            },
+            "body": [
+               "Finalize all core features.",
+               "Conduct thorough testing and documentation review.",
+               "Officially launch TypeComposer 1.0.0."
+            ],
+            "status": "planned",
+            "priority": "high",
+            "dueDate": "2025-12-15",
+            "tags": ["release", "milestone", "launch"]
+         },
         {
           "header": {
             "title": "Community Sessions"

@@ -64,7 +64,7 @@ export class BaseView extends VBox {
   constructor() {
     super({ className: "main-content" });
 
-    this.contentWrapper = this.appendChild(new VBox({ className: "content-wrapper" }));
+    this.contentWrapper = this.appendChild(new VBox({ className: "content-wrapper w-full" }));
     this.contentWrapper.append(getPage(Router.pathname));
     this.contentWrapper.append(new Navigation());
   }

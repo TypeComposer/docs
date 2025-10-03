@@ -100,7 +100,6 @@ const files = {
     <title>TypeCompose</title>
   </head>
   <body>
-    <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>`,
@@ -183,7 +182,9 @@ export class AppPage extends VBox {
     this.appendChild(subtitle);
     this.appendChild(this.button);
   }
-}`,
+}
+customElements.define("app-page", AppPage);  
+`,
 	},
 };
 
@@ -294,8 +295,6 @@ export class PlaygroundView extends Component {
   </style>
 </head>
 <body>
-  <div id="app"></div>
-  
   <script>
     // Global error handling
     window.addEventListener("error", (event) => {
@@ -347,39 +346,6 @@ export class PlaygroundView extends Component {
           .toLowerCase();
       }
       
-      // Register all TypeComposer components
-      const componentsToRegister = [];
-      
-      for (const [name, exported] of Object.entries(typecomposer)) {
-        // Check if it's a class that extends HTMLElement
-        if (typeof exported === 'function' && 
-            exported.prototype instanceof HTMLElement) {
-          
-          // Generate tag name from class name
-          let tagName = toKebabCase(name);
-          
-          // Ensure tag has a hyphen (required for custom elements)
-          if (!tagName.includes('-')) {
-            tagName = tagName + '-element';
-          }
-          
-          // Check if already registered
-          if (!customElements.get(tagName)) {
-            try {
-              customElements.define(tagName, exported);
-              componentsToRegister.push({ name, tagName, class: exported });
-              console.log(\`[Playground] Registered: \${name} as <\${tagName}>\`);
-            } catch (error) {
-              console.warn(\`[Playground] Failed to register \${name}:\`, error.message);
-            }
-          } else {
-            console.log(\`[Playground] Already registered: \${name} as <\${tagName}>\`);
-          }
-        }
-      }
-      
-      console.log(\`[Playground] Successfully registered \${componentsToRegister.length} components\`);
-      console.log('[Playground] Registered components:', componentsToRegister.map(c => c.name).join(', '));
       
       // Small delay to ensure all components are fully registered
       await new Promise(resolve => setTimeout(resolve, 50));

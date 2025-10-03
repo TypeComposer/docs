@@ -1,5 +1,6 @@
-import { Component, IFrameElement, DivElement } from "typecomposer";
+import { Component, IFrameElement, DivElement, HBox, VBox, ButtonElement } from "typecomposer";
 import { compileFiles, initializeEsbuild } from "@/utils/browserCompiler";
+import { MonacoEditor } from "@/components/editor/MonacoEditor";
 
 const files = {
 	"/tsconfig.json": {
@@ -130,8 +131,7 @@ export class AppPage extends VBox {
         gap: "20px",
       }
     });
-    
-    // Add title using TypeComposer DivElement
+
     const title = new DivElement({
       innerText: "🎨 TypeComposer Playground",
       style: {
@@ -142,17 +142,6 @@ export class AppPage extends VBox {
       }
     });
     
-    // Add subtitle
-    const subtitle = new DivElement({
-      innerText: "Browser-based compilation + TypeComposer Components! ✓",
-      style: {
-        color: "#e0e7ff",
-        fontSize: "18px",
-        fontWeight: "normal"
-      }
-    });
-    
-    // Add interactive button using TypeComposer ButtonElement
     this.button = new ButtonElement({
       innerText: "Click me!",
       style: {
@@ -179,7 +168,6 @@ export class AppPage extends VBox {
     
     // Append all elements
     this.appendChild(title);
-    this.appendChild(subtitle);
     this.appendChild(this.button);
   }
 }
@@ -192,23 +180,79 @@ customElements.define("app-page", AppPage);
 export class PlaygroundView extends Component {
 	private iframe: IFrameElement;
 	private errorContainer: DivElement;
+	private editor: MonacoEditor;
+	private currentFileName: string = "/src/AppPage.ts";
+	private files: Record<string, { code: string }>;
 	private isCompiling = false;
+	private compileTimeout: number | null = null;
 	private typeComposerVersion: string = "0.1.53"; // Make this configurable
+	private fileTabs: Map<string, ButtonElement> = new Map();
 
 	constructor() {
-		super({ className: "flex flex-col gap-2 overflow-hidden w-full h-full" });
+		super({ className: "flex flex-col overflow-hidden w-full h-full" });
+		
+		this.files = files;
 		
 		// Create error container
 		this.errorContainer = this.appendChild(new DivElement({
 			className: "hidden bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded relative",
-			style: { maxHeight: "200px", overflow: "auto" }
 		})) as DivElement;
+		this.errorContainer.style.maxHeight = "200px";
+		this.errorContainer.style.overflow = "auto";
 
+		// Create main container with split view
+		const mainContainer = this.appendChild(new HBox({ 
+			className: "flex-1 overflow-hidden"
+		})) as HBox;
+		
+		// Left panel - Editor
+		const editorPanel = mainContainer.appendChild(new VBox({
+			className: "flex-1 flex flex-col border-r border-gray-300 overflow-hidden"
+		})) as VBox;
+		
+		// File tabs
+		const tabsContainer = editorPanel.appendChild(new HBox({
+			className: "flex gap-1 p-2 bg-gray-100 border-b border-gray-300 overflow-x-auto"
+		})) as HBox;
+		
+		// Create tabs for editable files
+		const editableFiles = ["/src/main.ts", "/src/AppPage.ts"];
+		editableFiles.forEach(fileName => {
+			const tab = tabsContainer.appendChild(new ButtonElement({
+				innerText: fileName.split("/").pop() || fileName,
+				className: fileName === this.currentFileName 
+					? "px-3 py-1 text-sm bg-white border border-gray-300 rounded cursor-pointer"
+					: "px-3 py-1 text-sm bg-gray-200 border border-gray-300 rounded cursor-pointer hover:bg-gray-300"
+			})) as ButtonElement;
+			
+			tab.onclick = () => this.switchFile(fileName);
+			this.fileTabs.set(fileName, tab);
+		});
+		
+		// Monaco Editor
+		this.editor = editorPanel.appendChild(new MonacoEditor({
+			value: this.files[this.currentFileName].code,
+			language: "typescript",
+			onChange: (value) => this.onEditorChange(value),
+			className: "flex-1"
+		})) as MonacoEditor;
+		
+		// Right panel - Preview
+		const previewPanel = mainContainer.appendChild(new VBox({
+			className: "flex-1 flex flex-col overflow-hidden"
+		})) as VBox;
+		
+		// Preview header
+		previewPanel.appendChild(new DivElement({
+			innerText: "Preview",
+			className: "px-4 py-2 bg-gray-100 border-b border-gray-300 font-semibold text-sm"
+		}));
+		
 		// Create iframe for preview
-		this.iframe = this.appendChild(new IFrameElement({ 
-			className: "w-full h-full",
-			style: { border: "none" }
+		this.iframe = previewPanel.appendChild(new IFrameElement({ 
+			className: "flex-1",
 		})) as IFrameElement;
+		this.iframe.style.border = "none";
 	}
 
 	async onInit() {
@@ -446,9 +490,50 @@ export class PlaygroundView extends Component {
 	}
 
 	/**
+	 * Handle editor content changes with debounced compilation
+	 */
+	private onEditorChange(value: string): void {
+		// Update the current file's code
+		this.files[this.currentFileName].code = value;
+		
+		// Debounce compilation
+		if (this.compileTimeout !== null) {
+			clearTimeout(this.compileTimeout);
+		}
+		
+		this.compileTimeout = setTimeout(() => {
+			this.compileAndRun(this.files);
+		}, 1000) as unknown as number; // Compile 1 second after user stops typing
+	}
+	
+	/**
+	 * Switch between files in the editor
+	 */
+	private switchFile(fileName: string): void {
+		if (fileName === this.currentFileName) return;
+		
+		// Update current file
+		this.currentFileName = fileName;
+		
+		// Update editor content
+		this.editor.setValue(this.files[fileName].code);
+		
+		// Update tab styles
+		this.fileTabs.forEach((tab, name) => {
+			if (name === fileName) {
+				tab.className = "px-3 py-1 text-sm bg-white border border-gray-300 rounded cursor-pointer";
+			} else {
+				tab.className = "px-3 py-1 text-sm bg-gray-200 border border-gray-300 rounded cursor-pointer hover:bg-gray-300";
+			}
+		});
+	}
+
+	/**
 	 * Public method to update files and recompile
 	 */
 	public async updateFiles(newFiles: Record<string, { code: string }>): Promise<void> {
+		this.files = newFiles;
+		this.editor.setValue(this.files[this.currentFileName].code);
 		await this.compileAndRun(newFiles);
 	}
 } 

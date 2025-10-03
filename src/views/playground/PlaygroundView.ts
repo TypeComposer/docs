@@ -108,29 +108,70 @@ const files = {
 	"/src/main.ts": {
 		code: `import { AppPage } from "./AppPage";
 
-const app = new AppPage();
-document.body.appendChild(app);`,
+new AppPage();`,
 	},
 	"/src/AppPage.ts": {
-		code: `import { BorderPanel } from "typecomposer";
-
-export class AppPage extends BorderPanel {
+		code: `
+export class AppPage {
   constructor() {
-    super({ 
-      style: { 
-        width: "100vw", 
-        height: "100vh", 
-        backgroundColor: "#ef4444",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "white",
-        fontSize: "24px",
-        fontWeight: "bold"
-      }
-    });
+    const appDiv = document.getElementById("app");
+    if (!appDiv) return;
     
-    this.innerText = "Hello from TypeComposer!";
+    // Create a styled container
+    const container = document.createElement("div");
+    container.style.cssText = \`
+      padding: 40px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #3b82f6;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    \`;
+    
+    // Add title
+    const title = document.createElement("h1");
+    title.textContent = "🎨 TypeComposer Playground";
+    title.style.cssText = "color: white; font-size: 48px; margin: 0;";
+    
+    // Add subtitle
+    const subtitle = document.createElement("p");
+    subtitle.textContent = "Browser-based TypeScript compilation works! ✓";
+    subtitle.style.cssText = "color: #e0e7ff; font-size: 18px; font-weight: normal;";
+    
+    // Add interactive button
+    const button = document.createElement("button");
+    button.textContent = "Click me!";
+    button.style.cssText = \`
+      padding: 12px 24px;
+      font-size: 16px;
+      background: white;
+      color: #667eea;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    \`;
+    
+    let clickCount = 0;
+    button.onclick = () => {
+      clickCount++;
+      button.textContent = \`Clicked \${clickCount} time\${clickCount === 1 ? '' : 's'}!\`;
+      button.style.transform = "scale(1.1)";
+      setTimeout(() => {
+        button.style.transform = "scale(1)";
+      }, 150);
+    };
+    
+    container.appendChild(title);
+    container.appendChild(subtitle);
+    container.appendChild(button);
+    appDiv.appendChild(container);
   }
 }`,
 	},
@@ -141,6 +182,7 @@ export class PlaygroundView extends Component {
 	private iframe: IFrameElement;
 	private errorContainer: DivElement;
 	private isCompiling = false;
+	private typeComposerVersion: string = "0.1.53"; // Make this configurable
 
 	constructor() {
 		super({ className: "flex flex-col gap-2 overflow-hidden w-full h-full" });
@@ -185,11 +227,18 @@ export class PlaygroundView extends Component {
 				return;
 			}
 
+			// Debug: Log the compiled code
+			console.log("[PlaygroundView] Compilation successful!");
+			console.log("[PlaygroundView] Compiled code length:", result.code.length);
+			console.log("[PlaygroundView] First 500 chars:", result.code.substring(0, 500));
+
 			// Create HTML to inject into iframe
 			const html = this.createIframeHTML(result.code);
+			console.log("[PlaygroundView] Generated HTML length:", html.length);
 
 			// Inject into iframe
 			await this.injectCode(html);
+			console.log("[PlaygroundView] Code injected into iframe");
 
 		} catch (error) {
 			this.showError(`Error: ${error instanceof Error ? error.message : String(error)}`);
@@ -202,54 +251,145 @@ export class PlaygroundView extends Component {
 	 * Create HTML document for iframe
 	 */
 	private createIframeHTML(compiledCode: string): string {
-		// Create HTML with the compiled code as a separate module script
-		const html = '<!DOCTYPE html>\n' +
-			'<html lang="en">\n' +
-			'<head>\n' +
-			'  <meta charset="UTF-8" />\n' +
-			'  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n' +
-			'  <title>TypeComposer Preview</title>\n' +
-			'  <script type="importmap">\n' +
-			'  {\n' +
-			'    "imports": {\n' +
-			'      "typecomposer": "https://esm.sh/typecomposer@0.1.53"\n' +
-			'    }\n' +
-			'  }\n' +
-			'  </script>\n' +
-			'  <style>\n' +
-			'    * {\n' +
-			'      margin: 0;\n' +
-			'      padding: 0;\n' +
-			'      box-sizing: border-box;\n' +
-			'    }\n' +
-			'    body {\n' +
-			'      font-family: system-ui, -apple-system, sans-serif;\n' +
-			'    }\n' +
-			'  </style>\n' +
-			'</head>\n' +
-			'<body>\n' +
-			'  <script type="module">\n' +
-			'    // Error handling\n' +
-			'    window.addEventListener("error", (event) => {\n' +
-			'      console.error("Runtime Error:", event.error);\n' +
-			'      const errorDiv = document.createElement("div");\n' +
-			'      errorDiv.style.cssText = "color: #dc2626; padding: 20px; font-family: monospace; white-space: pre-wrap; background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; margin: 20px;";\n' +
-			'      errorDiv.textContent = "Error: " + (event.error?.stack || event.message);\n' +
-			'      if (document.body.children.length === 0) {\n' +
-			'        document.body.appendChild(errorDiv);\n' +
-			'      }\n' +
-			'    });\n' +
-			'    \n' +
-			'    window.addEventListener("unhandledrejection", (event) => {\n' +
-			'      console.error("Unhandled Promise Rejection:", event.reason);\n' +
-			'    });\n' +
-			'  </script>\n' +
-			'  <script type="module">\n' +
-			compiledCode + '\n' +
-			'  </script>\n' +
-			'</body>\n' +
-			'</html>';
+		// Use esm.sh CDN which properly supports ES modules with CORS
+		// Format: https://esm.sh/package@version
+		const typecomposerUrl = `https://esm.sh/typecomposer@${this.typeComposerVersion}`;
+		
+		const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeComposer Preview</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "typecomposer": "${typecomposerUrl}"
+    }
+  }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: auto;
+    }
+    #app {
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  
+  <script>
+    // Global error handling
+    window.addEventListener("error", (event) => {
+      console.error("Runtime Error:", event.error);
+      event.preventDefault();
+      const errorDiv = document.createElement("div");
+      errorDiv.style.cssText = "color: #dc2626; padding: 20px; font-family: monospace; white-space: pre-wrap; background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; margin: 20px;";
+      errorDiv.innerHTML = "<strong>Runtime Error:</strong><br><pre>" + (event.error?.stack || event.message) + "</pre>";
+      const appDiv = document.getElementById("app");
+      if (appDiv) {
+        appDiv.innerHTML = "";
+        appDiv.appendChild(errorDiv);
+      } else {
+        document.body.appendChild(errorDiv);
+      }
+    });
+    
+    window.addEventListener("unhandledrejection", (event) => {
+      console.error("Unhandled Promise Rejection:", event.reason);
+      event.preventDefault();
+      const errorDiv = document.createElement("div");
+      errorDiv.style.cssText = "color: #dc2626; padding: 20px; font-family: monospace; white-space: pre-wrap; background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; margin: 20px;";
+      errorDiv.innerHTML = "<strong>Unhandled Promise:</strong><br><pre>" + (event.reason?.stack || event.reason) + "</pre>";
+      const appDiv = document.getElementById("app");
+      if (appDiv) {
+        appDiv.appendChild(errorDiv);
+      } else {
+        document.body.appendChild(errorDiv);
+      }
+    });
+  </script>
+  
+  <script type="module">
+    console.log('[Playground] Starting initialization...');
+    
+    try {
+      // Pre-load TypeComposer
+      console.log('[Playground] Loading TypeComposer from:', 'typecomposer');
+      const typecomposer = await import('typecomposer');
+      console.log('[Playground] TypeComposer loaded:', typecomposer);
+      
+      // Make TypeComposer available globally
+      window.__typecomposer = typecomposer;
+      
+      // TypeComposer components are already registered by the CDN build
+      // No manual registration needed!
+      console.log('[Playground] Components auto-registered by esm.sh build');
+      
+      // Wait a moment for any async initialization
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      console.log('[Playground] Ready to execute user code');
+      
+      // Now load the user code
+      const codeUrl = '${this.createCodeBlobUrl(compiledCode)}';
+      console.log('[Playground] Loading user code from:', codeUrl);
+      
+      const userModule = await import(codeUrl);
+      console.log('[Playground] User module loaded:', userModule);
+      console.log('[Playground] User code executed successfully ✓');
+      
+    } catch (error) {
+      console.error('[Playground] Initialization failed:', error);
+      console.error('[Playground] Error stack:', error.stack);
+      
+      // Show error in the UI
+      const errorDiv = document.createElement('div');
+      errorDiv.style.cssText = 'color: #dc2626; padding: 20px; font-family: monospace; white-space: pre-wrap; background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; margin: 20px;';
+      errorDiv.innerHTML = '<strong>Initialization Error:</strong><br><pre>' + (error.stack || error.message || error) + '</pre>';
+      document.body.appendChild(errorDiv);
+      
+      throw error;
+    }
+  </script>
+</body>
+</html>`;
 		return html;
+	}
+
+	/**
+	 * Create a blob URL for the compiled code
+	 */
+	private createCodeBlobUrl(compiledCode: string): string {
+		// Replace bare imports with full CDN URLs since import maps don't work in blob URLs
+		// This allows the compiled code to resolve TypeComposer imports
+		const typecomposerUrl = `https://esm.sh/typecomposer@${this.typeComposerVersion}`;
+		
+		console.log('[PlaygroundView] Original code:', compiledCode.substring(0, 800));
+		
+		const processedCode = compiledCode.replace(
+			/from\s+["']typecomposer["']/g,
+			`from "${typecomposerUrl}"`
+		);
+		
+		console.log('[PlaygroundView] Processed code:', processedCode.substring(0, 800));
+		console.log('[PlaygroundView] Replacement count:', (compiledCode.match(/from\s+["']typecomposer["']/g) || []).length);
+		
+		const codeBlob = new Blob([processedCode], { type: 'text/javascript' });
+		const codeUrl = URL.createObjectURL(codeBlob);
+		
+		// Store URL to revoke later
+		setTimeout(() => URL.revokeObjectURL(codeUrl), 5000);
+		
+		return codeUrl;
 	}
 
 	/**

@@ -132,13 +132,32 @@ export async function compileFiles(
       bundle: true,
       write: false,
       format: 'esm',
-      target: 'esnext',
+      target: 'es2020',
+      minify: false,
+      keepNames: true,
+      sourcemap: 'inline',
       plugins: [virtualFilePlugin],
       external: ['typecomposer', 'typescript', 'vite', '@codesandbox/sandpack-client'],
+      tsconfigRaw: {
+        compilerOptions: {
+          experimentalDecorators: true,
+          emitDecoratorMetadata: true,
+          useDefineForClassFields: true,
+          target: 'ES2020',
+          module: 'ESNext',
+        },
+      }
     });
 
     if (result.outputFiles && result.outputFiles.length > 0) {
       const code = new TextDecoder().decode(result.outputFiles[0].contents);
+      
+      // Debug log in development
+      if (import.meta.env?.DEV) {
+        console.log('[Compiler] Successfully compiled:', entry);
+        console.log('[Compiler] Output length:', code.length, 'bytes');
+      }
+      
       return { success: true, code };
     }
 

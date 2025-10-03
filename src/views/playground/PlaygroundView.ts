@@ -108,70 +108,80 @@ const files = {
 	"/src/main.ts": {
 		code: `import { AppPage } from "./AppPage";
 
-new AppPage();`,
+const app = new AppPage();
+document.body.appendChild(app);`,
 	},
 	"/src/AppPage.ts": {
-		code: `
-export class AppPage {
+		code: `import { VBox, DivElement, ButtonElement } from "typecomposer";
+
+export class AppPage extends VBox {
+  private clickCount = 0;
+  private button: ButtonElement;
+  
   constructor() {
-    const appDiv = document.getElementById("app");
-    if (!appDiv) return;
+    super({
+      style: {
+        padding: "40px",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "20px",
+      }
+    });
     
-    // Create a styled container
-    const container = document.createElement("div");
-    container.style.cssText = \`
-      padding: 40px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #3b82f6;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 20px;
-    \`;
-    
-    // Add title
-    const title = document.createElement("h1");
-    title.textContent = "🎨 TypeComposer Playground";
-    title.style.cssText = "color: white; font-size: 48px; margin: 0;";
+    // Add title using TypeComposer DivElement
+    const title = new DivElement({
+      innerText: "🎨 TypeComposer Playground",
+      style: {
+        color: "white",
+        fontSize: "48px",
+        fontWeight: "bold",
+        margin: "0"
+      }
+    });
     
     // Add subtitle
-    const subtitle = document.createElement("p");
-    subtitle.textContent = "Browser-based TypeScript compilation works! ✓";
-    subtitle.style.cssText = "color: #e0e7ff; font-size: 18px; font-weight: normal;";
+    const subtitle = new DivElement({
+      innerText: "Browser-based compilation + TypeComposer Components! ✓",
+      style: {
+        color: "#e0e7ff",
+        fontSize: "18px",
+        fontWeight: "normal"
+      }
+    });
     
-    // Add interactive button
-    const button = document.createElement("button");
-    button.textContent = "Click me!";
-    button.style.cssText = \`
-      padding: 12px 24px;
-      font-size: 16px;
-      background: white;
-      color: #667eea;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: transform 0.2s;
-    \`;
+    // Add interactive button using TypeComposer ButtonElement
+    this.button = new ButtonElement({
+      innerText: "Click me!",
+      style: {
+        padding: "12px 24px",
+        fontSize: "16px",
+        background: "white",
+        color: "#667eea",
+        border: "none",
+        borderRadius: "8px",
+        cursor: "pointer",
+        fontWeight: "600",
+        transition: "transform 0.2s"
+      }
+    });
     
-    let clickCount = 0;
-    button.onclick = () => {
-      clickCount++;
-      button.textContent = \`Clicked \${clickCount} time\${clickCount === 1 ? '' : 's'}!\`;
-      button.style.transform = "scale(1.1)";
+    this.button.onclick = () => {
+      this.clickCount++;
+      this.button.innerText = \`Clicked \${this.clickCount} time\${this.clickCount === 1 ? '' : 's'}!\`;
+      this.button.style.transform = "scale(1.1)";
       setTimeout(() => {
-        button.style.transform = "scale(1)";
+        this.button.style.transform = "scale(1)";
       }, 150);
     };
     
-    container.appendChild(title);
-    container.appendChild(subtitle);
-    container.appendChild(button);
-    appDiv.appendChild(container);
+    // Append all elements
+    this.appendChild(title);
+    this.appendChild(subtitle);
+    this.appendChild(this.button);
   }
 }`,
 	},
@@ -319,32 +329,68 @@ export class PlaygroundView extends Component {
   </script>
   
   <script type="module">
-    console.log('[Playground] Starting initialization...');
+    console.log('[Playground] Starting TypeComposer component registration...');
     
     try {
-      // Pre-load TypeComposer
-      console.log('[Playground] Loading TypeComposer from:', 'typecomposer');
+      // Import TypeComposer library
       const typecomposer = await import('typecomposer');
-      console.log('[Playground] TypeComposer loaded:', typecomposer);
+      console.log('[Playground] TypeComposer loaded:', Object.keys(typecomposer));
       
-      // Make TypeComposer available globally
-      window.__typecomposer = typecomposer;
+      // Make TypeComposer available globally (needed for registration)
+      window.TypeComposer = typecomposer.TypeComposer || globalThis.TypeComposer;
       
-      // TypeComposer components are already registered by the CDN build
-      // No manual registration needed!
-      console.log('[Playground] Components auto-registered by esm.sh build');
+      // Helper function to convert class name to kebab-case tag
+      function toKebabCase(str) {
+        return str
+          .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+          .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+          .toLowerCase();
+      }
       
-      // Wait a moment for any async initialization
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Register all TypeComposer components
+      const componentsToRegister = [];
+      
+      for (const [name, exported] of Object.entries(typecomposer)) {
+        // Check if it's a class that extends HTMLElement
+        if (typeof exported === 'function' && 
+            exported.prototype instanceof HTMLElement) {
+          
+          // Generate tag name from class name
+          let tagName = toKebabCase(name);
+          
+          // Ensure tag has a hyphen (required for custom elements)
+          if (!tagName.includes('-')) {
+            tagName = tagName + '-element';
+          }
+          
+          // Check if already registered
+          if (!customElements.get(tagName)) {
+            try {
+              customElements.define(tagName, exported);
+              componentsToRegister.push({ name, tagName, class: exported });
+              console.log(\`[Playground] Registered: \${name} as <\${tagName}>\`);
+            } catch (error) {
+              console.warn(\`[Playground] Failed to register \${name}:\`, error.message);
+            }
+          } else {
+            console.log(\`[Playground] Already registered: \${name} as <\${tagName}>\`);
+          }
+        }
+      }
+      
+      console.log(\`[Playground] Successfully registered \${componentsToRegister.length} components\`);
+      console.log('[Playground] Registered components:', componentsToRegister.map(c => c.name).join(', '));
+      
+      // Small delay to ensure all components are fully registered
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       console.log('[Playground] Ready to execute user code');
       
-      // Now load the user code
+      // Now load and execute the user code
       const codeUrl = '${this.createCodeBlobUrl(compiledCode)}';
-      console.log('[Playground] Loading user code from:', codeUrl);
+      console.log('[Playground] Loading user code from blob URL');
       
-      const userModule = await import(codeUrl);
-      console.log('[Playground] User module loaded:', userModule);
+      await import(codeUrl);
       console.log('[Playground] User code executed successfully ✓');
       
     } catch (error) {

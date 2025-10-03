@@ -202,59 +202,54 @@ export class PlaygroundView extends Component {
 	 * Create HTML document for iframe
 	 */
 	private createIframeHTML(compiledCode: string): string {
-		return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TypeComposer Preview</title>
-  <script type="importmap">
-  {
-    "imports": {
-      "typecomposer": "https://unpkg.com/typecomposer@0.1.53/dist/typecomposer.es.js"
-    }
-  }
-  </script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-  </style>
-</head>
-<body>
-  <script type="module">
-    // Capture console output and errors
-    const originalConsole = {
-      log: console.log,
-      error: console.error,
-      warn: console.warn,
-    };
-    
-    window.addEventListener('error', (event) => {
-      console.error('Runtime Error:', event.error?.message || event.message);
-      event.preventDefault();
-    });
-    
-    window.addEventListener('unhandledrejection', (event) => {
-      console.error('Unhandled Promise Rejection:', event.reason);
-      event.preventDefault();
-    });
-
-    // Execute compiled code
-    try {
-      ${compiledCode}
-    } catch (error) {
-      console.error('Execution Error:', error.message);
-      document.body.innerHTML = '<div style="color: red; padding: 20px; font-family: monospace;">Error: ' + error.message + '</div>';
-    }
-  </script>
-</body>
-</html>`;
+		// Create HTML with the compiled code as a separate module script
+		const html = '<!DOCTYPE html>\n' +
+			'<html lang="en">\n' +
+			'<head>\n' +
+			'  <meta charset="UTF-8" />\n' +
+			'  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n' +
+			'  <title>TypeComposer Preview</title>\n' +
+			'  <script type="importmap">\n' +
+			'  {\n' +
+			'    "imports": {\n' +
+			'      "typecomposer": "https://esm.sh/typecomposer@0.1.53"\n' +
+			'    }\n' +
+			'  }\n' +
+			'  </script>\n' +
+			'  <style>\n' +
+			'    * {\n' +
+			'      margin: 0;\n' +
+			'      padding: 0;\n' +
+			'      box-sizing: border-box;\n' +
+			'    }\n' +
+			'    body {\n' +
+			'      font-family: system-ui, -apple-system, sans-serif;\n' +
+			'    }\n' +
+			'  </style>\n' +
+			'</head>\n' +
+			'<body>\n' +
+			'  <script type="module">\n' +
+			'    // Error handling\n' +
+			'    window.addEventListener("error", (event) => {\n' +
+			'      console.error("Runtime Error:", event.error);\n' +
+			'      const errorDiv = document.createElement("div");\n' +
+			'      errorDiv.style.cssText = "color: #dc2626; padding: 20px; font-family: monospace; white-space: pre-wrap; background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; margin: 20px;";\n' +
+			'      errorDiv.textContent = "Error: " + (event.error?.stack || event.message);\n' +
+			'      if (document.body.children.length === 0) {\n' +
+			'        document.body.appendChild(errorDiv);\n' +
+			'      }\n' +
+			'    });\n' +
+			'    \n' +
+			'    window.addEventListener("unhandledrejection", (event) => {\n' +
+			'      console.error("Unhandled Promise Rejection:", event.reason);\n' +
+			'    });\n' +
+			'  </script>\n' +
+			'  <script type="module">\n' +
+			compiledCode + '\n' +
+			'  </script>\n' +
+			'</body>\n' +
+			'</html>';
+		return html;
 	}
 
 	/**
@@ -262,17 +257,21 @@ export class PlaygroundView extends Component {
 	 */
 	private async injectCode(html: string): Promise<void> {
 		return new Promise((resolve) => {
-			const iframeDoc = this.iframe.contentDocument || this.iframe.contentWindow?.document;
-			if (iframeDoc) {
-				iframeDoc.open();
-				iframeDoc.write(html);
-				iframeDoc.close();
-				
-				// Wait a bit for the iframe to load
+			// Create a data URL for the HTML to avoid srcdoc issues
+			const blob = new Blob([html], { type: 'text/html' });
+			const url = URL.createObjectURL(blob);
+			
+			// Set the iframe src to the blob URL
+			this.iframe.src = url;
+			
+			// Clean up the URL after loading
+			this.iframe.onload = () => {
+				URL.revokeObjectURL(url);
 				setTimeout(() => resolve(), 100);
-			} else {
-				resolve();
-			}
+			};
+			
+			// Fallback in case onload doesn't fire
+			setTimeout(() => resolve(), 500);
 		});
 	}
 

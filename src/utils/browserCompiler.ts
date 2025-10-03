@@ -8,8 +8,9 @@ let esbuildInitialized = false;
 export async function initializeEsbuild(): Promise<void> {
   if (esbuildInitialized) return;
   
+  // Use the bundled WASM from node_modules
   await esbuild.initialize({
-    wasmURL: 'https://unpkg.com/esbuild-wasm@0.24.0/esbuild.wasm',
+    wasmURL: '/node_modules/esbuild-wasm/esbuild.wasm',
   });
   
   esbuildInitialized = true;

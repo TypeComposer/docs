@@ -282,18 +282,11 @@ export class PlaygroundView extends Component {
 				return;
 			}
 
-			// Debug: Log the compiled code
-			console.log("[PlaygroundView] Compilation successful!");
-			console.log("[PlaygroundView] Compiled code length:", result.code.length);
-			console.log("[PlaygroundView] First 500 chars:", result.code.substring(0, 500));
-
 			// Create HTML to inject into iframe
 			const html = this.createIframeHTML(result.code);
-			console.log("[PlaygroundView] Generated HTML length:", html.length);
 
 			// Inject into iframe
 			await this.injectCode(html);
-			console.log("[PlaygroundView] Code injected into iframe");
 
 		} catch (error) {
 			this.showError(`Error: ${error instanceof Error ? error.message : String(error)}`);
@@ -372,12 +365,10 @@ export class PlaygroundView extends Component {
   </script>
   
   <script type="module">
-    console.log('[Playground] Starting TypeComposer component registration...');
     
     try {
       // Import TypeComposer library
       const typecomposer = await import('typecomposer');
-      console.log('[Playground] TypeComposer loaded:', Object.keys(typecomposer));
       
       // Make TypeComposer available globally (needed for registration)
       window.TypeComposer = typecomposer.TypeComposer || globalThis.TypeComposer;
@@ -394,14 +385,10 @@ export class PlaygroundView extends Component {
       // Small delay to ensure all components are fully registered
       await new Promise(resolve => setTimeout(resolve, 50));
       
-      console.log('[Playground] Ready to execute user code');
-      
       // Now load and execute the user code
       const codeUrl = '${this.createCodeBlobUrl(compiledCode)}';
-      console.log('[Playground] Loading user code from blob URL');
       
       await import(codeUrl);
-      console.log('[Playground] User code executed successfully ✓');
       
     } catch (error) {
       console.error('[Playground] Initialization failed:', error);
@@ -429,15 +416,10 @@ export class PlaygroundView extends Component {
 		// This allows the compiled code to resolve TypeComposer imports
 		const typecomposerUrl = `https://esm.sh/typecomposer@${this.typeComposerVersion}`;
 		
-		console.log('[PlaygroundView] Original code:', compiledCode.substring(0, 800));
-		
 		const processedCode = compiledCode.replace(
 			/from\s+["']typecomposer["']/g,
 			`from "${typecomposerUrl}"`
 		);
-		
-		console.log('[PlaygroundView] Processed code:', processedCode.substring(0, 800));
-		console.log('[PlaygroundView] Replacement count:', (compiledCode.match(/from\s+["']typecomposer["']/g) || []).length);
 		
 		const codeBlob = new Blob([processedCode], { type: 'text/javascript' });
 		const codeUrl = URL.createObjectURL(codeBlob);

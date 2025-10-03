@@ -152,12 +152,6 @@ export async function compileFiles(
     if (result.outputFiles && result.outputFiles.length > 0) {
       const code = new TextDecoder().decode(result.outputFiles[0].contents);
       
-      // Debug log in development
-      if (import.meta.env?.DEV) {
-        console.log('[Compiler] Successfully compiled:', entry);
-        console.log('[Compiler] Output length:', code.length, 'bytes');
-      }
-      
       return { success: true, code };
     }
 

@@ -2,12 +2,13 @@ import { defineConfig } from "vite";
 import typeComposerPlugin from "typecomposer-plugin";
 import path from "path";
 import fs from "fs";
+import tailwindcss from "@tailwindcss/vite";
 
 // Simple MDX plugin for Vite
 function mdxPlugin() {
   return {
     name: "vite-plugin-mdx",
-    load(id) {
+    load(id: string) {
       if (id.endsWith(".md") || id.endsWith(".mdx")) {
         const content = fs.readFileSync(id, "utf-8");
         // Export both the raw markdown content and as MDX
@@ -28,6 +29,7 @@ export default defineConfig({
       debugger: false,
     }),
     mdxPlugin(),
+    tailwindcss(),
   ],
   resolve: {
     alias: {
@@ -35,11 +37,4 @@ export default defineConfig({
     },
   },
   base: "./",
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: "modern-compiler",
-      },
-    },
-  },
 });

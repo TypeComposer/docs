@@ -8,7 +8,7 @@ const ALGOLIA_APP_ID = "YOUR_APP_ID";
 const ALGOLIA_SEARCH_API_KEY = "YOUR_SEARCH_API_KEY";
 const ALGOLIA_INDEX_NAME = "typecomposer_docs";
 
-// Generate unique IDs for search containers to avoid conflicts
+// Instance counter for unique IDs - safe in browser's single-threaded environment
 let instanceCounter = 0;
 
 export class AlgoliaSearch extends Component {
@@ -44,8 +44,13 @@ export class AlgoliaSearch extends Component {
 
   onInit(): void {
     // Use requestAnimationFrame to ensure DOM is ready before initializing InstantSearch
-    // This is necessary because InstantSearch requires the DOM elements to be fully mounted
-    requestAnimationFrame(() => this.initializeSearch());
+    // This ensures the search container elements are mounted before InstantSearch tries to use them
+    requestAnimationFrame(() => {
+      // Verify DOM elements exist before initializing
+      if (this.searchBoxDiv && this.hitsDiv) {
+        this.initializeSearch();
+      }
+    });
   }
 
   private initializeSearch(): void {

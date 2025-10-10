@@ -8,16 +8,26 @@ const ALGOLIA_APP_ID = "YOUR_APP_ID";
 const ALGOLIA_SEARCH_API_KEY = "YOUR_SEARCH_API_KEY";
 const ALGOLIA_INDEX_NAME = "typecomposer_docs";
 
+// Generate unique IDs for search containers to avoid conflicts
+let instanceCounter = 0;
+
 export class AlgoliaSearch extends Component {
   private searchInstance: any;
   private searchContainer: DivElement;
   private searchBoxDiv: DivElement;
   private hitsDiv: DivElement;
+  private searchBoxId: string;
+  private hitsId: string;
 
   constructor() {
     super({
       className: "algolia-search-container",
     });
+
+    // Generate unique IDs for this instance
+    const instanceId = ++instanceCounter;
+    this.searchBoxId = `searchbox-${instanceId}`;
+    this.hitsId = `hits-${instanceId}`;
 
     // Create container for search
     this.searchContainer = new DivElement({
@@ -25,16 +35,17 @@ export class AlgoliaSearch extends Component {
     });
 
     // Create search elements with unique IDs
-    this.searchBoxDiv = new DivElement({ id: "searchbox" });
-    this.hitsDiv = new DivElement({ id: "hits" });
+    this.searchBoxDiv = new DivElement({ id: this.searchBoxId });
+    this.hitsDiv = new DivElement({ id: this.hitsId });
 
     this.searchContainer.append(this.searchBoxDiv, this.hitsDiv);
     this.append(this.searchContainer);
   }
 
   onInit(): void {
-    // Wait for next tick to ensure DOM is ready
-    setTimeout(() => this.initializeSearch(), 0);
+    // Use requestAnimationFrame to ensure DOM is ready before initializing InstantSearch
+    // This is necessary because InstantSearch requires the DOM elements to be fully mounted
+    requestAnimationFrame(() => this.initializeSearch());
   }
 
   private initializeSearch(): void {
@@ -55,7 +66,7 @@ export class AlgoliaSearch extends Component {
       }),
 
       searchBox({
-        container: "#searchbox",
+        container: `#${this.searchBoxId}`,
         placeholder: "Search documentation...",
         showReset: true,
         showSubmit: false,
@@ -68,7 +79,7 @@ export class AlgoliaSearch extends Component {
       }),
 
       hits({
-        container: "#hits",
+        container: `#${this.hitsId}`,
         cssClasses: {
           root: "hits-root",
           list: "hits-list",

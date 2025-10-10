@@ -1,5 +1,7 @@
 import { AnchorElement, Component, DivElement, ImageElement, Router, SvgElement, App, ref, computed, ButtonElement, BorderPanel } from "typecomposer";
-import { Sun, Moon, createElement, Menu } from "lucide";
+import { Sun, Moon, createElement, Menu, Search } from "lucide";
+import { SearchModal } from "@/components/search/SearchModal";
+import "@/components/search/search.scss";
 
 class ThemeToggle extends Component {
   constructor() {
@@ -34,17 +36,35 @@ class NavLinks extends Component {
     this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
     this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
     this.append(new AnchorElement({ text: "GitHub", href: "https://github.com/typecomposer/typecomposer" }));
-    this.append(new ThemeToggle());
   }
 }
 
 export class NavBar extends Component {
   open = false;
+  private searchModal: SearchModal;
 
   constructor() {
     super({ className: "flex items-center justify-between w-screen h-16 px-6 navbar" });
     this.append(new Logo());
     this.append(new NavLinks());
+    
+    // Add search button
+    this.append(
+      new ButtonElement({
+        className: "search-button flex items-center gap-2 px-3 py-2 rounded-md",
+        children: [
+          createElement(Search),
+          new DivElement({ 
+            className: "search-shortcut hidden md:block", 
+            textContent: "⌘K" 
+          })
+        ],
+        onclick: () => this.searchModal.open(),
+      })
+    );
+    
+    this.append(new ThemeToggle());
+    
     this.append(
       new ButtonElement({
         className: "btn-sidebar m-2",
@@ -56,6 +76,10 @@ export class NavBar extends Component {
       })
     );
     this.btn();
+    
+    // Add search modal
+    this.searchModal = new SearchModal();
+    this.append(this.searchModal);
   }
 
   btn() {

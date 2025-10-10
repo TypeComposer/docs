@@ -1,0 +1,226 @@
+/* Algolia Search Styles */
+
+/* Search Modal Wrapper */
+.search-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+}
+
+.search-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.search-modal {
+  position: relative;
+  width: 90%;
+  max-width: 640px;
+  max-height: 80vh;
+  background-color: var(--primary-background-color);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.search-modal-close:hover {
+  background-color: var(--secondary-background-color);
+  color: var(--text-primary);
+}
+
+/* Search Button in NavBar */
+.search-button {
+  background: var(--secondary-background-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-button:hover {
+  background: var(--primary-background-color);
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.search-shortcut {
+  font-size: 12px;
+  padding: 2px 6px;
+  background: var(--primary-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Algolia Search Container */
+.algolia-search-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Search Box Customization */
+.ais-SearchBox {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ais-SearchBox-form {
+  position: relative;
+}
+
+.ais-SearchBox-input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  font-size: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--secondary-background-color);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.ais-SearchBox-input:focus {
+  border-color: var(--accent-color, #007bff);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.ais-SearchBox-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.ais-SearchBox-reset {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ais-SearchBox-reset:hover {
+  color: var(--text-primary);
+}
+
+.ais-SearchBox-resetIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Hits (Results) Customization */
+.ais-Hits {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.ais-Hits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ais-Hits-item {
+  margin-bottom: 4px;
+}
+
+.hit-link {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: background-color 0.2s;
+}
+
+.hit-link:hover {
+  background-color: var(--secondary-background-color);
+}
+
+.hit-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.hit-content {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.hits-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* Highlight styles */
+.ais-Highlight-highlighted,
+.ais-Snippet-highlighted {
+  background-color: rgba(255, 215, 0, 0.3);
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .search-modal-wrapper {
+    padding-top: 5vh;
+  }
+
+  .search-shortcut {
+    display: none !important;
+  }
+}

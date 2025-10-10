@@ -11,6 +11,8 @@ const ALGOLIA_INDEX_NAME = "typecomposer_docs";
 export class AlgoliaSearch extends Component {
   private searchInstance: any;
   private searchContainer: DivElement;
+  private searchBoxDiv: DivElement;
+  private hitsDiv: DivElement;
 
   constructor() {
     super({
@@ -21,9 +23,21 @@ export class AlgoliaSearch extends Component {
     this.searchContainer = new DivElement({
       className: "search-wrapper",
     });
+
+    // Create search elements with unique IDs
+    this.searchBoxDiv = new DivElement({ id: "searchbox" });
+    this.hitsDiv = new DivElement({ id: "hits" });
+
+    this.searchContainer.append(this.searchBoxDiv, this.hitsDiv);
+    this.append(this.searchContainer);
   }
 
   onInit(): void {
+    // Wait for next tick to ensure DOM is ready
+    setTimeout(() => this.initializeSearch(), 0);
+  }
+
+  private initializeSearch(): void {
     // Initialize Algolia search client
     const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_API_KEY);
 
@@ -75,13 +89,6 @@ export class AlgoliaSearch extends Component {
         },
       }),
     ]);
-
-    // Create search elements
-    const searchBoxDiv = new DivElement({ id: "searchbox" });
-    const hitsDiv = new DivElement({ id: "hits" });
-
-    this.searchContainer.append(searchBoxDiv, hitsDiv);
-    this.append(this.searchContainer);
 
     // Start InstantSearch
     this.searchInstance.start();

@@ -33,6 +33,7 @@ class NavLinks extends Component {
     super({ className: "flex items-center nav-links" });
     this.append(new AnchorElement({ rlink: "docs", text: "Docs" }));
     this.append(new AnchorElement({ rlink: "playground", text: "Playground" }));
+    this.append(new AnchorElement({ text: "Learn", href: "https://roadmap.sh/r/learn-typecomposer-kzc3f" }));
     this.append(new AnchorElement({ text: "GitHub", href: "https://github.com/typecomposer/typecomposer" }));
     this.append(new ThemeToggle());
   }

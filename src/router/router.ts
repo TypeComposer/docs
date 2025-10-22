@@ -31,7 +31,7 @@ loadDocs().finally(() => {
           { path: "reactivity/computed", component: BaseView },
           { path: "router", component: BaseView },
           { path: "router-view", component: BaseView },
-          { path: "home", component: BaseView }
+          { path: "home", component: BaseView },
         ],
       },
       { path: "/playground", component: PlaygroundPage },

@@ -46,7 +46,7 @@ export class SidebarItem extends DetailsElement {
 export class Sidebar extends Component {
   constructor(props?: ElementType) {
     super({ ...props, className: "sidebar" });
-    this.append(new DivElement({ className: "lib-header", textContent: "TypeComposer" }));
+    // this.append(new DivElement({ className: "lib-header", textContent: "TypeComposer" }));
     const nav = this.appendChild(new NavElement());
     for (const menu of data.sidebar) {
       nav.append(new SidebarItem(menu as SidebarData));

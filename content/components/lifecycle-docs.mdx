@@ -1,0 +1,85 @@
+# Component Lifecycle
+
+TypeComposer provides a simple and predictable component lifecycle that allows you to run logic at different stages of an element’s creation and existence in the DOM.
+
+## Overview
+
+The component lifecycle follows a sequence of methods that can be overridden to execute code at specific moments:
+
+```ts
+constructor()
+onCreate()
+onInit()
+onConnected()
+onDisconnected()
+```
+
+### 🔄 Execution order
+
+1. **constructor()**
+   - Automatically called when the component is instantiated.
+   - Best place to initialize properties, internal state, and listeners that do not depend on the DOM.
+
+2. **onInit()**
+   - Called **after** the constructor, during the initial creation phase of the component.
+   - Ideal for logic that depends on child elements that have been created but **not yet mounted** in the DOM.
+   - Commonly used to append elements, set up event listeners, or prepare internal behavior.
+
+3. **onCreate()**
+   - Executed **before** the component is inserted into the DOM.
+   - Use this method to prepare the component structure or initialize child elements before rendering.
+   - Unlike `onConnected()`, the element is **not yet** attached to the DOM.
+
+4. **onConnected()**
+   - Executed **when the element is attached to the DOM**.
+   - Similar to the native Web Component `connectedCallback`.
+   - Use this method to start observers, timers, or interactions that require the element to exist in the DOM.
+
+5. **onDisconnected()**
+   - Called **when the element is removed from the DOM**.
+   - Similar to the native Web Component `disconnectedCallback`.
+   - Ideal for cleaning up timers, observers, or event listeners registered in `onConnected()`.
+
+## Example
+
+```ts
+import { Component, DivElement } from "typecomposer";
+
+export class ExampleComponent extends Component {
+  constructor() {
+    super();
+    console.log("constructor → component instantiated");
+  }
+
+  onInit() {
+    console.log("onInit → after constructor, initializing internal logic");
+  }
+
+  onCreate() {
+    console.log("onCreate → before insertion into DOM");
+    this.append(new DivElement({ textContent: "Preparing component..." }));
+  }
+
+  onConnected() {
+    console.log("onConnected → component inserted into DOM");
+  }
+
+  onDisconnected() {
+    console.log("onDisconnected → component removed from DOM");
+  }
+}
+```
+
+## Summary
+
+| Method             | Execution timing                          | Main purpose |
+|--------------------|-------------------------------------------|---------------|
+| `constructor()`    | When the component instance is created    | Basic initialization |
+| `onInit()`         | After constructor, before connecting to the DOM | Setup internal logic |
+| `onCreate()`       | Before the element is inserted into the DOM | Prepare structure |
+| `onConnected()`    | When the component is attached to the DOM | Start dynamic behavior |
+| `onDisconnected()` | When the component is removed from the DOM | Cleanup resources |
+
+---
+
+This lifecycle provides a clear and controlled flow for building robust and predictable components in TypeComposer.

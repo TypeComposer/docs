@@ -33,6 +33,7 @@
     },
     {
       "title": "Router",
+      "link": "docs/router",
       "items": [
         {
           "title": "Router",
@@ -50,8 +51,20 @@
         {
           "title": "Component",
           "link": "docs/components/component"
+        },
+        {
+          "title": "Template",
+          "link": "docs/components/template"
+        },
+        {
+          "title": "Component Lifecycle",
+          "link": "docs/components/lifecycle-docs"
         }
       ]
+    },
+    {
+      "title": "Dependency Injection",
+      "link": "docs/dependency-injection"
     },
     {
       "title": "Layout",

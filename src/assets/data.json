@@ -14,16 +14,36 @@
       ]
     },
     {
-      "title": "Reactivity Fundamentals",
-      "link": "docs/reactivity/fundamentals",
+      "title": "Reactivity",
+      "link": "docs/reactivity/ref",
       "items": [
-        {
-          "title": "Fundamentals",
-          "link": "docs/reactivity/fundamentals"
-        },
         {
           "title": "ref",
           "link": "docs/reactivity/ref"
+        },
+        {
+          "title": "refBoolean",
+          "link": "docs/reactivity/refboolean"
+        },
+        {
+          "title": "refNumber",
+          "link": "docs/reactivity/refnumber"
+        },
+        {
+          "title": "refString",
+          "link": "docs/reactivity/refstring"
+        },
+        {
+          "title": "refList",
+          "link": "docs/reactivity/reflist"
+        },
+        {
+          "title": "refMap",
+          "link": "docs/reactivity/refmap"
+        },
+        {
+          "title": "refSet",
+          "link": "docs/reactivity/refset"
         },
         {
           "title": "computed",
@@ -73,7 +93,10 @@
           "title": "BorderPanel",
           "link": "docs/layout/border-panel"
         },
-        { "title": "Vbox", "link": "docs/layout/vbox" },
+        {
+          "title": "Vbox",
+          "link": "docs/layout/vbox"
+        },
         {
           "title": "Hbox",
           "link": "docs/layout/hbox"

@@ -42,4 +42,11 @@ export default defineConfig({
       },
     },
   },
+  //  build: {
+  //   rollupOptions: {
+  //     output: {
+  //       format: "iife", // em vez de "es"
+  //     },
+  //   },
+  // },
 });

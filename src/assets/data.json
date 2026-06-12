@@ -10,6 +10,10 @@
         {
           "title": "Getting Started",
           "link": "docs/getting-started"
+        },
+        {
+          "title": "Skills.sh AI Skill",
+          "link": "docs/skills-sh"
         }
       ]
     },

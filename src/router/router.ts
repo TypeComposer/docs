@@ -15,7 +15,7 @@ loadDocs().finally(() => {
         component: AppPage,
         children: [
           { path: "getting-started", component: BaseView },
-          { path: "skills-sh", component: BaseView },
+          { path: "skills", component: BaseView },
           { path: "components/component", component: BaseView },
           { path: "components/template", component: BaseView },
           { path: "components/lifecycle-docs", component: BaseView },

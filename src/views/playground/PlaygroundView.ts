@@ -249,8 +249,11 @@ export class PlaygroundView extends Component {
 		// Create iframe for preview.
 		// sandbox="allow-scripts": user code runs in a sandboxed context without
 		// access to window.parent, cookies, or the docs page DOM.
-		// allow-same-origin is intentionally omitted — blob: URLs are always
-		// opaque-origin, so omitting it makes the sandbox stricter, not weaker.
+		// allow-same-origin is intentionally omitted — blob: URLs always have an
+		// opaque origin so adding it would have no effect; and without it the
+		// browser blocks localStorage access inside the iframe (SecurityError).
+		// A safe in-memory localStorage shim is injected into the iframe HTML
+		// (see createIframeHTML) so TypeComposer can probe storage without error.
 		this.iframe = previewPanel.appendChild(new IFrameElement({ 
 			className: "flex-1",
 		})) as IFrameElement;
@@ -315,6 +318,11 @@ export class PlaygroundView extends Component {
 	 * The import map resolves `typecomposer` to the jsDelivr CDN (+esm single bundle).
 	 * esm.sh is broken for this package (HTTP 500 on its generated core.mjs due to
 	 * a circular re-export); jsDelivr bundles it correctly with Rollup.
+	 *
+	 * An in-memory localStorage shim is injected before the import map so that
+	 * TypeComposer's runtime can probe storage without throwing a SecurityError in
+	 * the sandboxed iframe (sandbox="allow-scripts" without allow-same-origin blocks
+	 * real localStorage; the shim keeps state within the iframe lifetime only).
 	 */
 	private createIframeHTML(compiledCode: string): string {
 		// jsdelivr +esm bundles the package into a single ES module without the
@@ -334,6 +342,59 @@ export class PlaygroundView extends Component {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TypeComposer Preview</title>
+  <script>
+    // In-memory localStorage shim — required because the iframe runs under
+    // sandbox="allow-scripts" without allow-same-origin, which causes the
+    // browser to throw a SecurityError on any localStorage access.
+    // This shim provides a Map-backed storage that behaves like the real API
+    // for the lifetime of the iframe document (not persisted across reloads).
+    (function () {
+      try {
+        // Quick probe: if this succeeds, real localStorage is available.
+        void window.localStorage;
+      } catch (_e) {
+        // Real localStorage is inaccessible — install the in-memory shim.
+        var _store = Object.create(null);
+        var _length = 0;
+        var _shimStorage = {
+          get length() { return _length; },
+          key: function (index) {
+            return Object.keys(_store)[index] !== undefined ? Object.keys(_store)[index] : null;
+          },
+          getItem: function (key) {
+            return Object.prototype.hasOwnProperty.call(_store, key) ? _store[key] : null;
+          },
+          setItem: function (key, value) {
+            if (!Object.prototype.hasOwnProperty.call(_store, key)) _length++;
+            _store[key] = String(value);
+          },
+          removeItem: function (key) {
+            if (Object.prototype.hasOwnProperty.call(_store, key)) {
+              delete _store[key];
+              _length--;
+            }
+          },
+          clear: function () { _store = Object.create(null); _length = 0; }
+        };
+        try {
+          Object.defineProperty(window, 'localStorage', {
+            value: _shimStorage,
+            writable: false,
+            configurable: true
+          });
+          Object.defineProperty(window, 'sessionStorage', {
+            value: _shimStorage,
+            writable: false,
+            configurable: true
+          });
+        } catch (_defineErr) {
+          // Last resort: assign directly (older browsers / CSP edge cases)
+          window.localStorage = _shimStorage;
+          window.sessionStorage = _shimStorage;
+        }
+      }
+    })();
+  </script>
   <script type="importmap">
   {
     "imports": {

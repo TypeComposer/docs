@@ -4,33 +4,70 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/typecomposer.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://typecomposer.com/" />
+
     <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="TypeComposer is a framework for building web and native user interfaces. Build UIs from individual components written in JavaScript, and seamlessly integrate components developed by independent individuals, teams, and organizations."
+      content="TypeComposer is a zero-HTML TypeScript framework for building web and native user interfaces. Compose UIs from pure TypeScript classes — no JSX, no templates."
     />
-    <meta name="keywords" content="typecomposer, framework, web interfaces, native interfaces, UI components, JavaScript, modular UI, component-based design" />
+    <meta name="keywords" content="typecomposer, typescript framework, web interfaces, UI components, zero-html, component-based, reactive, no-jsx" />
     <meta name="author" content="TypeComposer Team" />
 
     <!-- Open Graph Tags for social media -->
-    <meta property="og:title" content="TypeComposer – Framework for Web and Native User Interfaces" />
+    <meta property="og:title" content="TypeComposer – Zero-HTML TypeScript UI Framework" />
     <meta
       property="og:description"
-      content="TypeComposer is a framework for building web and native user interfaces. Build UIs from individual components written in JavaScript, and seamlessly integrate components developed by independent individuals, teams, and organizations."
+      content="TypeComposer is a zero-HTML TypeScript framework for building web and native user interfaces. Compose UIs from pure TypeScript classes — no JSX, no templates."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://typecomposer.com" />
+    <meta property="og:url" content="https://typecomposer.com/" />
     <meta property="og:image" content="https://typecomposer.com/typecomposer.svg" />
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="TypeComposer – Framework for Web and Native User Interfaces" />
+    <meta name="twitter:title" content="TypeComposer – Zero-HTML TypeScript UI Framework" />
     <meta
       name="twitter:description"
-      content="TypeComposer is a framework for building web and native user interfaces. Build UIs from individual components written in JavaScript, and seamlessly integrate components developed by independent individuals, teams, and organizations."
+      content="TypeComposer is a zero-HTML TypeScript framework for building web and native user interfaces. Compose UIs from pure TypeScript classes — no JSX, no templates."
     />
     <meta name="twitter:site" content="@typecomposer" />
-    <title>TypeComposer</title>
+
+    <!-- JSON-LD: WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TypeComposer",
+      "url": "https://typecomposer.com/",
+      "description": "A zero-HTML TypeScript framework for building web and native user interfaces.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://typecomposer.com/#/docs/{search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- JSON-LD: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "TypeComposer",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://typecomposer.com/",
+      "description": "A zero-HTML TypeScript framework for building web and native user interfaces using pure TypeScript component classes.",
+      "license": "https://github.com/TypeComposer/typecomposer/blob/main/LICENSE",
+      "codeRepository": "https://github.com/TypeComposer/typecomposer",
+      "programmingLanguage": "TypeScript"
+    }
+    </script>
+
+    <title>TypeComposer – Zero-HTML TypeScript UI Framework</title>
   </head>
   <body>
     <script defer type="module" src="/src/main.ts"></script>

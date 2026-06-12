@@ -1,4 +1,4 @@
-import { Component, IFrameElement, DivElement, HBox, VBox, ButtonElement } from "typecomposer";
+import { Component, IFrameElement, DivElement, HBox, VBox } from "typecomposer";
 import { compileFiles, initializeEsbuild } from "@/utils/browserCompiler";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 
@@ -103,72 +103,45 @@ const files = {
 </html>`,
 	},
 	"/src/main.ts": {
-		code: `import { AppPage } from "./AppPage";
+		code: `import { App, ButtonElement, Component, H1Element, ref, VBox } from "typecomposer";
 
-const app = new AppPage();
-document.body.appendChild(app);`,
-	},
-	"/src/AppPage.ts": {
-		code: `import { VBox, DivElement, ButtonElement } from "typecomposer";
+class AppPage extends Component {
+  count = ref(0);
 
-export class AppPage extends VBox {
-  private clickCount = 0;
-  private button: ButtonElement;
-  
   constructor() {
     super({
       style: {
-        padding: "40px",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        minHeight: "100vh",
+        width: "100dvw",
+        height: "100dvh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "column",
-        gap: "20px",
-      }
+        background: "#242424",
+      },
     });
 
-    const title = new DivElement({
-      innerText: "🎨 TypeComposer Playground",
-      style: {
-        color: "white",
-        fontSize: "48px",
-        fontWeight: "bold",
-        margin: "0"
-      }
-    });
-    
-    this.button = new ButtonElement({
-      innerText: "Click me!",
-      style: {
-        padding: "12px 24px",
-        fontSize: "16px",
-        background: "white",
-        color: "#667eea",
-        border: "none",
-        borderRadius: "8px",
-        cursor: "pointer",
-        fontWeight: "600",
-        transition: "transform 0.2s"
-      }
-    });
-    
-    this.button.onclick = () => {
-      this.clickCount++;
-      this.button.innerText = \`Clicked \${this.clickCount} time\${this.clickCount === 1 ? '' : 's'}!\`;
-      this.button.style.transform = "scale(1.1)";
-      setTimeout(() => {
-        this.button.style.transform = "scale(1)";
-      }, 150);
-    };
-    
-    // Append all elements
-    this.appendChild(title);
-    this.appendChild(this.button);
+    const vbox = this.appendChild(
+      new VBox({ style: { alignItems: "center", gap: "1rem" } })
+    );
+
+    vbox.append(
+      new H1Element({ text: "TypeComposer", style: { color: "#fcfffa" } })
+    );
+
+    vbox.append(
+      new ButtonElement({
+        text: this.count,
+        onclick: () => this.count.value++,
+      })
+    );
   }
 }
-customElements.define("app-page", AppPage);  
+
+// In a real project the typecomposer-plugin registers components for you.
+// The playground compiles without it, so register the element explicitly.
+customElements.define("app-page", AppPage);
+
+App.setPage(new AppPage());
 `,
 	},
 };
@@ -178,11 +151,10 @@ export class PlaygroundView extends Component {
 	private iframe: IFrameElement;
 	private errorContainer: DivElement;
 	private editor: MonacoEditor;
-	private currentFileName: string = "/src/AppPage.ts";
+	private currentFileName: string = "/src/main.ts";
 	private files: Record<string, { code: string }>;
 	private isCompiling = false;
 	private compileTimeout: number | null = null;
-	private fileTabs: Map<string, ButtonElement> = new Map();
 	/** Blob URLs pending revocation — cleared at the start of each compile run. */
 	private pendingBlobUrls: string[] = [];
 
@@ -208,25 +180,6 @@ export class PlaygroundView extends Component {
 			className: "flex-1 flex flex-col border-r border-gray-300 overflow-hidden"
 		})) as VBox;
 		
-		// File tabs
-		const tabsContainer = editorPanel.appendChild(new HBox({
-			className: "flex gap-1 p-2 bg-gray-100 border-b border-gray-300 overflow-x-auto"
-		})) as HBox;
-		
-		// Create tabs for editable files
-		const editableFiles = ["/src/main.ts", "/src/AppPage.ts"];
-		editableFiles.forEach(fileName => {
-			const tab = tabsContainer.appendChild(new ButtonElement({
-				innerText: fileName.split("/").pop() || fileName,
-				className: fileName === this.currentFileName 
-					? "px-3 py-1 text-sm bg-white border border-gray-300 rounded cursor-pointer"
-					: "px-3 py-1 text-sm bg-gray-200 border border-gray-300 rounded cursor-pointer hover:bg-gray-300"
-			})) as ButtonElement;
-			
-			tab.onclick = () => this.switchFile(fileName);
-			this.fileTabs.set(fileName, tab);
-		});
-		
 		// Monaco Editor
 		this.editor = editorPanel.appendChild(new MonacoEditor({
 			value: this.files[this.currentFileName].code,
@@ -240,17 +193,16 @@ export class PlaygroundView extends Component {
 			className: "flex-1 flex flex-col overflow-hidden"
 		})) as VBox;
 		
-		// Preview header
-		previewPanel.appendChild(new DivElement({
-			innerText: "Preview",
-			className: "px-4 py-2 bg-gray-100 border-b border-gray-300 font-semibold text-sm"
-		}));
-		
 		// Create iframe for preview.
 		// sandbox="allow-scripts": user code runs in a sandboxed context without
 		// access to window.parent, cookies, or the docs page DOM.
-		// allow-same-origin is intentionally omitted — blob: URLs are always
-		// opaque-origin, so omitting it makes the sandbox stricter, not weaker.
+		// allow-same-origin is intentionally omitted so user code cannot reach the
+		// docs site's storage/cookies or un-sandbox itself. The trade-off: the
+		// document gets an opaque origin, so (a) real localStorage throws a
+		// SecurityError — handled by the in-memory shim injected into the iframe
+		// HTML (see createIframeHTML) — and (b) a blob: URL created in the parent
+		// origin is not importable here, which is why the user-code blob is built
+		// inside the iframe rather than passed in from the parent.
 		this.iframe = previewPanel.appendChild(new IFrameElement({ 
 			className: "flex-1",
 		})) as IFrameElement;
@@ -309,12 +261,34 @@ export class PlaygroundView extends Component {
 	}
 
 	/**
+	 * UTF-8-safe base64 encode. btoa() alone throws on multi-byte characters
+	 * (e.g. emoji in the default AppPage), so encode to UTF-8 bytes first.
+	 */
+	private encodeUtf8Base64(str: string): string {
+		const bytes = new TextEncoder().encode(str);
+		let binary = "";
+		for (let i = 0; i < bytes.length; i++) {
+			binary += String.fromCharCode(bytes[i]);
+		}
+		return btoa(binary);
+	}
+
+	/**
 	 * Create HTML document for iframe.
-	 * The compiled user code is injected as a blob: URL and referenced via
-	 * a dynamic import() inside the iframe module script.
+	 * The compiled user code is embedded as base64 and turned into a blob: URL
+	 * *inside* the iframe (see the module script below), then run via dynamic
+	 * import(). The blob must be created in the iframe: the document runs under an
+	 * opaque origin (sandbox without allow-same-origin), and a blob: URL created
+	 * here in the parent origin is not fetchable from that opaque-origin context
+	 * (import fails with "Failed to fetch dynamically imported module").
 	 * The import map resolves `typecomposer` to the jsDelivr CDN (+esm single bundle).
 	 * esm.sh is broken for this package (HTTP 500 on its generated core.mjs due to
 	 * a circular re-export); jsDelivr bundles it correctly with Rollup.
+	 *
+	 * An in-memory localStorage shim is injected before the import map so that
+	 * TypeComposer's runtime can probe storage without throwing a SecurityError in
+	 * the sandboxed iframe (sandbox="allow-scripts" without allow-same-origin blocks
+	 * real localStorage; the shim keeps state within the iframe lifetime only).
 	 */
 	private createIframeHTML(compiledCode: string): string {
 		// jsdelivr +esm bundles the package into a single ES module without the
@@ -322,11 +296,10 @@ export class PlaygroundView extends Component {
 		// on its generated core.mjs due to a circular re-export in the package.
 		const typecomposerUrl = `https://cdn.jsdelivr.net/npm/typecomposer@${TYPECOMPOSER_VERSION}/+esm`;
 
-		// Create a blob URL for the compiled user code.
-		// Tracked in pendingBlobUrls so it is revoked on the next compile run.
-		const codeBlob = new Blob([compiledCode], { type: 'text/javascript' });
-		const codeUrl = URL.createObjectURL(codeBlob);
-		this.pendingBlobUrls.push(codeUrl);
+		// Embed the compiled user code as base64. The iframe decodes it and
+		// creates its own blob: URL (see the module script below). base64's
+		// alphabet has no "<", so it is safe to inline inside a <script>.
+		const compiledCodeBase64 = this.encodeUtf8Base64(compiledCode);
 
 		const html = `<!DOCTYPE html>
 <html lang="en">
@@ -334,6 +307,59 @@ export class PlaygroundView extends Component {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TypeComposer Preview</title>
+  <script>
+    // In-memory localStorage shim — required because the iframe runs under
+    // sandbox="allow-scripts" without allow-same-origin, which causes the
+    // browser to throw a SecurityError on any localStorage access.
+    // This shim provides a Map-backed storage that behaves like the real API
+    // for the lifetime of the iframe document (not persisted across reloads).
+    (function () {
+      try {
+        // Quick probe: if this succeeds, real localStorage is available.
+        void window.localStorage;
+      } catch (_e) {
+        // Real localStorage is inaccessible — install the in-memory shim.
+        var _store = Object.create(null);
+        var _length = 0;
+        var _shimStorage = {
+          get length() { return _length; },
+          key: function (index) {
+            return Object.keys(_store)[index] !== undefined ? Object.keys(_store)[index] : null;
+          },
+          getItem: function (key) {
+            return Object.prototype.hasOwnProperty.call(_store, key) ? _store[key] : null;
+          },
+          setItem: function (key, value) {
+            if (!Object.prototype.hasOwnProperty.call(_store, key)) _length++;
+            _store[key] = String(value);
+          },
+          removeItem: function (key) {
+            if (Object.prototype.hasOwnProperty.call(_store, key)) {
+              delete _store[key];
+              _length--;
+            }
+          },
+          clear: function () { _store = Object.create(null); _length = 0; }
+        };
+        try {
+          Object.defineProperty(window, 'localStorage', {
+            value: _shimStorage,
+            writable: false,
+            configurable: true
+          });
+          Object.defineProperty(window, 'sessionStorage', {
+            value: _shimStorage,
+            writable: false,
+            configurable: true
+          });
+        } catch (_defineErr) {
+          // Last resort: assign directly (older browsers / CSP edge cases)
+          window.localStorage = _shimStorage;
+          window.sessionStorage = _shimStorage;
+        }
+      }
+    })();
+  </script>
   <script type="importmap">
   {
     "imports": {
@@ -400,8 +426,15 @@ export class PlaygroundView extends Component {
       // Small delay to ensure all components are fully registered
       await new Promise(resolve => setTimeout(resolve, 50));
       
-      // Execute user code (blob: URL, import map applies to its imports too)
-      await import('${codeUrl}');
+      // Decode the embedded user code and create a blob: URL *inside* this
+      // iframe so the dynamic import resolves under this document's own
+      // (opaque) origin. The import map above still applies to its imports.
+      const _bin = atob("${compiledCodeBase64}");
+      const _bytes = new Uint8Array(_bin.length);
+      for (let _i = 0; _i < _bin.length; _i++) _bytes[_i] = _bin.charCodeAt(_i);
+      const _codeUrl = URL.createObjectURL(new Blob([_bytes], { type: 'text/javascript' }));
+      await import(_codeUrl);
+      URL.revokeObjectURL(_codeUrl);
       
     } catch (error) {
       console.error('[Playground] Initialization failed:', error);
@@ -468,21 +501,6 @@ export class PlaygroundView extends Component {
 		this.compileTimeout = setTimeout(() => {
 			this.compileAndRun(this.files);
 		}, 1000) as unknown as number;
-	}
-	
-	private switchFile(fileName: string): void {
-		if (fileName === this.currentFileName) return;
-		
-		this.currentFileName = fileName;
-		this.editor.setValue(this.files[fileName].code);
-		
-		this.fileTabs.forEach((tab, name) => {
-			if (name === fileName) {
-				tab.className = "px-3 py-1 text-sm bg-white border border-gray-300 rounded cursor-pointer";
-			} else {
-				tab.className = "px-3 py-1 text-sm bg-gray-200 border border-gray-300 rounded cursor-pointer hover:bg-gray-300";
-			}
-		});
 	}
 
 	public async updateFiles(newFiles: Record<string, { code: string }>): Promise<void> {

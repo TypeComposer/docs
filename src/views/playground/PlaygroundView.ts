@@ -312,11 +312,15 @@ export class PlaygroundView extends Component {
 	 * Create HTML document for iframe.
 	 * The compiled user code is injected as a blob: URL and referenced via
 	 * a dynamic import() inside the iframe module script.
-	 * The import map resolves `typecomposer` to the esm.sh CDN — no text
-	 * replacement needed (and text replacement was fragile anyway).
+	 * The import map resolves `typecomposer` to the jsDelivr CDN (+esm single bundle).
+	 * esm.sh is broken for this package (HTTP 500 on its generated core.mjs due to
+	 * a circular re-export); jsDelivr bundles it correctly with Rollup.
 	 */
 	private createIframeHTML(compiledCode: string): string {
-		const typecomposerUrl = `https://esm.sh/typecomposer@${TYPECOMPOSER_VERSION}`;
+		// jsdelivr +esm bundles the package into a single ES module without the
+		// split-entry pattern that esm.sh uses — esm.sh@0.1.56 fails with HTTP 500
+		// on its generated core.mjs due to a circular re-export in the package.
+		const typecomposerUrl = `https://cdn.jsdelivr.net/npm/typecomposer@${TYPECOMPOSER_VERSION}/+esm`;
 
 		// Create a blob URL for the compiled user code.
 		// Tracked in pendingBlobUrls so it is revoked on the next compile run.

@@ -1,18 +1,20 @@
 import * as esbuild from 'esbuild-wasm';
+import wasmUrl from 'esbuild-wasm/esbuild.wasm?url';
 
 let esbuildInitialized = false;
 
 /**
  * Initialize esbuild-wasm. Must be called before using the compiler.
+ * Uses a Vite ?url import so the WASM binary is content-hashed and
+ * served from /assets/ — works in both dev and production builds.
  */
 export async function initializeEsbuild(): Promise<void> {
   if (esbuildInitialized) return;
-  
-  // Use the bundled WASM from node_modules
+
   await esbuild.initialize({
-    wasmURL: '/node_modules/esbuild-wasm/esbuild.wasm',
+    wasmURL: wasmUrl,
   });
-  
+
   esbuildInitialized = true;
 }
 
@@ -50,8 +52,8 @@ export async function compileFiles(
           // Handle relative imports
           if (args.path.startsWith('.')) {
             const basePath = args.importer.replace(/\/[^/]*$/, '');
-            let resolvedPath = resolvePath(basePath, args.path);
-            
+            const resolvedPath = resolvePath(basePath, args.path);
+
             // Try with various extensions
             const extensions = ['', '.ts', '.tsx', '.js', '.jsx'];
             for (const ext of extensions) {
@@ -60,7 +62,7 @@ export async function compileFiles(
                 return { path: testPath, namespace: 'virtual' };
               }
             }
-            
+
             // Check if it's a directory with index file
             const indexExtensions = ['/index.ts', '/index.tsx', '/index.js', '/index.jsx'];
             for (const ext of indexExtensions) {
@@ -70,7 +72,7 @@ export async function compileFiles(
               }
             }
           }
-          
+
           // Handle absolute imports
           if (args.path.startsWith('/')) {
             const extensions = ['', '.ts', '.tsx', '.js', '.jsx'];
@@ -81,20 +83,21 @@ export async function compileFiles(
               }
             }
           }
-          
+
           // Handle path aliases like @/
           if (args.path.startsWith('@/')) {
-            const resolvedPath = args.path.replace('@/', '/src/');
+            const resolved = args.path.replace('@/', '/src/');
             const extensions = ['', '.ts', '.tsx', '.js', '.jsx'];
             for (const ext of extensions) {
-              const testPath = resolvedPath + ext;
+              const testPath = resolved + ext;
               if (files[testPath]) {
                 return { path: testPath, namespace: 'virtual' };
               }
             }
           }
-          
-          // External modules (like typecomposer) - mark as external
+
+          // External modules (like typecomposer) - mark as external so they
+          // pass through to the import map injected in the iframe HTML.
           if (!args.path.startsWith('.') && !args.path.startsWith('/') && !args.path.startsWith('@/')) {
             return { path: args.path, external: true };
           }
@@ -106,7 +109,6 @@ export async function compileFiles(
         build.onLoad({ filter: /.*/, namespace: 'virtual' }, (args) => {
           const file = files[args.path];
           if (file) {
-            // Determine loader based on file extension
             const loader = getLoader(args.path);
             return {
               contents: file.code,
@@ -146,12 +148,11 @@ export async function compileFiles(
           target: 'ES2020',
           module: 'ESNext',
         },
-      }
+      },
     });
 
     if (result.outputFiles && result.outputFiles.length > 0) {
       const code = new TextDecoder().decode(result.outputFiles[0].contents);
-      
       return { success: true, code };
     }
 
@@ -171,7 +172,6 @@ export async function compileFiles(
  * Find the entry point from files
  */
 function findEntryPoint(files: Record<string, { code: string }>): string | null {
-  // Priority order for entry points
   const candidates = [
     '/src/main.ts',
     '/src/main.tsx',
@@ -189,11 +189,10 @@ function findEntryPoint(files: Record<string, { code: string }>): string | null 
     }
   }
 
-  // Fallback: find any .ts or .js file in /src
   const srcFiles = Object.keys(files).filter(
     (path) => path.startsWith('/src/') && /\.(ts|tsx|js|jsx)$/.test(path)
   );
-  
+
   return srcFiles.length > 0 ? srcFiles[0] : null;
 }
 

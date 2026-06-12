@@ -1,1 +1,220 @@
 # Reactivity Fundamentals
+
+TypeComposer's reactivity system is **synchronous** and **push-based**: when a ref's value changes, all subscribers are notified immediately in the same call stack. There is no virtual DOM diffing, no scheduler, and no batching — updates propagate directly.
+
+---
+
+## The Reactive Container: `ref()`
+
+The `ref(value)` factory creates a typed reactive container. TypeComposer infers the concrete ref type from the initial value:
+
+| Initial value type | Inferred ref type     |
+|--------------------|-----------------------|
+| `string`           | `RefString`           |
+| `number`           | `RefNumber`           |
+| `boolean`          | `RefBoolean`          |
+| `T[]`              | `RefList<T>`          |
+| `Set<T>`           | `RefSet<T>`           |
+| `Map<K,V>`         | `RefMap<K,V>`         |
+| plain `object`     | reactive object proxy |
+
+```typescript
+import { ref } from 'typecomposer';
+
+const name    = ref('Alice');       // RefString
+const score   = ref(0);            // RefNumber
+const active  = ref(false);        // RefBoolean
+const tags    = ref(['ts', 'ui']); // RefList<string>
+const prefs   = ref(new Map([['theme', 'dark']])); // RefMap<string,string>
+const ids     = ref(new Set([1, 2]));              // RefSet<number>
+const user    = ref({ name: 'Bob', age: 25 });     // reactive proxy
+```
+
+Read or write through the `.value` property:
+
+```typescript
+name.value = 'Carol';   // triggers all subscribers
+console.log(score.value); // 0
+```
+
+---
+
+## `subscribe()` vs `listen()`
+
+Both methods attach a change handler, but they differ in **when the first call happens**:
+
+| Method        | First call                             | Subsequent calls       |
+|---------------|----------------------------------------|------------------------|
+| `subscribe()` | **Immediately** with the current value | On every future change |
+| `listen()`    | **Never** for the current value        | On every future change |
+
+```typescript
+import { ref } from 'typecomposer';
+
+const count = ref(0);
+
+// subscribe fires right away with value=0, then on every change
+count.subscribe((newVal, oldVal) => {
+  console.log('subscribe →', newVal, '(was', oldVal, ')');
+});
+// console: "subscribe → 0 (was undefined)"
+
+// listen fires only on future changes — nothing printed yet
+count.listen((newVal, oldVal) => {
+  console.log('listen →', newVal);
+});
+
+count.value = 1;
+// console: "subscribe → 1 (was 0)"
+// console: "listen → 1"
+```
+
+> **Rule of thumb:** use `subscribe()` when you need to sync initial state immediately (e.g. setting an element's text on mount); use `listen()` when you only care about transitions.
+
+---
+
+## `update()` — Functional Updates
+
+`update()` accepts either a new value or a pure function from the previous value to the next. This is the preferred way to derive the next value from the current one without reading `.value` separately:
+
+```typescript
+const count = ref(0);
+
+count.update(prev => prev + 1); // count.value is now 1
+count.update(prev => prev * 2); // count.value is now 2
+
+// equivalent to direct assignment when no derivation is needed:
+count.value = 10;
+```
+
+---
+
+## `computed()` — Derived Reactive Values
+
+`computed()` returns a ref-like derived value whose result is recalculated whenever its dependencies change. TypeComposer's Vite plugin (`typecomposer-plugin`) assists dependency tracking in project code, so you generally do not need to declare dependencies manually.
+
+```typescript
+import { ref, computed } from 'typecomposer';
+
+const first = ref('John');
+const last  = ref('Doe');
+
+// Arrow function form
+const fullName = computed(() => `${first.value} ${last.value}`);
+console.log(fullName.value); // "John Doe"
+
+first.value = 'Jane';
+console.log(fullName.value); // "Jane Doe"
+
+// Tagged-template form (reactive string interpolation)
+const greeting = computed`Hello, ${first.value}!`;
+
+// Global alias C (no import required)
+const label = C`${first.value} ${last.value}`;
+```
+
+`computed` values are **read-only** — assigning to `.value` throws. Bind them directly to component props:
+
+```typescript
+import { DivElement } from 'typecomposer';
+
+const el = new DivElement({ text: fullName });
+// el updates automatically when first or last changes
+```
+
+---
+
+## Binding Refs to Components
+
+Any ref (or computed) can be passed directly as a component property. TypeComposer subscribes internally and patches the DOM attribute or text node when the value changes — no manual wiring needed:
+
+```typescript
+import { ref, computed, DivElement, InputElement, ButtonElement } from 'typecomposer';
+
+const query   = ref('');
+const results = ref(0);
+
+const input  = new InputElement({ value: query });
+const status = new DivElement({
+  text: computed(() => `${results.value} result(s) for "${query.value}"`),
+});
+const clear  = new ButtonElement({
+  text: 'Clear',
+  onClick: () => { query.value = ''; results.value = 0; },
+});
+```
+
+---
+
+## RefList: Mutation Gotcha
+
+`RefList` is reactive to **mutating methods** (`.push()`, `.splice()`, `.insert()`, etc.) and to **reassigning `.value`**. Direct index assignment **does not emit**:
+
+```typescript
+import { ref } from 'typecomposer';
+
+const items = ref(['a', 'b', 'c']); // RefList<string>
+
+// ✅ Reactive — method mutations
+items.push('d');
+items.splice(0, 1);
+
+// ✅ Reactive — value reassignment
+items.value = ['x', 'y'];
+
+// ❌ NOT reactive — direct index write
+items.value[0] = 'z'; // silently updates the array but does NOT notify subscribers
+```
+
+When you need to replace a single item reactively, create a new array:
+
+```typescript
+items.update(prev => {
+  const next = [...prev];
+  next[0] = 'z';
+  return next;
+});
+```
+
+---
+
+## Advanced: `refState()` — Shared / Cross-Component State
+
+`refState()` is designed for **shared or cross-component state** — not basic local component state. Use it when multiple components need to read and write the same reactive object, similar to a lightweight store.
+
+```typescript
+import { refState } from 'typecomposer';
+
+// Defined once, typically in a shared service file
+const appState = refState({ theme: 'light', locale: 'en' });
+
+// Read
+console.log(appState.value.theme); // "light"
+
+// Write
+appState.value = { ...appState.value, theme: 'dark' };
+
+// Functional update
+appState.update(prev => ({ ...prev, locale: 'fr' }));
+
+// Subscribe across components
+appState.subscribe((next) => console.log('App state changed:', next));
+```
+
+> **When to reach for `refState()`:** shared UI flags, application-level configuration, multi-component coordination. For local component state, plain `ref()` is sufficient and more efficient.
+
+---
+
+## Quick Reference
+
+| API                          | Description                                              |
+|------------------------------|----------------------------------------------------------|
+| `ref(value)`                 | Create a typed reactive container (infers type)          |
+| `.value`                     | Get or set the current value                             |
+| `.update(fn \| next)`        | Functional or direct update                              |
+| `.subscribe(handler)`        | Attach handler; fires immediately with current value     |
+| `.listen(handler)`           | Attach handler; fires only on future changes             |
+| `computed(() => expr)`       | Derived read-only ref, auto-tracked by plugin            |
+| `computed\`template\``       | Tagged-template form of computed                         |
+| `C\`template\``              | Global alias for `computed` tagged template              |
+| `refState(obj)`              | Shared-state container for cross-component coordination  |

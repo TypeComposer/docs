@@ -1,127 +1,129 @@
-# Ref
+# Overview
 
-In TypeComposer, `ref` is a reactive reference system used to track and manage state. It wraps primitive values, objects, and collections, allowing automatic updates in dependent components when the value changes.
+`ref<T>(initial)` creates a reactive reference to any value (boolean, number, string, object, array, Map, Set). It notifies subscribers when `value` changes and integrates with TypeComposer components and styles.
 
-## 1. Key Features
-
-- Supports primitive values (`string`, `number`, `boolean`).
-- Supports complex types such as `Array`, `Map`, `Set`, and objects.
-- Automatically tracks dependencies and triggers updates.
-- Provides `subscribe()` and `unsubscribe()` methods for reactivity.
-- Supports computed values with `computed()`.
-
-## 2. Creating a Ref
-
-A `ref` can be created using the `ref()` function. The provided value is wrapped in a reactive reference that can be accessed via `.value`.
-
-## 3. Example Usage
-
-```ts
-import { ref } from "typecomposer";
-
-const count = ref(0);
-console.log(count.value); // 0
-
-count.value = 5;
-console.log(count.value); // 5
-```
-
-## 4. Reactive Data Types
-
-| Type | Ref Type | Description | Example |
-|------|----------|-------------|---------|
-| string | RefString | Reactive string reference. | `const name = ref("hello")` |
-| number | RefNumber | Reactive number reference. | `const count = ref(0)` |
-| boolean | RefBoolean | Reactive boolean reference. | `const active = ref(true)` |
-| Array&lt;T&gt; | RefList&lt;T&gt; | Reactive array reference. | `const items = ref(["a", "b"])` |
-| Map&lt;K, V&gt; | RefMap&lt;K, V&gt; | Reactive map reference. | `const map = ref(new Map())` |
-| Set&lt;T&gt; | RefSet&lt;T&gt; | Reactive set reference. | `const set = ref(new Set())` |
-| Object | RefObject&lt;T&gt; | Reactive object reference. | `const obj = ref({ key: "value" })` |
-
-## 5. Example with Reactive Objects
+## 1. Creating refs
 
 ```javascript
-const data = ref({
-  history: "hash",
-  ob: { tes: "test" }
+import { ref } from 'typecomposer';
+
+// primitives
+const isOpen = ref(true);
+const count = ref(0);
+const title = ref('Hello');
+
+// arrays
+const items = ref(['A', 'B']);
+
+// objects
+const user = ref({ name: 'John', age: 30 });
+
+// Map / Set
+const prefs = ref(new Map([['theme', 'dark']]));
+const tags = ref(new Set(['news']));
+```
+
+## 2. Binding to UI
+
+```javascript
+import { DivElement, InputElement } from 'typecomposer';
+
+const isOpen = ref(false);
+const count = ref(0);
+const title = ref('Hello');
+
+const panel = new DivElement({ hidden: isOpen });
+const label = new DivElement({ text: count });
+const input = new InputElement({ value: title });
+
+// update UI by changing refs
+isOpen.value = true;   // shows panel
+count.value += 1;      // label updates
+title.value = 'Hi!';   // input reflects the new value
+```
+
+## 3. Events: subscribe, listen, update, value
+
+```javascript
+const valueRef = ref(1);
+
+// subscribe: immediate emit of (newValue, oldValue)
+valueRef.subscribe((newVal, oldVal) => {
+  console.log('value changed:', { newVal, oldVal });
 });
 
-console.log(data.value.history); // "hash"
-data.value.history = "history";
-console.log(data.value.history); // "history"
-```
-
-## 6. Using Ref as a List
-
-Refs can also be used to manage reactive lists. The `.value` property is still required when modifying the array.
-
-```javascript
-const l = ref(["a", "b"]);
-
-// Adding a new element to the list
-l.value.push("c");
-
-console.log(l.value); // ["a", "b", "c"]
-```
-
-## 7. Computed Properties
-
-The `computed()` function allows creating reactive derived values based on existing refs.
-
-```javascript
-import { computed, ref } from "typecomposer";
-
-const num = ref(5);
-const squared = computed(() => num.value * num.value, [num]);
-
-console.log(squared.value); // 25
-
-num.value = 10;
-console.log(squared.value); // 100
-```
-
-## 8. Subscribing to Changes
-
-Refs support subscriptions to reactively track changes.
-
-```javascript
-const count = ref(0);
-
-count.subscribe((newValue) => {
-  console.log("Updated:", newValue);
+// listen: only future changes
+valueRef.listen((newVal, oldVal) => {
+  console.log('future change:', newVal);
 });
 
-count.value = 10; // Logs: "Updated: 10"
+// update via function
+valueRef.update(prev => prev + 1);
+
+// direct assignment
+valueRef.value = 10;
 ```
 
-## 9. Unsubscribing from Changes
+## 4. Derived values with computed
 
 ```javascript
-const name = ref("Alice");
+import { computed } from 'typecomposer';
 
-const logName = (value) => {
-  console.log("Name changed to:", value);
-}
+const first = ref('John');
+const last = ref('Doe');
 
-name.subscribe(logName);
-name.value = "Bob"; // Logs: "Name changed to: Bob"
+// function form
+const full = computed(() => `${first.value} ${last.value}`);
 
-name.unsubscribe(logName);
-name.value = "Charlie"; // No log output
+// tagged template form
+const fullTpl = computed`${first.value} ${last.value}`;
+
+// global alias
+const nameCaps = C`${first.value.toUpperCase()}`;
 ```
 
-## 10. Default Behavior
+## 5. Arrays, Map, Set patterns
 
-- `ref` wraps a value and makes it reactive.
-- `.value` must be used to access or modify the wrapped value.
-- Changes in a `ref` trigger updates to subscribed functions or components.
+```javascript
+// arrays
+const items = ref(['A']);
+items.value = [...items.value, 'B']; // reassign to trigger updates
 
-## 11. When to Use `ref`
+// Map
+const prefs = ref(new Map());
+prefs.update(prev => new Map(prev).set('lang', 'en'));
 
-- When managing reactive state in components.
-- When tracking changes to primitive values, objects, or collections.
-- When computing derived values that should update reactively.
+// Set
+const tags = ref(new Set());
+tags.update(prev => new Set([...prev, 'news']));
+```
 
-## Conclusion
+## 6. Binding styles and classes
 
-The `ref` system in TypeComposer provides a simple and efficient way to manage reactivity. With support for primitive and complex data structures, `ref` enables seamless state management and automatic updates across components.
+```javascript
+const color = ref('red');
+const klass = ref('title primary');
+
+const box = new DivElement({
+  style: { color },
+  className: klass,
+});
+
+// later
+color.value = 'blue';
+klass.value = 'title secondary';
+```
+
+## 7. When to use `ref`
+
+- Simple reactive state for any type
+- Quick bindings for text, attributes, styles, classes, and inputs
+- Compose with `computed` to derive display values
+
+## API Reference
+
+- `ref<T>(initial: T): Ref<T>`
+- `subscribe(handler: (newValue: T, oldValue: T) => void): boolean`
+- `listen(handler: (newValue: T, oldValue: T) => void): boolean`
+- `update(updater: (prev: T) => T | T): void`
+- `value: T` get/set

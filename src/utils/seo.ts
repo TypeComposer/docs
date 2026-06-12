@@ -1,11 +1,11 @@
 /**
  * SEO utilities — update <title> and <meta name="description"> on each route
- * transition. Since this is a hash-router SPA with no SSR, these updates help
- * browser history titles, social preview when JS runs, and AI crawlers that
- * execute JS (e.g. Googlebot, GPTBot after rendering).
+ * transition.
  *
- * Canonical stays fixed at https://typecomposer.com/ in index.html because
- * hash fragments are not real URLs; there is no per-page canonical benefit.
+ * With browser-history routing every route is a real URL, so Googlebot and
+ * other crawlers can index /docs/skills, /docs/getting-started, etc. directly.
+ * The static <link rel="canonical"> in index.html covers the root; per-route
+ * canonicals are declared in the sitemap rather than injected at runtime.
  */
 
 interface PageMeta {
@@ -84,7 +84,7 @@ const PAGE_META: Record<string, PageMeta> = {
   },
   "docs/router": {
     title: "Router",
-    description: "TypeComposer's built-in hash router — define typed routes, nested routes, wildcards, and redirects in pure TypeScript.",
+    description: "TypeComposer's built-in router — define typed routes, nested routes, wildcards, and redirects in pure TypeScript.",
   },
   "docs/router-view": {
     title: "RouterView",
@@ -133,7 +133,8 @@ const PAGE_META: Record<string, PageMeta> = {
 };
 
 /**
- * Update <title> and <meta name="description"> for the given router pathname.
+ * Update <title> and <meta name="description"> for the given router pathname
+ * (e.g. "docs/skills").
  * Call this from BaseView constructor or onConnected whenever the route changes.
  */
 export function updatePageMeta(pathname: string): void {

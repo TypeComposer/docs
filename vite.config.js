@@ -34,7 +34,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "./",
+  // Use absolute base "/" so asset paths resolve correctly with browser-history
+  // routing (e.g. /docs/skills loads assets from /assets/*, not /docs/assets/*).
+  base: "/",
   css: {
     preprocessorOptions: {
       scss: {

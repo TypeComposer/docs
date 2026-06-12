@@ -1,11 +1,10 @@
 /**
- * SEO utilities — update <title> and <meta name="description"> on each route
- * transition. Since this is a hash-router SPA with no SSR, these updates help
- * browser history titles, social preview when JS runs, and AI crawlers that
- * execute JS (e.g. Googlebot, GPTBot after rendering).
+ * SEO utilities — update <title>, <meta name="description">, and
+ * <link rel="canonical"> on each route transition.
  *
- * Canonical stays fixed at https://typecomposer.com/ in index.html because
- * hash fragments are not real URLs; there is no per-page canonical benefit.
+ * With browser-history routing every route is a real URL, so Googlebot and
+ * other crawlers can index /docs/skills, /docs/getting-started, etc. directly.
+ * Per-route canonicals are therefore meaningful and are set dynamically here.
  */
 
 interface PageMeta {
@@ -16,6 +15,7 @@ interface PageMeta {
 const BASE_TITLE = "TypeComposer";
 const BASE_DESC =
   "A zero-HTML TypeScript framework for building web and native user interfaces. Compose UIs from pure TypeScript classes — no JSX, no templates.";
+const CANONICAL_BASE = "https://typecomposer.com";
 
 /** Per-route meta map keyed by Router.pathname value (e.g. "docs/getting-started") */
 const PAGE_META: Record<string, PageMeta> = {
@@ -84,7 +84,7 @@ const PAGE_META: Record<string, PageMeta> = {
   },
   "docs/router": {
     title: "Router",
-    description: "TypeComposer's built-in hash router — define typed routes, nested routes, wildcards, and redirects in pure TypeScript.",
+    description: "TypeComposer's built-in router — define typed routes, nested routes, wildcards, and redirects in pure TypeScript.",
   },
   "docs/router-view": {
     title: "RouterView",
@@ -133,7 +133,8 @@ const PAGE_META: Record<string, PageMeta> = {
 };
 
 /**
- * Update <title> and <meta name="description"> for the given router pathname.
+ * Update <title>, <meta name="description">, and <link rel="canonical">
+ * for the given router pathname (e.g. "docs/skills").
  * Call this from BaseView constructor or onConnected whenever the route changes.
  */
 export function updatePageMeta(pathname: string): void {
@@ -145,6 +146,8 @@ export function updatePageMeta(pathname: string): void {
     document.title = BASE_TITLE;
     setMetaDescription(BASE_DESC);
   }
+  // Set per-route canonical now that we use real browser-history URLs
+  setCanonical(`${CANONICAL_BASE}/${pathname}`);
 }
 
 function setMetaDescription(content: string): void {
@@ -155,4 +158,14 @@ function setMetaDescription(content: string): void {
     document.head.appendChild(tag);
   }
   tag.content = content;
+}
+
+function setCanonical(href: string): void {
+  let tag = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!tag) {
+    tag = document.createElement("link");
+    tag.rel = "canonical";
+    document.head.appendChild(tag);
+  }
+  tag.href = href;
 }

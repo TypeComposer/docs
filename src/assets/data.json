@@ -19,8 +19,12 @@
     },
     {
       "title": "Reactivity",
-      "link": "docs/reactivity/ref",
+      "link": "docs/reactivity/fundamentals",
       "items": [
+        {
+          "title": "Fundamentals",
+          "link": "docs/reactivity/fundamentals"
+        },
         {
           "title": "ref",
           "link": "docs/reactivity/ref"
@@ -50,8 +54,20 @@
           "link": "docs/reactivity/refset"
         },
         {
+          "title": "refObject",
+          "link": "docs/reactivity/refobject"
+        },
+        {
+          "title": "refProperty",
+          "link": "docs/reactivity/refproperty"
+        },
+        {
           "title": "computed",
           "link": "docs/reactivity/computed"
+        },
+        {
+          "title": "refState (shared state)",
+          "link": "docs/reactivity/refstate"
         }
       ]
     },
@@ -83,6 +99,10 @@
         {
           "title": "Component Lifecycle",
           "link": "docs/components/lifecycle-docs"
+        },
+        {
+          "title": "Examples",
+          "link": "docs/components/examples"
         }
       ]
     },

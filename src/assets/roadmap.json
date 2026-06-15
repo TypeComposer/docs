@@ -78,7 +78,7 @@
             "Expand component and reactivity examples",
             "Cover common patterns and real-world usage"
           ],
-          "status": "planned",
+          "status": "completed",
           "priority": "high",
           "dueDate": "2025-10-15",
           "tags": ["state", "documentation"]

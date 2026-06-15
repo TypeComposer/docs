@@ -64,7 +64,7 @@
             "Create example tests",
             "Integrate with CI"
           ],
-          "status": "in-progress",
+          "status": "completed",
           "priority": "high",
           "dueDate": "2025-10-31",
           "tags": ["integration", "frameworks"]

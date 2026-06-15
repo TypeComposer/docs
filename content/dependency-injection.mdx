@@ -1,0 +1,419 @@
+# @Inject Decorator
+
+The `@Inject()` decorator in **TypeComposer** provides a powerful way to share and access services between components using a declarative, type-safe API.
+
+It enables **dependency injection** in your component hierarchy, allowing service instances to be resolved automatically from the **ROOT**, **SELF**, or **PARENT** context based on TypeScript type annotations.
+
+---
+
+## 1. Creating Services with @Service
+
+Before using `@Inject()`, you must create a service class decorated with `@Service`. Services are singleton or scoped instances that can hold reactive state and business logic.
+
+```typescript
+import { ref, Service } from "typecomposer";
+
+@Service
+export class TestService {
+  title = ref("Test Service");
+  count = ref(0);
+
+  incrementCount() {
+    this.count.value++;
+  }
+}
+```
+
+**Key Points:**
+- Services **must** use the `@Service` decorator
+- Services can use reactive properties (`ref()`, `computed()`, etc.)
+- Services are automatically instantiated by TypeComposer's DI container
+
+---
+
+## 2. InjectedType Enum
+
+```ts
+export declare enum InjectedType {
+  ROOT = 0,
+  SELF = 1,
+  PARENT = 2
+}
+```
+
+### Description
+
+| Value | Description |
+|--------|--------------|
+| **ROOT** | Injects a shared global instance of the service (singleton). All components using ROOT get the same instance. |
+| **SELF** | Creates a **new instance** of the service for this component. Each component with SELF gets its own isolated instance. |
+| **PARENT** | Injects the instance from the nearest parent component that declared the service with `SELF`. Enables parent-child service sharing. |
+
+---
+
+## 3. The @Inject() Decorator (TypeScript)
+
+```ts
+export declare function Inject(type?: InjectedType): PropertyDecorator;
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|------------|------|----------|--------------|
+| `type` | `InjectedType` | `InjectedType.ROOT` | Defines where the service instance should be resolved from. |
+
+**Important for TypeScript users:**
+- The decorator **must** be used with a **typed property** (e.g., `test!: TestService`)
+- TypeComposer uses the TypeScript type to determine which service to inject
+- The `!` (definite assignment assertion) tells TypeScript the property will be initialized by the framework
+
+### Basic Syntax
+
+```typescript
+import { Component, Inject } from 'typecomposer';
+import { TestService } from './TestService';
+
+class MyComponent extends Component {
+  @Inject()
+  test!: TestService; // Type annotation is required for TypeScript
+
+  onCreate() {
+    console.log(this.test.title.value); // Access reactive property
+  }
+}
+```
+
+---
+
+## 4. Injecting from the ROOT Context (Shared Singleton)
+
+Use the ROOT context (default) when you want to access a **shared global instance** of a service across all components.
+
+```typescript
+import { Component, Inject } from 'typecomposer';
+import { TestService } from './TestService';
+
+class AppPage extends Component {
+  @Inject() // Same as @Inject(InjectedType.ROOT)
+  testService!: TestService;
+
+  onCreate() {
+    this.text = this.testService.title.value;
+  }
+}
+
+class AnotherPage extends Component {
+  @Inject()
+  testService!: TestService; // Same instance as AppPage
+
+  onCreate() {
+    // Both components share the same service instance
+    this.testService.incrementCount();
+  }
+}
+```
+
+**When to use:**  
+- Global state management
+- Shared configuration or settings
+- Singleton services (API clients, logging, etc.)
+
+---
+
+## 5. Injecting with SELF (Component-Scoped Instance)
+
+Use `InjectedType.SELF` to create a **new, isolated instance** of the service for the current component.
+
+```typescript
+import { Component, Inject, InjectedType } from 'typecomposer';
+import { TestService } from './TestService';
+
+class AppSection extends Component {
+  @Inject(InjectedType.SELF)
+  localService!: TestService; // New instance created for this component
+
+  onCreate() {
+    this.localService.title.value = 'Local Instance';
+    this.text = this.localService.title.value;
+  }
+}
+
+class AnotherSection extends Component {
+  @Inject(InjectedType.SELF)
+  localService!: TestService; // Different instance from AppSection
+
+  onCreate() {
+    this.localService.title.value = 'Another Local Instance';
+    // Each component has its own isolated service
+  }
+}
+```
+
+**When to use:**  
+- Component-specific state
+- Isolated business logic per component
+- When you need multiple independent instances
+
+---
+
+## 6. Injecting from PARENT (Parent's SELF Instance)
+
+`InjectedType.PARENT` injects the service instance from the **nearest parent component** that declared it with `SELF`.
+
+```typescript
+import { Component, Inject, InjectedType } from 'typecomposer';
+import { TestService } from './TestService';
+
+class ParentComponent extends Component {
+  @Inject(InjectedType.SELF)
+  sharedService!: TestService; // Creates instance for this component
+
+  onCreate() {
+    this.sharedService.title.value = 'Parent Service';
+  }
+}
+
+class ChildComponent extends Component {
+  @Inject(InjectedType.PARENT)
+  parentService!: TestService; // Gets parent's SELF instance
+
+  onCreate() {
+    // Access the same instance as the parent
+    this.text = `From parent: ${this.parentService.title.value}`;
+  }
+}
+
+// Compose hierarchy
+const parent = new ParentComponent();
+const child = new ChildComponent();
+parent.append(child);
+```
+
+**When to use:**  
+- Parent-child state sharing
+- Context inheritance (theme, user data, layout config)
+- When children need access to parent's scoped instance
+
+---
+
+## 7. Combining Injection Contexts
+
+You can use multiple injection types in the same component:
+
+```typescript
+import { Component, Inject, InjectedType } from 'typecomposer';
+import { ConfigService } from './ConfigService';
+import { ThemeService } from './ThemeService';
+
+class ChildWidget extends Component {
+  @Inject() // ROOT - shared singleton
+  config!: ConfigService;
+
+  @Inject(InjectedType.PARENT) // Parent's SELF instance
+  theme!: ThemeService;
+
+  onCreate() {
+    this.text = `${this.config.appName} - Theme: ${this.theme.current}`;
+  }
+}
+```
+
+**When to use:**  
+When you need both global services (ROOT) and parent-scoped services (PARENT) in the same component.
+
+---
+
+## 8. Lifecycle Integration
+
+Injected services are resolved and become available starting from the `onCreate()` lifecycle method.  
+They remain accessible throughout `onConnected()` and `onDisconnected()`.
+
+**Important:** Injected dependencies are **NOT** available in the `constructor` or `onInit()` methods.
+
+```typescript
+import { Component, Inject } from 'typecomposer';
+import { ThemeService } from './ThemeService';
+
+class ThemedComponent extends Component {
+  @Inject()
+  theme!: ThemeService;
+
+  onCreate() {
+    // Safe to access injected services here
+    this.style.background = this.theme.isDark ? '#222' : '#fff';
+    this.text = `Theme applied: ${this.theme.current}`;
+  }
+
+  onConnected() {
+    // Also safe to access here
+    console.log('Theme:', this.theme.current);
+  }
+}
+```
+
+**Best practice:**  
+Use `onCreate()`, `onConnected()`, or `onDisconnected()` to access injected services.
+
+---
+
+## 9. Error Handling & Fallbacks
+
+If a service cannot be resolved (for example, a PARENT instance doesn't exist), the property remains `undefined`.  
+You can provide a fallback safely within your component logic.
+
+```typescript
+import { Component, Inject, InjectedType } from 'typecomposer';
+import { ThemeService } from './ThemeService';
+
+class SafeComponent extends Component {
+  @Inject(InjectedType.PARENT)
+  parentTheme?: ThemeService;
+
+  onCreate() {
+    const theme = this.parentTheme?.current ?? 'default';
+    this.text = `Using theme: ${theme}`;
+  }
+}
+```
+
+**When to use:**  
+Whenever you expect that a dependency might not be available, especially with PARENT injections in reusable components.---
+
+## 8. Error Handling & Fallbacks
+
+If a dependency cannot be resolved (for example, a parent context doesn’t exist), the property remains `undefined`.  
+You can provide a fallback safely within your component logic.
+
+```javascript
+class SafeComponent extends Component {
+  @Inject(InjectedType.PARENT)
+  parentConfig;
+
+  onCreate() {
+    const theme = this.parentConfig?.theme ?? 'default';
+    this.text = `Using theme: ${theme}`;
+  }
+}
+```
+
+**When to use:**  
+Whenever you expect that a dependency might not be available, especially in reusable components.
+
+---
+
+## 10. When to Use Each Injection Type
+
+| Type | Instance Sharing | Typical Use Case |
+|------|------------------|------------------|
+| **ROOT** | Global singleton (same instance everywhere) | Global state, config, API clients, logging |
+| **SELF** | New instance per component | Component-specific state, isolated logic |
+| **PARENT** | Shared with nearest parent's SELF | Parent-child communication, context inheritance |
+
+**Key Differences:**
+
+- **ROOT**: All components share **one global instance**
+- **SELF**: Each component gets its **own new instance**
+- **PARENT**: Child gets the **parent's SELF instance** (must exist)
+
+---
+
+## 11. Summary
+
+| Feature | Description |
+|----------|--------------|
+| **@Service Decorator** | Required on service classes to enable DI |
+| **Type-Safe Injection** | Uses TypeScript type annotations to resolve services |
+| **Three Injection Scopes** | ROOT (singleton), SELF (new instance), PARENT (parent's instance) |
+| **Lifecycle Safe** | Available from `onCreate()` onwards |
+| **Automatic Resolution** | No manual wiring or event passing required |
+| **Lightweight & Modular** | Ideal for scalable and maintainable component systems |
+
+---
+
+## 12. Complete Example
+
+Here's a complete demonstration of service injection with all three scopes:
+
+```typescript
+import { Component, Inject, InjectedType, ref, Service } from 'typecomposer';
+
+// 1. Define a service with @Service decorator
+@Service
+class ThemeService {
+  current = ref('dark');
+  isDark = computed(() => this.current.value === 'dark');
+
+  toggle() {
+    this.current.value = this.isDark.value ? 'light' : 'dark';
+  }
+}
+
+// 2. Parent component with SELF instance
+class HeaderComponent extends Component {
+  @Inject(InjectedType.SELF)
+  localTheme!: ThemeService; // Creates new instance
+
+  onCreate() {
+    this.localTheme.current.value = 'light';
+    this.text = `Header Theme: ${this.localTheme.current.value}`;
+    this.style.padding = '10px';
+    this.style.background = '#f0f0f0';
+  }
+}
+
+// 3. Child component inheriting parent's instance
+class NavComponent extends Component {
+  @Inject(InjectedType.PARENT)
+  parentTheme!: ThemeService; // Gets parent's SELF instance
+
+  onCreate() {
+    this.text = `Nav inherits: ${this.parentTheme.current.value}`;
+    this.style.padding = '10px';
+  }
+}
+
+// 4. Component using global ROOT instance
+class FooterComponent extends Component {
+  @Inject() // Same as InjectedType.ROOT
+  globalTheme!: ThemeService; // Global singleton
+
+  onCreate() {
+    this.text = `Footer uses global: ${this.globalTheme.current.value}`;
+    this.style.padding = '10px';
+  }
+}
+
+// Compose structure
+const header = new HeaderComponent();
+const nav = new NavComponent();
+const footer = new FooterComponent();
+
+header.append(nav);
+document.body.append(header, footer);
+```
+
+**Result:**
+- `HeaderComponent`: Has its own `ThemeService` instance (SELF) with value 'light'
+- `NavComponent`: Shares the same instance as HeaderComponent (PARENT)
+- `FooterComponent`: Uses the global singleton instance (ROOT) with default value 'dark'
+
+---
+
+## 13. Conclusion
+
+The `@Service` and `@Inject()` decorators are essential building blocks for modular, maintainable applications in TypeComposer.
+
+**Key Takeaways:**
+- Services must use `@Service` decorator
+- `@Inject()` requires TypeScript type annotations (`service!: ServiceType`)
+- **ROOT**: Global singleton instance shared everywhere
+- **SELF**: Creates a new instance for each component
+- **PARENT**: Inherits the parent's SELF instance
+- Injected services are available from `onCreate()` onwards
+
+They enable cleaner architecture, better encapsulation, and more reusable components through automatic dependency resolution.
+
+---
+
+> **Pro Tip:** Combine `@Inject()` with TypeComposer's reactive properties (`ref()`, `computed()`) for powerful, reactive service-driven components.

@@ -10,11 +10,15 @@
         {
           "title": "Getting Started",
           "link": "docs/getting-started"
+        },
+        {
+          "title": "Agent Skills",
+          "link": "docs/skills"
         }
       ]
     },
     {
-      "title": "Reactivity Fundamentals",
+      "title": "Reactivity",
       "link": "docs/reactivity/fundamentals",
       "items": [
         {
@@ -26,13 +30,50 @@
           "link": "docs/reactivity/ref"
         },
         {
+          "title": "refBoolean",
+          "link": "docs/reactivity/refboolean"
+        },
+        {
+          "title": "refNumber",
+          "link": "docs/reactivity/refnumber"
+        },
+        {
+          "title": "refString",
+          "link": "docs/reactivity/refstring"
+        },
+        {
+          "title": "refList",
+          "link": "docs/reactivity/reflist"
+        },
+        {
+          "title": "refMap",
+          "link": "docs/reactivity/refmap"
+        },
+        {
+          "title": "refSet",
+          "link": "docs/reactivity/refset"
+        },
+        {
+          "title": "refObject",
+          "link": "docs/reactivity/refobject"
+        },
+        {
+          "title": "refProperty",
+          "link": "docs/reactivity/refproperty"
+        },
+        {
           "title": "computed",
           "link": "docs/reactivity/computed"
+        },
+        {
+          "title": "refState (shared state)",
+          "link": "docs/reactivity/refstate"
         }
       ]
     },
     {
       "title": "Router",
+      "link": "docs/router",
       "items": [
         {
           "title": "Router",
@@ -50,8 +91,24 @@
         {
           "title": "Component",
           "link": "docs/components/component"
+        },
+        {
+          "title": "Template",
+          "link": "docs/components/template"
+        },
+        {
+          "title": "Component Lifecycle",
+          "link": "docs/components/lifecycle-docs"
+        },
+        {
+          "title": "Examples",
+          "link": "docs/components/examples"
         }
       ]
+    },
+    {
+      "title": "Dependency Injection",
+      "link": "docs/dependency-injection"
     },
     {
       "title": "Layout",
@@ -60,7 +117,10 @@
           "title": "BorderPanel",
           "link": "docs/layout/border-panel"
         },
-        { "title": "Vbox", "link": "docs/layout/vbox" },
+        {
+          "title": "Vbox",
+          "link": "docs/layout/vbox"
+        },
         {
           "title": "Hbox",
           "link": "docs/layout/hbox"

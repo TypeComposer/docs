@@ -1,6 +1,7 @@
 import { CodeComponent } from "@/components/code/CodeComponent";
 import { Navigation } from "@/components/navigation/Navigation";
 import { getPage } from "@/utils/mdx";
+import { updatePageMeta } from "@/utils/seo";
 import {
   AnchorElement,
   ButtonElement,
@@ -65,6 +66,7 @@ export class BaseView extends VBox {
     super({ className: "main-content" });
 
     this.contentWrapper = this.appendChild(new VBox({ className: "content-wrapper w-full" }));
+    updatePageMeta(Router.pathname);
     this.contentWrapper.append(getPage(Router.pathname));
     this.contentWrapper.append(new Navigation());
   }

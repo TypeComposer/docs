@@ -1,0 +1,55 @@
+# TypeComposer
+
+> A zero-HTML TypeScript framework for building web and native user interfaces using pure TypeScript component classes.
+
+TypeComposer lets you compose UIs entirely in TypeScript — no JSX, no HTML templates, no string-based templates. Components are plain TypeScript classes that extend built-in element types (DivElement, VBox, BorderPanel, etc.) and compose directly with each other.
+
+## Key Concepts
+
+- **Components** — TypeScript classes extending `Component` or built-in elements. No HTML files.
+- **Reactivity** — `ref`, `refBoolean`, `refNumber`, `refString`, `refList`, `refMap`, `refSet`, `computed` — reactive primitives that update the DOM automatically.
+- **Layout** — `VBox`, `HBox`, `BorderPanel` — flexbox-based layout components.
+- **Elements** — `DivElement`, `ButtonElement`, `InputElement`, `LabelElement`, `SpanElement`, `HeadingElement`, `TableElement`.
+- **Router** — Browser-history SPA router with typed route definitions. `Router.create({ history: "browser", routes: [...] })`.
+- **RouterView** — Outlet component that renders the matched child route.
+- **Dependency Injection** — Built-in DI container; inject services into components via constructor.
+- **Agent Skills** — Integration guide for using TypeComposer apps as AI agent skills.
+
+## Docs
+
+- [Why TypeComposer?](https://typecomposer.com/docs/home)
+- [Getting Started](https://typecomposer.com/docs/getting-started)
+- [Component](https://typecomposer.com/docs/components/component)
+- [Template](https://typecomposer.com/docs/components/template)
+- [Lifecycle](https://typecomposer.com/docs/components/lifecycle-docs)
+- [Dependency Injection](https://typecomposer.com/docs/dependency-injection)
+- [ref](https://typecomposer.com/docs/reactivity/ref)
+- [refBoolean](https://typecomposer.com/docs/reactivity/refboolean)
+- [refNumber](https://typecomposer.com/docs/reactivity/refnumber)
+- [refString](https://typecomposer.com/docs/reactivity/refstring)
+- [refList](https://typecomposer.com/docs/reactivity/reflist)
+- [refMap](https://typecomposer.com/docs/reactivity/refmap)
+- [refSet](https://typecomposer.com/docs/reactivity/refset)
+- [computed](https://typecomposer.com/docs/reactivity/computed)
+- [Router](https://typecomposer.com/docs/router)
+- [RouterView](https://typecomposer.com/docs/router-view)
+- [BorderPanel](https://typecomposer.com/docs/layout/border-panel)
+- [VBox](https://typecomposer.com/docs/layout/vbox)
+- [HBox](https://typecomposer.com/docs/layout/hbox)
+- [Div](https://typecomposer.com/docs/elements/div)
+- [Button](https://typecomposer.com/docs/elements/button)
+- [Input](https://typecomposer.com/docs/elements/input)
+- [Label](https://typecomposer.com/docs/elements/label)
+- [Table](https://typecomposer.com/docs/elements/table)
+- [Span](https://typecomposer.com/docs/elements/span)
+- [Heading](https://typecomposer.com/docs/elements/heading)
+- [Agent Skills](https://typecomposer.com/docs/skills)
+- [Playground](https://typecomposer.com/playground)
+
+## GitHub
+
+- [typecomposer/typecomposer](https://github.com/TypeComposer/typecomposer) — core framework
+- [typecomposer/docs](https://github.com/TypeComposer/docs) — documentation site
+- [typecomposer/plugin](https://github.com/TypeComposer/plugin) — Vite plugin
+- [typecomposer/create](https://github.com/TypeComposer/create) — CLI scaffolding
+- [typecomposer/ssr](https://github.com/TypeComposer/ssr) — SSR / hydration

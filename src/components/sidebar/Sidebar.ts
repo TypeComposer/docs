@@ -16,7 +16,7 @@ export class SidebarItem extends DetailsElement {
 
   constructor(private data: SidebarData) {
     super({ className: "menu" });
-    if (data.items.length) {
+    if (data.items?.length) {
       this.icon.append(createElement(ChevronDown));
       this.addEventListener("toggle", () => {
         this.icon.innerHTML = "";
@@ -30,9 +30,10 @@ export class SidebarItem extends DetailsElement {
     summary.append(new SpanElement({ className: "label", style: { paddingLeft: "20px" }, textContent: this.data.title }));
     summary.appendChild(this.icon);
     this.appendChild(summary);
-    if (this.data.items.length === 0) {
-      this.onclick = () => Router.go(this.data.link!);
-    } else {
+    if (this.data.link) {
+      summary.onclick = () =>  Router.go(this.data.link!);
+    }
+    if(this.data.items) {
       const li = new DivElement({ className: "submenu", role: "group", ariaLabel: this.data.title });
       for (const item of this.data.items) {
         li.append(new AnchorElement({ rlink: item.link, textContent: item.title }));
@@ -51,4 +52,5 @@ export class Sidebar extends Component {
       nav.append(new SidebarItem(menu as SidebarData));
     }
   }
+
 }

@@ -1,0 +1,311 @@
+# Template Files (.template)
+
+TypeComposer provides a **`.template`** file system that lets you write component UI markup in a dedicated file using **TSX syntax**, keeping rendering separate from component logic.
+
+The Vite plugin (`typecomposer-plugin`) automatically detects the sibling `.template` file, reads its content, and injects it into the component's `template()` method at build time.
+
+---
+
+## 1. File Naming Convention
+
+A `.template` file must be placed **in the same directory** as its component class file and share the **same base name as the class**:
+
+```
+src/
+  pages/
+    AppPage.ts          ← Component class file  (class AppPage)
+    AppPage.template    ← Template file (auto-linked by name)
+```
+
+**Supported patterns:**
+
+| Component file | Template file |
+|---|---|
+| `AppPage.ts` | `AppPage.template` |
+| `AppPage.tsx` | `AppPage.template` |
+
+> **Name matching is case-sensitive.** `appPage.template` will not be matched to `AppPage.ts`.
+
+---
+
+## 2. Template File Format
+
+A `.template` file contains **only**:
+
+1. **Optional import statements** at the top
+2. **A single JSX/TSX expression** (the root element)
+
+No variable declarations, function declarations, or class declarations are allowed — all logic lives in the component class.
+
+```tsx
+import { NavBar } from '@/components/NavBar';
+import { Button } from '@/components/Button';
+
+<div className="app-page">
+  <NavBar title={this.title.value} />
+  <main>
+    <h1>{this.title.value}</h1>
+    <div className="counter">
+      <Button onClick={this.decrement}>-</Button>
+      <span>{this.count.value}</span>
+      <Button onClick={this.increment}>+</Button>
+    </div>
+  </main>
+</div>
+```
+
+The plugin strips the imports from the template body, merges them with the component's existing imports (deduplicating), and wraps the JSX in a generated `template()` method on the class.
+
+---
+
+## 3. How It Works
+
+1. When Vite processes `AppPage.ts`, the plugin looks for `AppPage.template` in the same directory.
+2. If found, it reads the file and parses it into imports + JSX body.
+3. The JSX body is injected as the body of a new `template()` method on the `AppPage` class.
+4. Template imports are merged into the component's import list.
+5. HMR is supported — editing the `.template` file triggers a rebuild of the linked component.
+
+> **Note on `templateUrl`:** The `ComponentDefinitionOptions` interface includes a `templateUrl` property for future use, but it is **not currently the supported mechanism** for loading external templates. Use the sibling `.template` file convention described here instead.
+
+---
+
+## 4. Complete Example
+
+### Component File — `AppPage.ts`
+
+```typescript
+import { Component, ref } from 'typecomposer';
+
+export class AppPage extends Component {
+  title = ref('My Application');
+  count = ref(0);
+
+  increment() {
+    this.count.value++;
+  }
+
+  decrement() {
+    this.count.value--;
+  }
+
+  // No template() method needed — defined in AppPage.template
+}
+```
+
+### Template File — `AppPage.template`
+
+```tsx
+import { NavBar } from '@/components/NavBar';
+import { Button } from '@/components/Button';
+
+<div className="app-page">
+  <NavBar title={this.title.value} />
+
+  <main>
+    <h1>{this.title.value}</h1>
+
+    <div className="counter">
+      <Button onClick={this.decrement}>-</Button>
+      <span>{this.count.value}</span>
+      <Button onClick={this.increment}>+</Button>
+    </div>
+  </main>
+</div>
+```
+
+**What the plugin generates** (simplified):
+
+```typescript
+// AppPage.ts — after build transform
+import { Component, ref } from 'typecomposer';
+import { NavBar } from '@/components/NavBar';
+import { Button } from '@/components/Button';
+
+export class AppPage extends Component {
+  title = ref('My Application');
+  count = ref(0);
+
+  increment() { this.count.value++; }
+  decrement() { this.count.value--; }
+
+  template() {
+    return (
+      <div className="app-page">
+        <NavBar title={this.title.value} />
+        <main>
+          <h1>{this.title.value}</h1>
+          <div className="counter">
+            <Button onClick={this.decrement.bind(this)}>-</Button>
+            <span>{this.count.value}</span>
+            <Button onClick={this.increment.bind(this)}>+</Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+}
+```
+
+---
+
+## 5. Template Rules
+
+### ✅ Allowed
+
+- `import` statements at the top
+- A single JSX/TSX root element (or fragment `<>…</>`)
+- References to `this` properties, methods, and reactive refs
+- Inline expressions, conditionals, and `.map()` calls
+- Nested components imported at the top of the file
+
+### ❌ Not allowed
+
+```tsx
+// ❌ Variable declarations
+const title = 'Hello';
+
+// ❌ Function declarations
+function format(s: string) { return s.toUpperCase(); }
+
+// ❌ Class declarations
+class Helper { ... }
+```
+
+All logic should live in the component class (`.ts`/`.tsx`), not in the template.
+
+---
+
+## 6. VS Code Extension
+
+Install the official extension for full **syntax highlighting**, **IntelliSense**, and **type checking** inside `.template` files:
+
+**[TypeComposer Template Language Support →](https://marketplace.visualstudio.com/items?itemName=typecomposer-language-support.typecomposer-template)**
+
+### Installation
+
+**From VS Code:** Open Extensions (`Ctrl`/`Cmd` + `Shift` + `X`), search **"TypeComposer"**, and install *TypeComposer Template Language Support*.
+
+**From the web:** Visit the [VS Code Marketplace page](https://marketplace.visualstudio.com/items?itemName=typecomposer-language-support.typecomposer-template) and click **Install**.
+
+### Features
+
+- ✅ TSX syntax highlighting in `.template` files
+- ✅ IntelliSense for component props and `this` members
+- ✅ Auto-completion for imports and component names
+- ✅ Type checking and error detection
+- ✅ Go to Definition for imported components
+- ✅ Auto-closing tags and snippets
+
+---
+
+## 7. Lifecycle Integration
+
+The generated `template()` method is called by TypeComposer during the component initialisation sequence, **before** `onCreate()`:
+
+1. `constructor()`
+2. `onInit()`
+3. **`template()`** ← template rendered here
+4. `onCreate()`
+5. `onConnected()`
+
+All class properties initialised in the constructor or as field declarations are available in the template when it executes.
+
+---
+
+## 8. Inline `template()` vs `.template` File
+
+You can also define the template directly in the class using an inline `template()` method — the `.template` file approach is not mandatory:
+
+```typescript
+import { Component } from 'typecomposer';
+import { NavBar } from '@/components/NavBar';
+
+export class AppPage extends Component {
+  template() {
+    return (
+      <div>
+        <NavBar />
+        <h1>Welcome</h1>
+      </div>
+    );
+  }
+}
+```
+
+Use `.template` files for complex component UIs where separating markup from logic improves readability. Use inline `template()` for simple, single-element components.
+
+---
+
+## 9. Migrating from Inline Templates
+
+Moving an existing inline `template()` to a `.template` file is straightforward:
+
+**Before — `AppPage.ts`:**
+
+```typescript
+export class AppPage extends Component {
+  template() {
+    return (
+      <div>
+        <h1>Hello</h1>
+      </div>
+    );
+  }
+}
+```
+
+**After — `AppPage.ts`:**
+
+```typescript
+export class AppPage extends Component {
+  // template() removed — now in AppPage.template
+}
+```
+
+**New — `AppPage.template`:**
+
+```tsx
+<div>
+  <h1>Hello</h1>
+</div>
+```
+
+---
+
+## 10. Troubleshooting
+
+### Template not found
+
+**Symptom:** The component renders nothing or the template content is missing.
+
+**Check:** The `.template` file name must exactly match the class name (case-sensitive):
+- `AppPage.template` + `class AppPage` ✅
+- `appPage.template` + `class AppPage` ❌
+
+### Type errors in `.template`
+
+**Solution:** Install the TypeComposer VS Code extension and ensure `tsconfig.json` covers the component directory.
+
+### Syntax errors at build time
+
+**Error:** `The file contains non-JSX/TSX code after imports`
+
+**Solution:** Remove any variable or function declarations from the `.template` file. Only `import` statements and a JSX/TSX expression are allowed.
+
+---
+
+## 11. Summary
+
+| Feature | Detail |
+|---|---|
+| **File extension** | `.template` |
+| **Location** | Same directory as the component class file |
+| **Name matching** | Must match the class name exactly (case-sensitive) |
+| **Syntax** | JSX/TSX (imports allowed at top) |
+| **Injected into** | `template()` method at build time |
+| **Variables / functions** | ❌ Not allowed |
+| **`templateUrl` option** | Defined in typings; not currently implemented |
+| **VS Code support** | Install the TypeComposer extension |
+
+> 💡 **Tip:** Use `.template` files for complex, multi-element component UIs. For simple components, an inline `template()` method is perfectly fine.

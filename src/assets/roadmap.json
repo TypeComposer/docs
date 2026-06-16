@@ -14,7 +14,7 @@
             "Added Home Page",
             "Improved Navigation"
           ],
-          "status": "in-progress",
+          "status": "completed",
           "priority": "high",
           "dueDate": "2025-09-30",
           "tags": ["docs", "user-experience"]
@@ -64,7 +64,7 @@
             "Create example tests",
             "Integrate with CI"
           ],
-          "status": "planned",
+          "status": "completed",
           "priority": "high",
           "dueDate": "2025-10-31",
           "tags": ["integration", "frameworks"]
@@ -74,11 +74,11 @@
             "title": "Improve Documentation with Examples"
           },
           "body": [
-            "Implement reactive state management",
-            "Add support for external stores",
-            "Create debugging tools for state"
+            "Add practical code examples to existing docs",
+            "Expand component and reactivity examples",
+            "Cover common patterns and real-world usage"
           ],
-          "status": "planned",
+          "status": "completed",
           "priority": "high",
           "dueDate": "2025-10-15",
           "tags": ["state", "documentation"]
@@ -95,11 +95,11 @@
             "title": "Improve Templates"
           },
           "body": [
-            "Add support for custom templates to streamline component creation.",
-            "Possibility of importing other components inside templates.",
-            "Similar to React's TSX."
+            "Support for .template sibling files to streamline component creation.",
+            "Import other components inside .template files.",
+            "TSX syntax in .template files, similar to React's JSX."
           ],
-          "status": "in-progress",
+          "status": "completed",
           "priority": "high",
           "dueDate": "2025-11-30",
           "tags": ["templates", "components", "developer-experience"]
@@ -109,10 +109,11 @@
             "title": "VSCode Extension"
           },
           "body": [
-            "Support syntax highlighting for .template files.",
-            "Link templates with classes similar to how styles are linked."
+            "Syntax highlighting for .template files.",
+            "Link templates with classes similar to how styles are linked.",
+            "Published to VS Code Marketplace."
           ],
-          "status": "in-progress",
+          "status": "completed",
           "priority": "medium",
           "dueDate": "2025-11-30",
           "tags": ["vscode", "developer-tools", "templates"]
@@ -120,8 +121,8 @@
       ]
     },
     {
-      "id": "202512",
-      "title": "December 2025",
+      "id": "future",
+      "title": "Planned",
       "description": "Release, Community and Routing",
       "cards": [
          {
@@ -135,7 +136,6 @@
             ],
             "status": "planned",
             "priority": "high",
-            "dueDate": "2025-12-15",
             "tags": ["release", "milestone", "launch"]
          },
         {
@@ -148,7 +148,6 @@
           ],
           "status": "planned",
           "priority": "medium",
-          "dueDate": "2025-12-31",
           "tags": ["community", "showcases", "feedback"]
         },
         {
@@ -161,7 +160,6 @@
           ],
           "status": "planned",
           "priority": "high",
-          "dueDate": "2025-12-31",
           "tags": ["routing", "navigation", "architecture"]
         }
       ]

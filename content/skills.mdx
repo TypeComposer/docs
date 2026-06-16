@@ -1,0 +1,53 @@
+# Agent Skills
+
+Agent skills for building TypeComposer apps directly from your AI coding assistant.
+
+## What are agent skills?
+
+Agent Skills are an open format for extending AI coding assistants with specialised knowledge
+and capabilities. They follow the [Agent Skills](https://agentskills.io) specification.
+
+Skills are markdown files (`SKILL.md`) that contain step-by-step instructions for an AI
+agent. When you ask your assistant something like "scaffold a TypeComposer component" or
+"open a PR to add a reactivity test," the agent selects the matching skill and follows its
+instructions automatically.
+
+### Supported tools
+
+The TypeComposer skill works with any Agent Skills-compatible AI coding assistant, including
+Claude Code, OpenAI Codex, Cursor, and other tools that support the specification.
+
+## Installation
+
+Install the TypeComposer skill with a single command:
+
+```bash
+npx skills add TypeComposer/skill
+```
+
+This registers the skill with your AI assistant and makes the TypeComposer knowledge base
+available in your current workspace.
+
+## The TypeComposer skill
+
+The repository ships one skill: **TypeComposer Framework Contributor**. It follows a
+route-first design — your intent is matched to the correct repo and workflow, then
+execution details are resolved from structured reference files.
+
+### Workflow coverage
+
+| Task | Coverage |
+|---|---|
+| Scaffold a new project or library | ✓ |
+| Create or update components using the zero-HTML TypeScript model | ✓ |
+| Review and open pull requests (framework, docs, plugin, SSR, create) | ✓ |
+| Update documentation pages and MDX content | ✓ |
+| Add or fix Vitest tests against the component testing baseline | ✓ |
+| Investigate issues in `plugin`, `create`, `ssr`, or `language-service` | ✓ |
+| Respond to maintainer feedback on open PRs | ✓ |
+| Align changes with the TypeComposer roadmap | ✓ |
+
+## Source
+
+The TypeComposer agent skill is open-source and available on
+[GitHub](https://github.com/TypeComposer/skill).

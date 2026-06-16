@@ -1,0 +1,286 @@
+# Component Examples
+
+This page collects practical, self-contained component patterns that show how TypeComposer's zero-HTML TypeScript architecture fits together: class-based components, reactive refs, computed values, template files, and lifecycle hooks.
+
+---
+
+## 1. Counter Component
+
+A minimal component with local reactive state and two buttons.
+
+**Counter.ts**
+```typescript
+import { Component, ref, computed, ButtonElement, DivElement, SpanElement } from 'typecomposer';
+
+export class Counter extends Component {
+  count = ref(0);
+  label = computed(() => `Count: ${this.count.value}`);
+
+  constructor() {
+    super({ padding: '16px' });
+  }
+
+  increment() { this.count.value++; }
+  decrement() { this.count.value--; }
+
+  template() {
+    return (
+      <div>
+        <ButtonElement text="-" onClick={() => this.decrement()} />
+        <SpanElement text={this.label} style={{ margin: '0 12px' }} />
+        <ButtonElement text="+" onClick={() => this.increment()} />
+      </div>
+    );
+  }
+}
+```
+
+The `count` ref is local to the component instance. `label` is a computed that re-runs whenever `count` changes — no manual wiring required.
+
+---
+
+## 2. Counter Using a `.template` File
+
+The same counter, but with the UI extracted into a separate `.template` file. This follows the convention-based `ClassName.ts` + `ClassName.template` structure supported by `typecomposer-plugin`.
+
+**Counter.ts**
+```typescript
+import { Component, ref, computed } from 'typecomposer';
+
+export class Counter extends Component {
+  count = ref(0);
+  label = computed(() => `Count: ${this.count.value}`);
+
+  increment() { this.count.value++; }
+  decrement() { this.count.value--; }
+
+  // No template() method needed — injected from Counter.template at build time
+}
+```
+
+**Counter.template**
+```tsx
+import { ButtonElement, SpanElement } from 'typecomposer';
+
+<div>
+  <ButtonElement text="-" onClick={this.decrement} />
+  <SpanElement text={this.label} style={{ margin: '0 12px' }} />
+  <ButtonElement text="+" onClick={this.increment} />
+</div>
+```
+
+> The plugin matches `Counter.template` to `Counter.ts` by filename and injects the TSX as the `template()` return at build time. Variable declarations inside `.template` files are **not** allowed — put all logic in the class file.
+
+---
+
+## 3. Todo List — `RefList` with Reactive Rendering
+
+Demonstrates `RefList` mutations and the `Fragment.forEach` list renderer.
+
+**TodoList.ts**
+```typescript
+import { Component, ref, computed, Fragment, DivElement, InputElement, ButtonElement } from 'typecomposer';
+
+export class TodoList extends Component {
+  items = ref<string[]>([]);
+  draft = ref('');
+
+  countLabel = computed(() => `${this.items.value.length} item(s)`);
+
+  addItem() {
+    const text = this.draft.value.trim();
+    if (!text) return;
+    this.items.push(text);        // ✅ reactive — push() triggers subscribers
+    this.draft.value = '';
+  }
+
+  removeItem(value: string) {
+    this.items.removeItem(value); // ✅ reactive helper
+  }
+
+  template() {
+    const list = Fragment.forEach(
+      this.items,
+      (item) => new DivElement({ text: item, onClick: () => this.removeItem(item) })
+    );
+
+    return (
+      <div>
+        <DivElement text={this.countLabel} />
+        <InputElement value={this.draft} placeholder="New item…" />
+        <ButtonElement text="Add" onClick={() => this.addItem()} />
+        {list}
+      </div>
+    );
+  }
+}
+```
+
+> **Important:** avoid direct index assignment on a `RefList`. `this.items.value[0] = 'x'` does **not** emit. Use `.update()`, `.splice()`, `.insert()`, or reassign `.value` instead.
+
+---
+
+## 4. Toggle Panel — `RefBoolean` and Conditional Visibility
+
+```typescript
+import { Component, ref, computed, DivElement, ButtonElement } from 'typecomposer';
+
+export class TogglePanel extends Component {
+  open = ref(false);
+  buttonLabel = computed(() => (this.open.value ? 'Hide' : 'Show'));
+
+  template() {
+    return (
+      <div>
+        <ButtonElement text={this.buttonLabel} onClick={() => { this.open.value = !this.open.value; }} />
+        <DivElement
+          text="Panel content"
+          hidden={this.open}
+          style={{ border: '1px solid #ccc', padding: '12px', marginTop: '8px' }}
+        />
+      </div>
+    );
+  }
+}
+```
+
+Passing `this.open` directly to `hidden` lets TypeComposer subscribe internally. When `open` flips, the `DivElement` toggles its `hidden` attribute without any manual subscription.
+
+---
+
+## 5. User Form — Reactive Object Proxy
+
+When `ref()` receives a plain object it returns a reactive proxy. Individual property writes on the proxy are reactive.
+
+**UserForm.ts**
+```typescript
+import { Component, ref, computed, DivElement, InputElement, ButtonElement } from 'typecomposer';
+
+export class UserForm extends Component {
+  user = ref({ name: '', email: '' });
+  summary = computed(() => `Name: ${this.user.value.name} | Email: ${this.user.value.email}`);
+
+  submit() {
+    console.log('Submitting:', this.user.value);
+  }
+
+  template() {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <InputElement
+          placeholder="Name"
+          value={computed(() => this.user.value.name)}
+          onInput={(e) => { this.user.value = { ...this.user.value, name: (e.target as HTMLInputElement).value }; }}
+        />
+        <InputElement
+          placeholder="Email"
+          value={computed(() => this.user.value.email)}
+          onInput={(e) => { this.user.value = { ...this.user.value, email: (e.target as HTMLInputElement).value }; }}
+        />
+        <DivElement text={this.summary} />
+        <ButtonElement text="Submit" onClick={() => this.submit()} />
+      </div>
+    );
+  }
+}
+```
+
+---
+
+## 6. Shared-State Panel — `refState()` Across Components
+
+`refState()` is the right tool when **multiple components** need to coordinate around the same reactive object. Define it once in a shared module; import it wherever needed.
+
+**appState.ts** (shared module)
+```typescript
+import { refState } from 'typecomposer';
+
+export const appState = refState({
+  theme: 'light' as 'light' | 'dark',
+  notifications: 0,
+});
+```
+
+**ThemeToggle.ts**
+```typescript
+import { Component, computed, ButtonElement } from 'typecomposer';
+import { appState } from '@/services/appState';
+
+export class ThemeToggle extends Component {
+  label = computed(() => appState.value.theme === 'light' ? '🌙 Dark mode' : '☀️ Light mode');
+
+  toggle() {
+    appState.update(prev => ({
+      ...prev,
+      theme: prev.theme === 'light' ? 'dark' : 'light',
+    }));
+  }
+
+  template() {
+    return <ButtonElement text={this.label} onClick={() => this.toggle()} />;
+  }
+}
+```
+
+**NotificationBadge.ts**
+```typescript
+import { Component, computed, SpanElement } from 'typecomposer';
+import { appState } from '@/services/appState';
+
+export class NotificationBadge extends Component {
+  badge = computed(() => `${appState.value.notifications} unread`);
+
+  template() {
+    return <SpanElement text={this.badge} />;
+  }
+}
+```
+
+Both components read from the same `appState`; when either updates it, the other re-renders automatically.
+
+---
+
+## 7. `subscribe()` vs `listen()` in a Component
+
+The difference between `subscribe` and `listen` is especially visible during component initialisation:
+
+```typescript
+import { Component, ref } from 'typecomposer';
+
+export class LogDemo extends Component {
+  status = ref('idle');
+
+  onInit() {
+    // subscribe fires immediately with "idle" — useful to initialise derived state
+    this.status.subscribe((val) => {
+      console.log('[subscribe] current status:', val);
+    });
+
+    // listen fires only on future changes — no output yet
+    this.status.listen((val) => {
+      console.log('[listen] status changed to:', val);
+    });
+  }
+
+  start() { this.status.value = 'running'; }
+  stop()  { this.status.value = 'idle'; }
+}
+
+// Calling start():
+// console: "[subscribe] current status: running"
+// console: "[listen] status changed to: running"
+```
+
+---
+
+## Summary
+
+| Pattern                      | Key APIs used                                   |
+|------------------------------|-------------------------------------------------|
+| Local counter                | `ref`, `computed`, `ButtonElement`              |
+| Template file split          | `ClassName.ts` + `ClassName.template`           |
+| Reactive list                | `RefList`, `Fragment.forEach`, `.push()`        |
+| Conditional visibility       | `RefBoolean`, `hidden` prop                     |
+| Reactive object form         | `ref(object)` proxy, spread-update              |
+| Shared / cross-component     | `refState()`, shared module import              |
+| Lifecycle subscription       | `subscribe()` (immediate) / `listen()` (future) |

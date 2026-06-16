@@ -11,7 +11,7 @@ updates:
     # Check the npm registry for updates every day (weekdays)
     schedule:
       interval: "daily"
-    target-branch: "develop"
+    target-branch: "main"
     # Group all patch and minor updates together
     groups:
       docs-development:

@@ -22,9 +22,9 @@
     "typecomposer": "^0.1.56"
   },
   "devDependencies": {
-    "typecomposer-plugin": "^1.0.12",
+    "typecomposer-plugin": "^1.0.15",
     "@types/node": "^24.7.1",
-    "autoprefixer": "^10.5.0",
+    "autoprefixer": "^10.5.1",
     "csstype": "^3.2.3",
     "sass": "^1.101.0",
     "tailwindcss": "^4.3.1",
